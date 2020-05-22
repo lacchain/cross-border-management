@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: crossborder-management
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/crossboarder
+    username: postgres
+    password: 
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none     
+
+# Server config
+
+server:
+  port: 9092
+  servlet:
+    context-path: /crossborder
+
+crossborder:
+  oauth:
+    client:
+      web:
+        client-id: web-react
+        client-secret: web123
+        private-key: -----BEGIN RSA PRIVATE KEY-----MIIEowIBAAKCAQEAy2IFXU+NGJCAf3eYN2rmTYFNm9G6agek7jKGkqfnw7vtwblkSGYtQ8vGij02PV0jK4+oPOe3qusEyvka9LprNRKfWJWJ5vjl35kI5ELt3aapKs2OcGJTPPIx/2YdRX8M7YkIVv4XD6F8mLy332QRp4qfi6yitJI9YgOI8LLdgJ+X56KBE4PZy9T+rCke4cQuzobgXCqCX9oyNS0Cm19JaHzUNCL9TkJT93/78YqpjYMTWTyEKaYagLBW+RwWPHZV2kCQ/Rsg7QhbrggnqKbXk4stRCE9Ga2IC4e1JU/zkE+NbMx5Y2Zj/b38ShRNjWTlF34+HjRwoRvwBXgARaafZQIDAQABAoIBAHx3GUdYhsWwsSLQ4tOPVS+7YO5p9EYtNW8cdqTLopdzq/YxacCw3yStUWyKN2ZoWDyxZskXGZy8xSseNbPtXeyV3/SLV2CFk9A5zGo812sdMkvijjgSxFP4+EYPjPxZ22SGxxbN2vkS37htTa2lhPRebnNBDDWrhWs1NJnxLIMokImWprZR8jU/N/cx00l7+F9ZkNChHR8ctPzoe+teynS8j06lWebkiEYyGsyFPMjlTsIBU0lYva2m5gUu3GSHjGa1uZP8sDvJLcLERHcIDzqLYi2lTFFM5t7K2My47BCEz+Ydczv6Wbi1TiTuHRVoQRDczz5WxQ4ko70jl/x0ZKUCgYEA7L5tTVMm9e2JJRspXPZlPzZK814aYlhd/RFlsHFYm0ZgXdoSmF3qxwfKMW915qzrMVL/jv0T0zn31T4GNgF8arCibcLLGMnwqOC3J8sP0Xwc04R7y2k8pjmpr37GOFM6RtqMnfs7TfBP4uAW0USdginoKwnYjHLQFuxdmoRrV8MCgYEA2+zwZG2DwJua0Wzv1d00mvLaVg3cdpsVxhRNqdqN2+H4FFCtS75uXlE09uj/yPWa9I7ydE+yS4ZXkKJo6gGrs+KBNvjVuiXAajJTdjjmldZpIZDgIqVIPa2tijuoXu0JHrKW6Vt0x2h2k6VCqDvZ7QJYI+xRmx21gV9e4QwOYbcCgYEAmPkXEW7YbvJ0ushJOutvUqAXYBf/PmrRGJPkPFWRJowb+qjNeSy+ZqrO6JCYA1zagD2cKl23MLZ1QJHaW40sQpgt7HSA3VynJ8hEMO9SIk9rJPWnNDGk4dfCoEZveLe2oU/YqsBKerr8M6IOvFv01sWTYjPzfBU4Bofml9BWuBcCgYAwvgHFcFQ8EwCsG8XIE3++O8bSPb4390VLImLYG11Hd3yhHARcfjc95iej9Z4DLxQJ0cjAqI0umfa8UpKIEpi4hKH4ygusdwN/ReojkJbibKPeUZqrcxBgwyZsNa6qY0SbLh+uVpu6OlfVf1IXsTQqiFN6mry3cU0yAC4qGJ7zXwKBgEDMaDZaV3KtuhaJgoViso2HsfWc8mxVS0Ggt26r2AG98LjAI5H74j4ybsRnleoCXgYZlK0hWp69zRfiTBVMjngRphS8mLnubX0jk8fVrtciuna3kvzHh02xI4U3P01JwZlxn3Av3u2IAnfhjsXjhXQF8IfXb7hh1756yrDKUUcP-----END RSA PRIVATE KEY-----
+        public-key: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy2IFXU+NGJCAf3eYN2rmTYFNm9G6agek7jKGkqfnw7vtwblkSGYtQ8vGij02PV0jK4+oPOe3qusEyvka9LprNRKfWJWJ5vjl35kI5ELt3aapKs2OcGJTPPIx/2YdRX8M7YkIVv4XD6F8mLy332QRp4qfi6yitJI9YgOI8LLdgJ+X56KBE4PZy9T+rCke4cQuzobgXCqCX9oyNS0Cm19JaHzUNCL9TkJT93/78YqpjYMTWTyEKaYagLBW+RwWPHZV2kCQ/Rsg7QhbrggnqKbXk4stRCE9Ga2IC4e1JU/zkE+NbMx5Y2Zj/b38ShRNjWTlF34+HjRwoRvwBXgARaafZQIDAQAB-----END PUBLIC KEY-----
+        access-token-time: 120
+        refresh-token-time: 2
+  cors:
+    allowed-origins: "*"
+  apis:
+    poolconnection:
+      maxtotal: 1000
+      maxperroute: 30
+      inactivity: 2000
+      keepalive: 5
+    requestconfig:
+      connection:
+        requesttimeout: 2000
+        timeout: 2000
+        sockettimeout: 2000
+
+# APIs config
+resources:
+  supplied:
+    application: global
+    company: CITIBANK
+    storeCode: 200
+    x-application-id: 1123
+    subscription-key:
+      security: 123
+    generic-timeout:
+      query:
+        read: 6000
+        connect: 6000
+    api:
+      security:
+        citi:
+          url: https://citi.com:7020/account/{0}
+          timeout:
+            read: 1000
+            connect: 3000
+            enabled: false
+
+# Logging config
+logging:
+    pattern:
+        file: "%d{yyyy-MM-dd HH:mm:ss} | %-5level | %X{Slf4jMDCFilter.UUID} | %logger{36} - %msg%n"
+    file: ./management-app-local.log
+    level:
+      root: INFO

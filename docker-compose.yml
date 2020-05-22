@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11.2
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+    volumes:
+      - ./database/install.sql:/docker-entrypoint-initdb.d/db.sql
+      - .volumes/postgresql:/var/lib/postgresql/data
+    networks:
+      - default
+
+  cross-boarder:
+    build:
+      context: crossboarder-app/
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 9092:9092
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+    - postgres
+    networks:
+      - default

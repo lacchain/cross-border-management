@@ -1,0 +1,528 @@
+swagger: '2.0'
+info:
+  description: |
+    This is the Crossborder Payment server.  You can find 
+    out more about Swagger at 
+    [http://swagger.io](http://swagger.io) or on 
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: 1.0.0
+  title: Swagger CrossBorderPayment
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: adrianp@iadb.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: lacchain.net
+# basePath: /v1
+tags:
+- name: account
+  description: Information about user's account and movements
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: user
+  description: Operations about user
+  externalDocs:
+    description: Find out more about our store
+    url: http://swagger.io
+# schemes:
+# - http
+paths:
+  /account:
+    get:
+      tags:
+      - account
+      summary: list all accounts
+      security: 
+      - crossboarder_auth: []
+      operationId: getAccounts
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Account'
+        401:
+          description: Not authenticated
+  /account/{accountId}:
+    get:
+      tags:
+      - account
+      summary: get an specific account
+      security: 
+      - crossboarder_auth: []
+      operationId: getAccountById
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        description: ID of account that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Account'
+        401:
+          description: Not authenticated
+  /account/movements:
+    get:
+      tags:
+      - account
+      summary: Get movements by account
+      description: Get all movements that an account has generated
+      operationId: getMovementsByAccount
+      security: 
+      - crossboarder_auth: []
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        description: ID of movement that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movement'
+        400:
+          description: Invalid ID supplied
+        401:
+          description: Not authenticated  
+        404:
+          description: Order not found
+  /account/movements/{movementId}:
+    get:
+      tags:
+      - account
+      summary: Find purchase order by ID
+      description: For valid response try integer IDs with value >= 1 and <= 10.\
+        \ Other values will generated exceptions
+      security: 
+      - crossboarder_auth: []  
+      operationId: getOrderById
+      produces:
+      - application/json
+      parameters:
+      - name: movementId
+        in: path
+        description: ID of movement that needs to be fetched
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      - name: accountId
+        in: path
+        description: ID of an account
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/MovementDetails'
+        400:
+          description: Invalid ID supplied
+        401:
+          description: Not authenticated  
+        404:
+          description: Order not found
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: This can only be done by someone want to be a user.
+      security: 
+      - crossboarder_auth: []
+      operationId: createUser
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Created user object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: successful operation
+        500:
+          description: operation failed
+    get:
+      tags:
+      - user
+      summary: Get user by Access Token
+      description: This get a user who owns a valid access token
+      security: 
+      - crossboarder_auth: []
+      operationId: getUser
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: The dltAddress save into access token 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid username supplied
+        401:
+          description: Not authenticated
+        404:
+          description: User not found
+  /user/login:
+    post:
+      tags:
+      - user
+      summary: Log user into the system
+      security: 
+      - crossboarder_auth: []
+      operationId: login
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/Credentials'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      security: 
+      - crossboarder_auth: []
+      operationId: logoutUser
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /user/{dltAddress}:
+    get:
+      tags:
+      - user
+      summary: Get user by dltAddress
+      description: This function is only used by ROLE_CITI
+      security: 
+      - crossboarder_auth: []
+      operationId: getUserByDltAddress
+      produces:
+      - application/json
+      parameters:
+      - name: dltAddress
+        in: path
+        description: The account dltAddress that needs to be fetched. 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid username supplied
+        401:
+          description: Not authenticated
+        404:
+          description: User not found
+    put:
+      tags:
+      - user
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      produces:
+      - application/json
+      parameters:
+      - name: dltAddress
+        in: path
+        description: name that need to be updated
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Updated user object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        400:
+          description: Invalid user supplied
+        401:
+          description: Not authenticated
+        404:
+          description: User not found
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      produces:
+      - application/json
+      parameters:
+      - name: dltAddress
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        type: string
+      responses:
+        400:
+          description: Invalid username supplied
+        401:
+          description: Not authenticated
+        404:
+          description: User not found
+securityDefinitions:
+  crossboarder_auth:
+    type: oauth2
+    tokenUrl: http://lacchain.net/oauth/token
+    flow: password
+    scopes:
+      write:user: modify user
+      read:account: read accounts
+      write:movement: send movement
+definitions:
+  Credentials:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    example:
+      email: "marcosallende@iadb.org"
+      password: "A88787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6"
+  Account:
+    type: object
+    properties:
+      company:
+        type: string
+      fullname:
+        type: string
+      bankName:
+        type: string
+      bankAccount:
+        type: string
+      dltAddress:
+        type: string
+      currency:
+        type: string
+      balance:
+        type: number
+        format: float
+      status:
+        type: string
+        description: account status
+        enum:
+        - Requested
+        - Active
+    example:
+      company: "IDB HQ"
+      fullname: "Marcos Allende"
+      bankName: "Citi Bank US"
+      bankAccount: "014027000000000008"
+      dltAddress: "0xCC9a2ae1162D5de44E11363556c829D6c08f7dc9"
+      currenty: "USD"
+      balance: 2500.00
+      status: "Active"
+  Movement:
+    type: object
+    properties:
+      id:
+        type: string
+      dateTime:
+        type: string
+      transfer_type:
+        type: string
+      company:
+        type: string
+      dltAddress:
+        type: string
+      amount_received:
+        type: number
+        format: float
+      detail:
+        type: string
+      status:
+        type: string
+        description: Movement Status
+        enum:
+        - Requested
+        - In Progress
+        - Completed
+    example:
+      id: "12345678"
+      dateTime: "2012-04-23T18:25:43.511Z"
+      transfer_type: "TRANSFER OUT"
+      company: "IDB COF"
+      dltAddress: "0xCC9a2ae1162D5de44E11363556c829D6c08f7dc9"
+      amount_received: -540.00
+      detail: "Conversion to MXD"
+      status: "Completed"
+  MovementDetails:
+    type: object
+    properties:
+      operationId:
+        type: string
+      transferDetails:
+        $ref: '#/definitions/Transfer'
+      senderDetails:
+        $ref: '#/definitions/Customer'
+      recipientDetails:
+        $ref: '#/definitions/Customer'
+      transactionsHistory:
+        $ref: '#/definitions/TransactionHistory'
+  Transfer:
+    type: object
+    properties:
+      amountSent:
+        type: number
+        format: float
+      feeApplied:
+        type: number
+        format: float
+      amountConverted:
+        type: number
+        format: float
+      rateApplied:
+        type: number
+        format: float
+      totalAmount:
+        type: number
+        format: float
+    example:
+      amountSent: 540.00
+      feeAplied: 4.95
+      amountConverted: 500.05  
+      rateApplied: 25.6745
+      totalAmount: 13257.43
+  Customer:
+    type: object
+    properties:
+      name:
+        type: string
+      bank:
+        type: string
+      bankAccount:
+        type: string
+      dltAddress:
+        type: string
+    example: 
+      name: "Marcos Allende"
+      bank: "Citi Bank US"
+      bankAccount: "014027000000000008"
+      dltAddress: "0xCC9a2ae1162D5de44E11363556c829D6c08f7dc9"
+  TransactionHistory:
+    type: object
+    properties:
+      operationRequested:
+        type: string
+      setFee:
+        type: string
+      operationApproved:
+        type: string
+    example:
+      operationRequested: "0xc199c72e3e56c40e592a1c8e94483332e22bab5e8aa7d9cce1d87b1f6415f21b"
+      setFee: "0xA12372e3e56c40e592a1c8e94483332eF2bab5e8aa7d9cce1d87b1f6415f21b"
+      operationApproved: "0x8766d27b1f090e307eae9850bfe90fead1b89d3c652d37f7beda3a8e32947ad2"
+  User:
+    type: object
+    properties:
+      accountDetails:
+        $ref: '#/definitions/AccountDetails'
+      bankDetails:
+        $ref: '#/definitions/BankDetails'
+  AccountDetails:
+    type: object
+    properties:
+      company:
+        type: string
+      fullname:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      dltAddress:
+        type: string
+      currency:
+        type: string
+      balance:
+        type: number
+      status:
+        type: number
+    example:   # <-----
+      company: "IDB HQ"
+      fullname: "Marcos Allende"
+      email: "marcosallende@iadb.org"
+      password: "A88787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6"
+      dltAddress: "0xCC9a2ae1162D5de44E11363556c829D6c08f7dc9"
+      currency: "USD"
+      balance: 500.50
+      status: 0  #Requested
+  BankDetails:
+    type: object
+    properties:
+      bankName:
+        type: string
+      bankTaxId:
+        type: string
+      bankCity:
+        type: string
+      bankAccount:
+        type: string
+    example:
+      bankName: "Citi Bank"
+      bankTaxId: "US-345624244256"
+      bankCity: "USA"
+      bankAccount: "014027000000000008"
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /lacchain/crossboarder/1.0.0
+schemes:
+ - https
+ - http
+# Added by API Auto Mocking Plugin
+basePath: /lacchain/crossborder/1.0.0
