@@ -4,6 +4,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.dao.DataAccessResourceFailureException; 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
             UserLogin user = userRepository.getUserLogin(username,password);
 
+            if (user == null){
+                throw new BadCredentialsException("User or password is incorrect");    
+            }
+
             logger.debug("Authenticate username:"+user.getEmail());
             logger.debug("Authenticate dltAddress:"+user.getDltAddress());
 
@@ -55,9 +61,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             final UserAuthenticated userAuth = new UserAuthenticated(userLogged, additionalInfo);
 
             return new UsernamePasswordAuthenticationToken(userAuth, password, grantedAuths);
-        } catch (Exception e) {
-            logger.info("Error en CustomAuthentication");
-            e.printStackTrace();
+        } catch (DataAccessResourceFailureException e) {
+            logger.info("Error connecting to database");
+            logger.error(e.getMessage());
         }
 
         return null;
