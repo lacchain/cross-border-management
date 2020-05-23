@@ -1,4 +1,6 @@
-CREATE DATABASE crossboarder;
+CREATE DATABASE crossborder;
+
+\c crossborder
 
 DROP TABLE IF EXISTS public.users;
 CREATE TABLE IF NOT EXISTS public.users
@@ -8,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.users
   "email" text NOT NULL,
   "password" text NOT NULL,
   "company" text NOT NULL,
-  "role" text NOT NULL
+  "role" text NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -56,6 +58,8 @@ CREATE TABLE IF NOT EXISTS public.movements
   FOREIGN KEY ("sender") REFERENCES public.accounts ("dlt_address"),
   FOREIGN KEY ("receiver") REFERENCES public.accounts ("dlt_address")	
 );
+
+CREATE SEQUENCE IF NOT EXISTS movements_sequence INCREMENT 4 START 100;
 
 INSERT INTO public.banks
 (

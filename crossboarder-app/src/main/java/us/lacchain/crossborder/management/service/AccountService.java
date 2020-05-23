@@ -32,7 +32,12 @@ public class AccountService implements IAccountService {
     }
 
     public MovementDetail getMovementDetail(long idMovementDetail, String dltAddress){
-        return movementDetailRepository.getMovementDetail(idMovementDetail, dltAddress);
+        try{
+            return movementDetailRepository.getMovementDetail(idMovementDetail, dltAddress);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<AccountResult> getAllAccounts(){

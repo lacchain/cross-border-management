@@ -2,7 +2,7 @@ spring:
   application:
     name: crossborder-management
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/crossboarder
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/crossborder
     username: postgres
     password: 
   jpa:

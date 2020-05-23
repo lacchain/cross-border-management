@@ -15,13 +15,17 @@ import us.lacchain.crossborder.management.util.Token;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-
-
+import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
+
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private IUserService userService;
@@ -32,32 +36,40 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity addUser(@RequestBody AddUserRequest requestBody){
         try {
-            System.out.println("ADDUSER");
+            logger.info("ADDUSER");
             userService.insert(requestBody);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_CITI')")
     @GetMapping("/user")
     public ResponseEntity<GetUserResponse> getUser(Authentication auth){
-        System.out.println("GETUser");
+        logger.info("GET /user");
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
         try {
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
-            System.out.println("--FOR DltAddress:"+dltAddress);
+            logger.debug("--FOR DltAddress:"+dltAddress);
             UserView userView = userService.getUser(dltAddress);
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
             BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
-            System.out.println(userView.toString());
-            return ResponseEntity.accepted().body(response);
+            logger.debug("response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -65,16 +77,20 @@ public class UserController {
     @GetMapping("/user/{dltAddress}")
     public ResponseEntity<GetUserResponse> getUserByDltAddress(@PathVariable String dltAddress){
         try {
-            System.out.println("GETUSERRR"+dltAddress);
+            logger.info("GET /user/"+dltAddress);
             UserView userView = userService.getUser(dltAddress);
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
             BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
-            System.out.println(userView.toString());
+            logger.debug("response:"+response);
             return ResponseEntity.accepted().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

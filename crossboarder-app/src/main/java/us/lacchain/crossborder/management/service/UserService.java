@@ -38,25 +38,35 @@ public class UserService implements IUserService {
 
     @Transactional
     public boolean insert(AddUserRequest request){
-        String hashId = Hashing.sha256().hashString(request.getAccountDetails().getFullname()+request.getAccountDetails().getEmail(), StandardCharsets.UTF_8).toString();
-        User user = new User(hashId, request.getAccountDetails().getFullname(), request.getAccountDetails().getEmail(), request.getAccountDetails().getPassword(), request.getAccountDetails().getCompany(),"ROLE_USER");
-        if (!userRepository.existsById(user.getId())){
-            userRepository.save(user);
-            userRepository.flush();
-        }
-        if (!bankRepository.existsById(request.getBankDetails().getBankTaxId())){
-            Bank bank = new Bank(request.getBankDetails().getBankTaxId(), request.getBankDetails().getBankName(), request.getBankDetails().getBankCity());
-            bankRepository.save(bank);
-        }
-        if (!accountRepository.existsById(request.getAccountDetails().getDltAddress())){
-            Account account = new Account(request.getAccountDetails().getDltAddress(), request.getBankDetails().getBankAccount(), "USD",0,0,request.getBankDetails().getBankTaxId(), user.getId());
-            accountRepository.save(account);
-        }
+        try{
+            String hashId = Hashing.sha256().hashString(request.getAccountDetails().getFullname()+request.getAccountDetails().getEmail(), StandardCharsets.UTF_8).toString();
+            User user = new User(hashId, request.getAccountDetails().getFullname(), request.getAccountDetails().getEmail(), request.getAccountDetails().getPassword(), request.getAccountDetails().getCompany(),"ROLE_USER");
+            if (!userRepository.existsById(user.getId())){
+                userRepository.save(user);
+                userRepository.flush();
+            }
+            if (!bankRepository.existsById(request.getBankDetails().getBankTaxId())){
+                Bank bank = new Bank(request.getBankDetails().getBankTaxId(), request.getBankDetails().getBankName(), request.getBankDetails().getBankCity());
+                bankRepository.save(bank);
+            }
+            if (!accountRepository.existsById(request.getAccountDetails().getDltAddress())){
+                Account account = new Account(request.getAccountDetails().getDltAddress(), request.getBankDetails().getBankAccount(), "USD",0,0,request.getBankDetails().getBankTaxId(), user.getId());
+                accountRepository.save(account);
+            }
 
-        return true;
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public UserView getUser(String dltAddress){
+        try{
         return userViewRepository.findUserByDltAddress(dltAddress);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
