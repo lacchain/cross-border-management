@@ -18,8 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import us.lacchain.crossborder.management.model.UserAuthenticated;
 import us.lacchain.crossborder.management.model.UserLogin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 
     @Autowired
     UserRepository userRepository;
@@ -36,8 +41,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
             UserLogin user = userRepository.getUserLogin(username,password);
 
-            System.out.println("username:"+user.getEmail());
-            System.out.println("password:"+user.getPassword());
+            logger.debug("Authenticate username:"+user.getEmail());
+            logger.debug("Authenticate dltAddress:"+user.getDltAddress());
 
             final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(user.getRole()));
@@ -51,6 +56,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
             return new UsernamePasswordAuthenticationToken(userAuth, password, grantedAuths);
         } catch (Exception e) {
+            logger.info("Error en CustomAuthentication");
             e.printStackTrace();
         }
 

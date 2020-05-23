@@ -58,9 +58,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        System.out.println("clientId:"+clientId);
-        System.out.println("clientSecret:"+clientSecret);
-
         clients
                 .inMemory()
                 .withClient(clientId)

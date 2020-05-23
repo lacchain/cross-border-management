@@ -30,29 +30,35 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import us.lacchain.crossborder.management.util.Token;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping(value = "/api")
 public class AccountController {
+
+    Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
     private IAccountService accountService;
 
     @Autowired
     private Token token;
-
+    
     @PreAuthorize("hasRole('ROLE_CITI')")
     @GetMapping("/account")
     public ResponseEntity getAllAccounts(){
-        System.out.println("GETAllAccounts");
-        
+        logger.info("GET /account");
         try {
             List<AccountResult> response = accountService.getAllAccounts();
-            System.out.println(response);
-            return ResponseEntity.accepted().body(response);
+            logger.debug("Response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -60,16 +66,17 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_CITI')")
     @GetMapping("/account/{dltAddress}/movements")
     public ResponseEntity getMovementsByDltAddress(@PathVariable String dltAddress){
-        System.out.println("GETMovementsByDltAddress");
+        logger.info("GET /account/"+dltAddress+"/movements");
         try {
-            System.out.println("--FOR DltAddress:"+dltAddress);
             List<MovementResult> response = accountService.getMovementsByAccount(dltAddress);
-            System.out.println(response);
-            return ResponseEntity.accepted().body(response);
+            logger.debug("Response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -77,18 +84,20 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_CITI')")
     @GetMapping("/account/movements")
     public ResponseEntity getMovementsByAccount(Authentication auth){
-        System.out.println("GETMovementsByAccount");
+        logger.info("GET /account/movements");
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
         try {
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
-            System.out.print("--FOR DltAddress:"+dltAddress);
+            logger.debug("--FOR DltAddress:"+dltAddress);
             List<MovementResult> response = accountService.getMovementsByAccount(dltAddress);
-            System.out.println(response);
-            return ResponseEntity.accepted().body(response);
+            logger.debug("Response"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -96,16 +105,17 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_CITI')")
     @GetMapping("/account/transactions")
     public ResponseEntity getAllTransactions(){
-        System.out.println("GETAllTransactions");
+        logger.info("GET /account/transactions");
         try {
             List<Transaction> response = accountService.getTransactions();
-            System.out.println(response);
-            return ResponseEntity.accepted().body(response);
+            logger.debug("Response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -113,23 +123,29 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_CITI')")
     @GetMapping("/account/movements/{movementId}")
     public ResponseEntity getMovementDetail(@PathVariable long movementId, Authentication auth){
-        System.out.println("GETMovementDetail");
+        logger.info("GET /account/movements/movementId");
         try {
             OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
-            System.out.print("--FOR DltAddress:"+dltAddress);
+            logger.debug("--FOR DltAddress:"+dltAddress);
             MovementDetail movementDetail = accountService.getMovementDetail(movementId, dltAddress);
-            System.out.println(movementDetail);
-            TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get());
-            CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
-            CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
-            TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved());
-            GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
-            return ResponseEntity.accepted().body(response);
+            if (movementDetail != null){
+                TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get());
+                CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
+                CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
+                TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved());
+                GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
+                logger.debug("Response:"+response);
+                return ResponseEntity.ok().body(response);
+            } else {
+                return ResponseEntity.noContent().build();    
+            }
         }
         catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
