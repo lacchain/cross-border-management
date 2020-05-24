@@ -15,6 +15,8 @@ import javax.annotation.PostConstruct;
 import com.google.common.hash.Hashing;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.dao.DataAccessException;
+
 @Service
 public class AccountService implements IAccountService {
 
@@ -27,30 +29,19 @@ public class AccountService implements IAccountService {
     @Autowired
     private MovementDetailRepository movementDetailRepository;
 
-    public List<MovementResult> getMovementsByAccount(String dltAddress){
+    public List<MovementResult> getMovementsByAccount(String dltAddress)throws DataAccessException{
         return movementRepository.getAllMovementsByDltAddress(dltAddress);
     }
 
-    public MovementDetail getMovementDetail(long idMovementDetail, String dltAddress){
-        try{
-            return movementDetailRepository.getMovementDetail(idMovementDetail, dltAddress);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    public MovementDetail getMovementDetail(long idMovementDetail, String dltAddress) throws DataAccessException{
+        return movementDetailRepository.getMovementDetail(idMovementDetail, dltAddress);
     }
 
-    public List<AccountResult> getAllAccounts(){
+    public List<AccountResult> getAllAccounts()throws DataAccessException{
         return accountRepository.getAllAccounts();
     }
 
-    public List<Transaction> getTransactions(){
-        try{
-            return movementDetailRepository.getAllTransactions();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        System.out.println ("NULOOO");
-        return null;
+    public List<Transaction> getTransactions()throws DataAccessException{
+        return movementDetailRepository.getAllTransactions();
     }
 }
