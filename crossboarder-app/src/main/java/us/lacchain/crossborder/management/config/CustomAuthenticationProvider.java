@@ -36,7 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException, DataAccessResourceFailureException {
         try {
             final String username = authentication.getName();
             final String password = authentication.getCredentials().toString();
@@ -64,9 +64,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         } catch (DataAccessResourceFailureException e) {
             logger.info("Error connecting to database");
             logger.error(e.getMessage());
+            throw e;
         }
 
-        return null;
+        //return null;
     }
 
     @Override

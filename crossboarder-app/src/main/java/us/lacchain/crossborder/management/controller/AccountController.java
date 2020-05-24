@@ -51,6 +51,9 @@ public class AccountController {
         logger.info("GET /account");
         try {
             List<AccountResult> response = accountService.getAllAccounts();
+            if (response == null || response.size()==0){
+                return ResponseEntity.noContent().build();
+            }
             logger.debug("Response:"+response);
             return ResponseEntity.ok().body(response);
         }
@@ -58,7 +61,7 @@ public class AccountController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -69,6 +72,9 @@ public class AccountController {
         logger.info("GET /account/"+dltAddress+"/movements");
         try {
             List<MovementResult> response = accountService.getMovementsByAccount(dltAddress);
+            if (response == null || response.size()==0){
+                return ResponseEntity.noContent().build();
+            }
             logger.debug("Response:"+response);
             return ResponseEntity.ok().body(response);
         }
@@ -76,7 +82,7 @@ public class AccountController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -90,6 +96,9 @@ public class AccountController {
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
             logger.debug("--FOR DltAddress:"+dltAddress);
             List<MovementResult> response = accountService.getMovementsByAccount(dltAddress);
+            if (response == null || response.size()==0){
+                return ResponseEntity.noContent().build();
+            }
             logger.debug("Response"+response);
             return ResponseEntity.ok().body(response);
         }
@@ -97,7 +106,7 @@ public class AccountController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -108,6 +117,9 @@ public class AccountController {
         logger.info("GET /account/transactions");
         try {
             List<Transaction> response = accountService.getTransactions();
+            if (response == null || response.size()==0){
+                return ResponseEntity.noContent().build();
+            }
             logger.debug("Response:"+response);
             return ResponseEntity.ok().body(response);
         }
@@ -115,7 +127,7 @@ public class AccountController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -129,23 +141,22 @@ public class AccountController {
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
             logger.debug("--FOR DltAddress:"+dltAddress);
             MovementDetail movementDetail = accountService.getMovementDetail(movementId, dltAddress);
-            if (movementDetail != null){
-                TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get());
-                CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
-                CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
-                TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved());
-                GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
-                logger.debug("Response:"+response);
-                return ResponseEntity.ok().body(response);
-            } else {
-                return ResponseEntity.noContent().build();    
+            if (movementDetail == null){
+                return ResponseEntity.noContent().build();
             }
+            TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get());
+            CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
+            CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
+            TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved());
+            GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
+            logger.debug("Response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -12,6 +12,7 @@ import us.lacchain.crossborder.management.clients.request.AccountDetail;
 import us.lacchain.crossborder.management.clients.request.BankDetail;
 import us.lacchain.crossborder.management.clients.response.GetUserResponse;
 import us.lacchain.crossborder.management.util.Token;
+import us.lacchain.crossborder.management.exception.UserExistsException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -40,11 +41,15 @@ public class UserController {
             userService.insert(requestBody);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
+        catch(UserExistsException bex){
+            logger.warn(bex.getMessage());
+            return ResponseEntity.status(601).build();    
+        }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch  (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -58,6 +63,9 @@ public class UserController {
             String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
             logger.debug("--FOR DltAddress:"+dltAddress);
             UserView userView = userService.getUser(dltAddress);
+            if (userView == null){
+                return ResponseEntity.noContent().build();
+            }
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
             BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
@@ -68,7 +76,7 @@ public class UserController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch  (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -79,6 +87,9 @@ public class UserController {
         try {
             logger.info("GET /user/"+dltAddress);
             UserView userView = userService.getUser(dltAddress);
+            if (userView == null){
+                return ResponseEntity.noContent().build();
+            }
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
             BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
@@ -89,7 +100,7 @@ public class UserController {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }catch  (Exception ex){
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
