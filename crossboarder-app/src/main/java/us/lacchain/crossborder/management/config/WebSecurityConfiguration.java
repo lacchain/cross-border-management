@@ -82,6 +82,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .antMatcher("/oauth/**")
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
                 .antMatchers("/oauth/token").permitAll()
                 .anyRequest().denyAll()
                 .and()
