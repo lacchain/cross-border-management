@@ -92,7 +92,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    /*@Bean("corsFilter")
+    @Bean("corsFilter")
     public CorsFilter corsFilter(ApplicationContext context) {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.addAllowedHeader("*");
@@ -104,5 +104,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         corsConfig.addAllowedMethod(HttpMethod.DELETE);
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
         corsConfigurationSource.registerCorsConfiguration("/oauth/**", corsConfig);
-    }*/
+        corsConfigurationSource.registerCorsConfiguration("/api/**", corsConfig);
+        return new CustomCorsFilter(corsConfigurationSource);
+    }
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public static class CustomCorsFilter extends CorsFilter{
+        CustomCorsFilter(CorsConfigurationSource configSource){
+            super(configSource);
+        }
+    }
 }
