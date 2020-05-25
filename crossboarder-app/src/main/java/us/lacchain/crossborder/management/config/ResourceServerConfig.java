@@ -23,6 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 //            .csrf().disable()
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/event").permitAll()
             .antMatchers("/api/**").access("#oauth2.hasScope('write')")
             .anyRequest().denyAll()
             .and()
