@@ -46,7 +46,7 @@ public class EventService implements IEventService {
         return true;
     }
 
-    private void setWhitelistedAccount(EventRequest request) throws Exception{
+    private void setWhitelistedAccount(EventRequest request){
         logger.debug("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
@@ -54,7 +54,7 @@ public class EventService implements IEventService {
         accountRepository.setWhitelisted(dltAddress);
     }
 
-    private void setBalanceMinted(EventRequest request) throws Exception{
+    private void setBalanceMinted(EventRequest request){
         logger.info("index"+request.getIndexedParameters().get(1));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(1);
         Map<String,Object> value = request.getNonIndexedParameters().get(0);
