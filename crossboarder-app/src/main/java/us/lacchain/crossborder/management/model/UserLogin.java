@@ -1,7 +1,6 @@
 package us.lacchain.crossborder.management.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class UserLogin implements Serializable {
