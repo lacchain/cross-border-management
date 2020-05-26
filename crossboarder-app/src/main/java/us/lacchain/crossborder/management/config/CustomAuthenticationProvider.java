@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import us.lacchain.crossborder.management.model.UserAuthenticated;
 import us.lacchain.crossborder.management.model.UserLogin;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,9 @@ import org.slf4j.LoggerFactory;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
+
+    @Autowired(required = false)
+    private HttpServletRequest request;
 
     @Autowired
     UserRepository userRepository;
@@ -38,10 +43,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException, DataAccessResourceFailureException {
         try {
+            logger.info("Authenticate dlt-address:"+request.getHeader("dlt-address"));
+
             final String username = authentication.getName();
             final String password = authentication.getCredentials().toString();
 
-            UserLogin user = userRepository.getUserLogin(username,password);
+            UserLogin user = userRepository.getUserLogin(username,password,request.getHeader("dlt-address"));
 
             if (user == null){
                 throw new BadCredentialsException("User or password is incorrect");    

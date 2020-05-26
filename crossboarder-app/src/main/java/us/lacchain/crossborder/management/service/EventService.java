@@ -52,6 +52,9 @@ public class EventService implements IEventService {
             case "Transfer":
                 setBalanceMinted(request);
                 break;
+            case "TransferOrdered":
+                setBalanceMinted(request);
+                break;    
             default:
                 logger.info("Event doesn't registered");
         }

@@ -1,9 +1,6 @@
 package us.lacchain.crossborder.management.model;
 
-import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.NamedNativeQueries;
@@ -16,7 +13,7 @@ import javax.persistence.ColumnResult;
     @ConstructorResult(targetClass = UserLogin.class, columns = { @ColumnResult(name = "email", type = String.class),
             @ColumnResult(name = "password", type= String.class), @ColumnResult(name = "role"), @ColumnResult(name = "dlt_address")}) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = "UserRepository.getUserLogin", query = "SELECT u.email,u.password, u.role, accounts.dlt_address FROM users u INNER JOIN accounts ON accounts.user_id = u.id WHERE u.email = :email and u.password = :password", resultSetMapping = "userResultMapping")})
+    @NamedNativeQuery(name = "UserRepository.getUserLogin", query = "SELECT u.email,u.password, u.role, accounts.dlt_address FROM users u INNER JOIN accounts ON accounts.user_id = u.id WHERE u.email = :email and u.password = :password and accounts.dlt_address = :dltAddress", resultSetMapping = "userResultMapping")})
 
 @Entity
 @Table(name = "users")
