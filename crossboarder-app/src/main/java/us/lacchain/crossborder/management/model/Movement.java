@@ -1,9 +1,12 @@
 package us.lacchain.crossborder.management.model;
 
 import javax.persistence.ColumnResult;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +28,8 @@ public class Movement {
     @Id
     @GeneratedValue(generator="movements_sequence")
     private long id;
-    private String datetime;
+    @Column(name = "datetime", columnDefinition = "TIMESTAMP")
+    private LocalDateTime datetime;
     private String sender;
     private String receiver;
     private float amount;
@@ -39,7 +43,7 @@ public class Movement {
     public Movement() {
     }
 
-    public Movement(long id, String datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, int status) {
+    public Movement(long id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -60,11 +64,11 @@ public class Movement {
         this.id = id;
     }
 
-    public String getDatetime() {
+    public LocalDateTime getDatetime() {
         return this.datetime;
     }
 
-    public void setDatetime(String datetime) {
+    public void setDatetime(LocalDateTime datetime) {
         this.datetime = datetime;
     }
 

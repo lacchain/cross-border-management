@@ -14,4 +14,7 @@ public interface MovementRepository extends JpaRepository<Movement, String> {
 
     @Query(name = "MovementRepository.getAllMovementsByDltAddress", nativeQuery=true)
     List<MovementResult> getAllMovementsByDltAddress(@Param("dltAddress") String dltAddress);
+
+    @Query(value = "SELECT nextval('movements_sequence')", nativeQuery=true)
+    long getNextMovementId();
 }
