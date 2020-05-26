@@ -42,6 +42,8 @@ crossborder:
         requesttimeout: 2000
         timeout: 2000
         sockettimeout: 2000
+  message:
+    mint: Bank Deposit
 
 # APIs config
 resources:
