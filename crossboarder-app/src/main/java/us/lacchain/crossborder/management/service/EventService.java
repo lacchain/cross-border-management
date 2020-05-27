@@ -34,8 +34,11 @@ public class EventService implements IEventService {
     @Autowired
     private MovementRepository movementRepository;
 
-    @Value("${crossborder.message.mint}")
+    @Value("${crossborder.message.detail.mint}")
     private String mintMessage;
+
+    @Value("${crossborder.message.detail.transfer}")
+    private String detailMessage;
 
     public EventService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -80,6 +83,22 @@ public class EventService implements IEventService {
         logger.debug("new balance set");
         LocalDateTime localDateTime = LocalDateTime.now();
         Movement movement = new Movement(movementRepository.getNextMovementId(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,1);
+        movementRepository.save(movement);
+        logger.debug("new movement registered");
+    }
+
+    private void setNewTransfer(EventRequest request){
+        logger.info("index"+request.getIndexedParameters().get(1));
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
+        Map<String,Object> toParameter = request.getIndexedParameters().get(1);
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        Map<String,Object> valueParameter = request.getNonIndexedParameters().get(1);
+        String ordererAddress = (String)ordererParameter.get("value");
+        String toAddress = (String)toParameter.get("value");
+        String operationId = (String)operationIdParameter.get("value");
+        int balance = (int)valueParameter.get("value");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Movement movement = new Movement(Integer.parseInt(operationId), localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,0);
         movementRepository.save(movement);
         logger.debug("new movement registered");
     }
