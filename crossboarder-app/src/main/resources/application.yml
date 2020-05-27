@@ -43,7 +43,9 @@ crossborder:
         timeout: 2000
         sockettimeout: 2000
   message:
-    mint: Bank Deposit
+    detail:
+      mint: Bank Deposit
+      transfer: Convert to MXD 
 
 # APIs config
 resources:

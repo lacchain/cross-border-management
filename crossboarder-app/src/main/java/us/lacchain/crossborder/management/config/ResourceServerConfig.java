@@ -24,6 +24,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/user").permitAll()
             .antMatchers(HttpMethod.POST, "/api/event").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/block").permitAll()
             .antMatchers("/api/**").access("#oauth2.hasScope('write')")
             .anyRequest().denyAll()
             .and()

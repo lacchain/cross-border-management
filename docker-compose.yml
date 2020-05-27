@@ -27,3 +27,37 @@ services:
     - postgres
     networks:
       - default
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - $HOME/mongodb/data/db:/data/db
+    networks:
+      - default
+
+  eventeum:
+    image: eventeum/eventeum:latest
+    ports:
+    - "8060:8060"
+    depends_on:
+      - cross-boarder
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      ETHEREUM_NODE_URL: http://34.74.56.215:4545
+      BROADCASTER_TYPE: HTTP
+      BROADCASTER_HTTP_CONTRACTEVENTSURL: http://cross-boarder:9092/crossborder/api/event
+      BROADCASTER_HTTP_BLOCKEVENTSURL: http://cross-boarder:9092/crossborder/api/block
+      BROADCASTER_EVENT_CONFIRMATION_NUMBLOCKSTOWAIT: 1
+    networks:
+      - default
+
+  curl:
+    image: byrnedo/alpine-curl
+    depends_on:
+      - eventeum
+    command: "curl -X POST http://eventeum:8060/api/rest/v1/event-filter -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' --data '{\"id\": \"WhitelistedAdded\", \"contractAddress\": \"0x71f0B9a1188da0d2d2ed29b5DF8b77643C962968\",\"eventSpecification\": {\"eventName\": \"WhitelistedAdded\", \"indexedParameterDefinitions\": [{\"position\": 0, \"type\": \"ADDRESS\"}],\"nonIndexedParameterDefinitions\": []}, \"correlationIdStrategy\": {\"type\": \"NON_INDEXED_PARAMETER\",\"parameterIndex\": 0 }}'"
+    networks:
+      - default
