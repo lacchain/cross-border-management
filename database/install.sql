@@ -120,7 +120,9 @@ INSERT INTO public.movements
  
 
 CREATE VIEW users_view AS
-SELECT accounts.dlt_address, users.company, users.fullname, users.email, banks.name, banks.tax_id, banks.city, accounts.bank_account, accounts.currency, accounts.balance, accounts.status
+SELECT accounts.dlt_address, users.company, users.fullname, users.email, banks.name, banks.tax_id, 
+       banks.city, accounts.bank_account, accounts.currency, accounts.balance, 
+       CASE WHEN accounts.status = 0 THEN 'Requested' ELSE 'Active' END AS status
 FROM users
 INNER JOIN accounts ON accounts.user_id = users.id
 INNER JOIN banks ON banks.tax_id = accounts.bank_id;
@@ -148,7 +150,7 @@ SELECT DISTINCT movements.id AS "id",
   movements.operation_requested,
   movements.set_fee,
   movements.operation_approved,
-  movements.status
+  CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'IN PROGRESS' ELSE 'COMPLETED' END AS status
 	
 	FROM movements, users, banks, (
     								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address
