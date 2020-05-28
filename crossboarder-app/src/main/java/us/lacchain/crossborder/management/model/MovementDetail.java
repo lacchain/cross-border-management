@@ -2,8 +2,6 @@ package us.lacchain.crossborder.management.model;
 
 import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.NamedNativeQueries;
@@ -18,7 +16,7 @@ import javax.persistence.ColumnResult;
             @ColumnResult(name = "receiver_bank", type = String.class), @ColumnResult(name = "receiver_dlt_address",type = String.class), 
             @ColumnResult(name = "sent_amount", type = Float.class), @ColumnResult(name = "recipient_will_get",type = Float.class),
             @ColumnResult(name = "fee_applied",type = Float.class), @ColumnResult(name = "rate_applied",type = Float.class), 
-            @ColumnResult(name = "status",type = Integer.class) }) })
+            @ColumnResult(name = "status",type = String.class) }) })
 @NamedNativeQueries({
     @NamedNativeQuery(name = "MovementDetailRepository.getAllTransactions", query = "SELECT * from movements_view m", resultSetMapping = "transactionResultMapping")})
     
@@ -46,13 +44,13 @@ public class MovementDetail {
     private String operation_requested;
     private String set_fee;
     private String operation_approved;
-    private int status;
+    private String status;
 
 
     public MovementDetail() {
     }
 
-    public MovementDetail(long id, String datetime,float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String operation_requested, String set_fee, String operation_approved, int status) {
+    public MovementDetail(long id, String datetime,float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String operation_requested, String set_fee, String operation_approved, String status) {
         this.id = id;
         this.datetime = datetime;
         this.sent_amount = sent_amount;
@@ -218,11 +216,11 @@ public class MovementDetail {
         this.operation_approved = operation_approved;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

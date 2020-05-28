@@ -1,6 +1,5 @@
 package us.lacchain.crossborder.management.util;
 
-import javax.xml.bind.DatatypeConverter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Claims;

@@ -1,7 +1,6 @@
 package us.lacchain.crossborder.management.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class Transaction implements Serializable {
@@ -15,13 +14,13 @@ public class Transaction implements Serializable {
     private float amountReceived;
     private float fee;
     private float rateApplied;
-    private int status;
+    private String status;
 
 
     public Transaction() {
     }
 
-    public Transaction(long id, String datetime, String senderBank, String senderDltAddress, String receiverBank, String receiverDltAddress, float amountSent, float amountReceived, float fee, float rateApplied, int status) {
+    public Transaction(long id, String datetime, String senderBank, String senderDltAddress, String receiverBank, String receiverDltAddress, float amountSent, float amountReceived, float fee, float rateApplied, String status) {
         this.id = id;
         this.datetime = datetime;
         this.senderBank = senderBank;
@@ -115,11 +114,11 @@ public class Transaction implements Serializable {
         this.rateApplied = rateApplied;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

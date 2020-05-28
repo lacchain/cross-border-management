@@ -1,14 +1,7 @@
 package us.lacchain.crossborder.management.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.io.Serializable;
-import java.time.LocalDate;
 import org.springframework.security.core.userdetails.User;
-
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;

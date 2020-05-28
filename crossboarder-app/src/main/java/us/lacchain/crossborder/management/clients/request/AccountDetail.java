@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +16,5 @@ public class AccountDetail implements Serializable {
     private String dltAddress;
     private String currency;
     private float balance;
-    private int status;
+    private String status;
 }

@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,8 +24,6 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import us.lacchain.crossborder.management.config.CustomAuthenticationProvider;
 
-import javax.sql.DataSource;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.Arrays;
 
