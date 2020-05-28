@@ -2,8 +2,6 @@ package us.lacchain.crossborder.management.model;
 
 import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -22,12 +20,12 @@ public class UserView {
     private String bank_account;
     private String currency;
     private float balance;
-    private int status;
+    private String status;
 
     public UserView() {
     }
 
-    public UserView(String dlt_address, String company, String fullname, String email, String name, String tax_id, String city, String bank_account, String currency, float balance, int status) {
+    public UserView(String dlt_address, String company, String fullname, String email, String name, String tax_id, String city, String bank_account, String currency, float balance, String status) {
         this.dlt_address = dlt_address;
         this.company = company;
         this.fullname = fullname;
@@ -121,11 +119,11 @@ public class UserView {
         this.balance = balance;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

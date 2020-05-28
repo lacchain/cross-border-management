@@ -47,19 +47,26 @@ public class EventService implements IEventService {
     public boolean processEvent(EventRequest request){
 
         logger.info("Event:"+request);
-        
-        switch(request.getFilterId()){
-            case "WhitelistedAdded":
-                setWhitelistedAccount(request);
-                break;
-            case "Transfer":
-                setBalanceMinted(request);
-                break;
-            case "TransferOrdered":
-                setBalanceMinted(request);
-                break;    
-            default:
-                logger.info("Event doesn't registered");
+
+        if(request.getStatus().equalsIgnoreCase("CONFIRMED")){
+            switch(request.getFilterId()){
+                case "WhitelistedAdded":
+                    setWhitelistedAccount(request);
+                    break;
+                case "WhitelistedRemoved":
+                    setWhitelistedRemoved(request);
+                    break;    
+                case "Transfer":
+                    setBalanceMinted(request);
+                    break;
+                case "TransferOrdered":
+                    setTransferOrdered(request);
+                    break;    
+                default:
+                    logger.info("Event doesn't registered");
+            }
+        }else{
+            logger.debug("Event UNCORFIMED");
         }
 
         return true;
@@ -71,6 +78,14 @@ public class EventService implements IEventService {
         String dltAddress = (String)accountParameter.get("value");
         logger.debug("dltAddress:"+dltAddress);
         accountRepository.setWhitelisted(dltAddress);
+    }
+
+    private void setWhitelistedRemoved(EventRequest request){
+        logger.debug("index:"+request.getIndexedParameters().get(0));
+        Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
+        String dltAddress = (String)accountParameter.get("value");
+        logger.debug("dltAddress:"+dltAddress);
+        accountRepository.setWhitelistedRemove(dltAddress);
     }
 
     private void setBalanceMinted(EventRequest request){
@@ -87,7 +102,7 @@ public class EventService implements IEventService {
         logger.debug("new movement registered");
     }
 
-    private void setNewTransfer(EventRequest request){
+    private void setTransferOrdered(EventRequest request){
         logger.info("index"+request.getIndexedParameters().get(1));
         Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
         Map<String,Object> toParameter = request.getIndexedParameters().get(1);

@@ -10,10 +10,6 @@ import us.lacchain.crossborder.management.repository.MovementDetailRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.annotation.PostConstruct;
-import com.google.common.hash.Hashing;
-import java.nio.charset.StandardCharsets;
 
 import org.springframework.dao.DataAccessException;
 
