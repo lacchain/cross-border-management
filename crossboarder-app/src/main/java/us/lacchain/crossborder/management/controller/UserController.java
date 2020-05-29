@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class UserController {
     private Token token;
     
     @PostMapping("/user")
-    public ResponseEntity addUser(@RequestBody AddUserRequest requestBody){
+    public ResponseEntity addUser(@Valid @RequestBody AddUserRequest requestBody){
         try {
             logger.info("ADDUSER");
             userService.insert(requestBody);

@@ -61,7 +61,22 @@ public class EventService implements IEventService {
                     break;
                 case "TransferOrdered":
                     setTransferOrdered(request);
-                    break;    
+                    break;
+                case "TransferApproved":
+                    executeTransfer(request);
+                    break;
+                case "FeeRateSet":
+                    sendDolarToExchange(request);  
+                    break;
+                case "SendedToMarket":
+                    changeDolarToPesos(request);
+                    break;   
+                case "Exchanged":
+                    sendPesosToRecipient(request);
+                    break;
+                case "TransferExecuted":
+                    setTransferExecuted(request);
+                    break;
                 default:
                     logger.info("Event doesn't registered");
             }
@@ -117,5 +132,41 @@ public class EventService implements IEventService {
         movementRepository.save(movement);
         logger.debug("new movement registered");
     }
+
+    private void executeTransfer(EventRequest request){
+        logger.info("-->>>CALLING TO CITIIII<<<----");
+        logger.info("WATCHER CALL BLOCKCHAIN GO ---> SET FEE");
+        logger.info("SET IN PROGRESS");
+        logger.debug("index:"+request.getNonIndexedParameters().get(0));
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        String operationId = (String)operationIdParameter.get("value");
+        logger.debug("operationId:"+operationId);
+        movementRepository.setTransferInProgress(operationId);
+    }
+
+    private void sendDolarToExchange(EventRequest request){
+        logger.info("CALL BLOCKCHAIN GO");
+        logger.info("CITI --> SENT DOLAR TO EXCHANGE");
+    }
+
+    private void changeDolarToPesos(EventRequest request){
+        logger.info("CALLING BLOCKCHAIN GO");
+        logger.info("MARKET-MAKER --> CHANGE DOLAR");
+    }
+
+    private void sendPesosToRecipient(EventRequest request){
+        logger.info("CALLING BLOCKCHAIN GO");
+        logger.info("MARKET-MAKER --> SEND PESOS");
+    }
+
+    private void setTransferExecuted(EventRequest request){
+        logger.debug("index:"+request.getNonIndexedParameters().get(0));
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        String operationId = (String)operationIdParameter.get("value");
+        logger.debug("operationId:"+operationId);
+        movementRepository.setTransferExecuted(operationId);
+    }
+
+    
 
 }
