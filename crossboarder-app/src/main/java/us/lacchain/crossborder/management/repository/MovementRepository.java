@@ -3,6 +3,8 @@ package us.lacchain.crossborder.management.repository;
 import us.lacchain.crossborder.management.model.Movement;
 import us.lacchain.crossborder.management.model.MovementResult;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,14 @@ public interface MovementRepository extends JpaRepository<Movement, String> {
 
     @Query(value = "SELECT nextval('movements_sequence')", nativeQuery=true)
     long getNextMovementId();
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update movements set status = 2 where id = :operationId", nativeQuery=true)
+    void setTransferExecuted(@Param("operationId") String operationId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update movements set status = 1 where id = :operationId", nativeQuery=true)
+    void setTransferInProgress(@Param("operationId") String operationId);
 }
