@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.springframework.dao.DataAccessException;
 import us.lacchain.crossborder.management.exception.UserExistsException;
+import us.lacchain.crossborder.management.exception.DLTAddressExistsException;
 
 @Service
 public class UserService implements IUserService {
@@ -40,24 +41,24 @@ public class UserService implements IUserService {
     }
 
     @Transactional
-    public boolean insert(AddUserRequest request)throws UserExistsException, Exception{
+    public boolean insert(AddUserRequest request)throws UserExistsException, DLTAddressExistsException, Exception{
         String hashId = Hashing.sha256().hashString(request.getAccountDetails().getFullname()+request.getAccountDetails().getEmail(), StandardCharsets.UTF_8).toString();
         User user = new User(hashId, request.getAccountDetails().getFullname(), request.getAccountDetails().getEmail(), request.getAccountDetails().getPassword(), request.getAccountDetails().getCompany(),"ROLE_USER");
         if (!userRepository.existsById(user.getId())){
+            if (accountRepository.existsById(request.getAccountDetails().getDltAddress())){
+                throw new DLTAddressExistsException("DLT Address is already in use");    
+            }
             userRepository.save(user);
-            userRepository.flush();
-        }else{
-            throw new UserExistsException("User already exists");
-        }
-        if (!bankRepository.existsById(request.getBankDetails().getBankTaxId())){
-            Bank bank = new Bank(request.getBankDetails().getBankTaxId(), request.getBankDetails().getBankName(), request.getBankDetails().getBankCity());
-            bankRepository.save(bank);
-        }
-        if (!accountRepository.existsById(request.getAccountDetails().getDltAddress())){
+       
+            if (!bankRepository.existsById(request.getBankDetails().getBankTaxId())){
+                Bank bank = new Bank(request.getBankDetails().getBankTaxId(), request.getBankDetails().getBankName(), request.getBankDetails().getBankCity());
+                bankRepository.save(bank);
+            }
+        
             Account account = new Account(request.getAccountDetails().getDltAddress(), request.getBankDetails().getBankAccount(), "USD",0,0,request.getBankDetails().getBankTaxId(), user.getId());
             accountRepository.save(account);
         }else{
-            throw new UserExistsException("Dlt Address is already in use");
+            throw new UserExistsException("User already exists");
         }
 
         return true;
