@@ -1,7 +1,6 @@
 package us.lacchain.crossborder.management.controller;
 
 import us.lacchain.crossborder.management.service.IUserService;
-import us.lacchain.crossborder.management.service.UserService;
 import us.lacchain.crossborder.management.model.UserView;
 import us.lacchain.crossborder.management.clients.request.AddUserRequest;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import us.lacchain.crossborder.management.clients.request.BankDetail;
 import us.lacchain.crossborder.management.clients.response.GetUserResponse;
 import us.lacchain.crossborder.management.util.Token;
 import us.lacchain.crossborder.management.exception.UserExistsException;
+import us.lacchain.crossborder.management.exception.DLTAddressExistsException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -45,6 +45,10 @@ public class UserController {
         catch(UserExistsException bex){
             logger.warn(bex.getMessage());
             return ResponseEntity.status(601).build();    
+        }
+        catch(DLTAddressExistsException dex){
+            logger.warn(dex.getMessage());
+            return ResponseEntity.status(602).build();    
         }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());
