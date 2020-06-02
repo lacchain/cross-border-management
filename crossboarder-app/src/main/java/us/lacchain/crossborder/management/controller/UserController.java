@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import us.lacchain.crossborder.management.clients.request.AccountDetail;
 import us.lacchain.crossborder.management.clients.request.BankDetail;
+import us.lacchain.crossborder.management.clients.response.CustomerDetail;
 import us.lacchain.crossborder.management.clients.response.GetUserResponse;
 import us.lacchain.crossborder.management.util.Token;
 import us.lacchain.crossborder.management.exception.UserExistsException;
@@ -99,7 +100,29 @@ public class UserController {
             BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
             logger.debug("response:"+response);
-            return ResponseEntity.accepted().body(response);
+            return ResponseEntity.ok().body(response);
+        }
+        catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/user/{dltAddress}/{accountNumber}")
+    public ResponseEntity<CustomerDetail> getUserRecipient(@PathVariable String dltAddress,@PathVariable String accountNumber){
+        try {
+            logger.info("GET /user/"+dltAddress+"/"+accountNumber);
+            UserView userView = userService.getUser(dltAddress, accountNumber);
+            if (userView == null){
+                return ResponseEntity.noContent().build();
+            }
+            CustomerDetail response = new CustomerDetail(userView.getFullname(), userView.getName(), userView.getBank_account(), userView.getDlt_address()); 
+            logger.debug("response:"+response);
+            return ResponseEntity.ok().body(response);
         }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());

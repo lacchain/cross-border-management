@@ -12,4 +12,7 @@ public interface UserViewRepository extends JpaRepository<UserView, String> {
     @Query(value="SELECT * FROM users_view u WHERE u.dlt_address = :dltAddress", nativeQuery = true)
     UserView findUserByDltAddress(@Param("dltAddress") String dltAddress);
 
+    @Query(value="SELECT * FROM users_view u WHERE u.dlt_address = :dltAddress and u.bank_account = :accountNumber", nativeQuery = true)
+    UserView findUserByAddressAccount(@Param("dltAddress") String dltAddress, @Param("accountNumber") String accountNumber);
+
 }
