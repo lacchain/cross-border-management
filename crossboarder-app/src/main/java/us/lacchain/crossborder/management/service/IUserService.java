@@ -8,5 +8,5 @@ public interface IUserService {
 
     boolean insert(AddUserRequest request)throws UserExistsException,Exception;
     UserView getUser(String dltAddress);
-
+    UserView getUser(String dltAddress, String accountNumber);
 }

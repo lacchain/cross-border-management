@@ -67,4 +67,8 @@ public class UserService implements IUserService {
     public UserView getUser(String dltAddress)throws DataAccessException{
         return userViewRepository.findUserByDltAddress(dltAddress);
     }
+
+    public UserView getUser(String dltAddress, String accountNumber)throws DataAccessException{
+        return userViewRepository.findUserByAddressAccount(dltAddress, accountNumber);
+    }
 }
