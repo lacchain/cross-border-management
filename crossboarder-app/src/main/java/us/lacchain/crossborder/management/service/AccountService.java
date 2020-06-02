@@ -40,4 +40,8 @@ public class AccountService implements IAccountService {
     public List<Transaction> getTransactions()throws DataAccessException{
         return movementDetailRepository.getAllTransactions();
     }
+
+    public MovementDetail getMovementDetail(long idMovementDetail) throws DataAccessException{
+        return movementDetailRepository.getMovementDetail(idMovementDetail);
+    }
 }

@@ -21,11 +21,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import us.lacchain.crossborder.management.util.Token;
@@ -137,10 +140,18 @@ public class AccountController {
     public ResponseEntity getMovementDetail(@PathVariable long movementId, Authentication auth){
         logger.info("GET /account/movements/movementId");
         try {
-            OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
-            String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
-            logger.debug("--FOR DltAddress:"+dltAddress);
-            MovementDetail movementDetail = accountService.getMovementDetail(movementId, dltAddress);
+            List<GrantedAuthority> authorities = new ArrayList<>(); 
+            authorities.addAll(auth.getAuthorities());
+            logger.info("Role:"+authorities.get(0));
+            MovementDetail movementDetail = new MovementDetail();
+            if ("ROLE_CITI".equalsIgnoreCase(authorities.get(0).toString())){
+                movementDetail = accountService.getMovementDetail(movementId);
+            }else{
+                OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
+                String dltAddress = (String)(token.parseJWT(details.getTokenValue()).getBody().get("dltAddress"));
+                logger.debug("--FOR DltAddress:"+dltAddress);
+                movementDetail = accountService.getMovementDetail(movementId, dltAddress);
+            }
             if (movementDetail == null){
                 return ResponseEntity.noContent().build();
             }

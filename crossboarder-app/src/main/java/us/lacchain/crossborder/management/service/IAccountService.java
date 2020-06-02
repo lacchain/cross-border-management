@@ -11,6 +11,7 @@ public interface IAccountService {
 
     List<MovementResult> getMovementsByAccount(String dltAddress);
     MovementDetail getMovementDetail(long idMovementDetail, String dltAddress);
+    MovementDetail getMovementDetail(long idMovementDetail);
     List<AccountResult> getAllAccounts();
     List<Transaction> getTransactions();
 

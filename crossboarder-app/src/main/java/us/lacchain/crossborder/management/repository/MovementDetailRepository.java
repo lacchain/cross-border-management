@@ -14,6 +14,9 @@ public interface MovementDetailRepository extends JpaRepository<MovementDetail, 
     @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail and (sender_dlt_address = :dltAddress or receiver_dlt_address = :dltAddress)", nativeQuery = true)
     MovementDetail getMovementDetail(@Param("idMovementDetail") long idMovementDetail, @Param("dltAddress") String dltAddress);
 
+    @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail", nativeQuery = true)
+    MovementDetail getMovementDetail(@Param("idMovementDetail") long idMovementDetail);
+
     @Query(name = "MovementDetailRepository.getAllTransactions", nativeQuery=true)
     List<Transaction> getAllTransactions();
 
