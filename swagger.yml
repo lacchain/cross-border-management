@@ -124,18 +124,7 @@ paths:
         in: path
         description: ID of movement that needs to be fetched
         required: true
-        type: integer
-        maximum: 10.0
-        minimum: 1.0
-        format: int64
-      - name: accountId
-        in: path
-        description: ID of an account
-        required: true
-        type: integer
-        maximum: 10.0
-        minimum: 1.0
-        format: int64
+        type: string
       responses:
         200:
           description: successful operation
@@ -402,7 +391,9 @@ definitions:
     type: object
     properties:
       operationId:
-        type: string
+        type: number
+      status:
+        type: number
       transferDetails:
         $ref: '#/definitions/Transfer'
       senderDetails:
@@ -429,12 +420,18 @@ definitions:
       totalAmount:
         type: number
         format: float
+      senderCurrency:
+        type: string
+      receiverCurrency:
+        type: string
     example:
       amountSent: 540.00
       feeAplied: 4.95
       amountConverted: 500.05  
       rateApplied: 25.6745
       totalAmount: 13257.43
+      senderCurrency: USD
+      receiverCurrency: MXN
   Customer:
     type: object
     properties:

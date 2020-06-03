@@ -141,11 +141,13 @@ SELECT DISTINCT movements.id AS "id",
 	sender.name AS "sender_bank",
 	sender.bank_account AS "sender_bank_account",
 	sender.dlt_address AS "sender_dlt_address",
+	sender.currency AS "sender_currency",
 	
 	receiver.fullname AS "receiver_name",
 	receiver.name AS "receiver_bank",
 	receiver.bank_account AS "receiver_bank_account",
 	receiver.dlt_address AS "receiver_dlt_address",
+    receiver.currency AS "receiver_currency",
 
   movements.operation_requested,
   movements.set_fee,
@@ -153,13 +155,13 @@ SELECT DISTINCT movements.id AS "id",
   CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'IN PROGRESS' ELSE 'COMPLETED' END AS status
 	
 	FROM movements, users, banks, (
-    								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address
+    								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency
     								FROM users
     								INNER JOIN accounts ON accounts.user_id = users.id
 									INNER JOIN banks ON banks.tax_id = accounts.bank_id
     							) AS sender,
 								(
-    								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address
+    								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency
     								FROM users
     								INNER JOIN accounts ON accounts.user_id = users.id
 									INNER JOIN banks ON banks.tax_id = accounts.bank_id
