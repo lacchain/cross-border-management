@@ -3,6 +3,7 @@ package us.lacchain.crossborder.management.service;
 import us.lacchain.crossborder.management.clients.request.EventRequest;
 import us.lacchain.crossborder.management.repository.AccountRepository;
 import us.lacchain.crossborder.management.repository.MovementRepository;
+import us.lacchain.crossborder.management.util.Client;
 import us.lacchain.crossborder.management.model.Movement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.client.RestTemplate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.json.JSONObject;
 
 @Service
 public class EventService implements IEventService {
@@ -27,6 +30,12 @@ public class EventService implements IEventService {
     private static final String ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
     Logger logger = LoggerFactory.getLogger(EventService.class);
+
+    @Autowired
+    private RestTemplate webClient;
+
+    @Autowired
+    private Client client;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -39,6 +48,9 @@ public class EventService implements IEventService {
 
     @Value("${crossborder.message.detail.transfer}")
     private String detailMessage;
+
+    @Value("${resources.supplied.api.blockchain.setfeerate.url}")
+    private String setFeeRateURL;
 
     public EventService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -134,13 +146,16 @@ public class EventService implements IEventService {
     }
 
     private void executeTransfer(EventRequest request){
-        logger.info("-->>>CALLING TO CITIIII<<<----");
-        logger.info("WATCHER CALL BLOCKCHAIN GO ---> SET FEE");
-        logger.info("SET IN PROGRESS");
+        logger.info("-->>>CALLING TO CITIIII FOR TRANSFER<<<----");
+        logger.info("-->>>WAITING ANSWER FROM CITIIII<<<----");
         logger.debug("index:"+request.getNonIndexedParameters().get(0));
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         String operationId = (String)operationIdParameter.get("value");
         logger.debug("operationId:"+operationId);
+        logger.info("CALLING BLOCKCHAIN ---> SET FEE");
+        JSONObject body = new JSONObject();
+        body.put("operationId", operationId);
+        webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
         movementRepository.setTransferInProgress(operationId);
     }
 
@@ -166,7 +181,4 @@ public class EventService implements IEventService {
         logger.debug("operationId:"+operationId);
         movementRepository.setTransferExecuted(operationId);
     }
-
-    
-
 }

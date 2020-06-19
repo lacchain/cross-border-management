@@ -68,6 +68,17 @@ resources:
             read: 1000
             connect: 3000
             enabled: false
+      blockchain:
+        setfeerate:
+          url: http://localhost:9000/setFeeRate
+        executeTransfer:
+          url: http://localhost:9000/executeTransfer
+        sendDollarsToExchange:
+          url: http://localhost:9000/sendDollarsToExchange
+        changeDollarsToPesos:
+          url: http://localhost:9000/changeDollarsToPesos
+        sendPesosToRecepient:
+          url: http://localhost:9000/sendPesosToRecepient
 
 # Logging config
 logging:
