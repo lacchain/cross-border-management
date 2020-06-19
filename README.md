@@ -18,5 +18,9 @@ Now you can run.
 
 `$ docker-compose up -d`
 
+To register event filters run:
+
+`$ docker-compose up -d curl`
+
 
 
