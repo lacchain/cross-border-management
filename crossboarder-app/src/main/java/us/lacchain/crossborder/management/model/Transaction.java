@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Transaction implements Serializable {
-    private long id;
+    private String id;
     private String datetime;
     private String senderBank; 
     private String senderDltAddress;
@@ -20,7 +20,7 @@ public class Transaction implements Serializable {
     public Transaction() {
     }
 
-    public Transaction(long id, String datetime, String senderBank, String senderDltAddress, String receiverBank, String receiverDltAddress, float amountSent, float amountReceived, float fee, float rateApplied, String status) {
+    public Transaction(String id, String datetime, String senderBank, String senderDltAddress, String receiverBank, String receiverDltAddress, float amountSent, float amountReceived, float fee, float rateApplied, String status) {
         this.id = id;
         this.datetime = datetime;
         this.senderBank = senderBank;
@@ -34,11 +34,11 @@ public class Transaction implements Serializable {
         this.status = status;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

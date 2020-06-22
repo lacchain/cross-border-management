@@ -29,7 +29,7 @@ public class AccountService implements IAccountService {
         return movementRepository.getAllMovementsByDltAddress(dltAddress);
     }
 
-    public MovementDetail getMovementDetail(long idMovementDetail, String dltAddress) throws DataAccessException{
+    public MovementDetail getMovementDetail(String idMovementDetail, String dltAddress) throws DataAccessException{
         return movementDetailRepository.getMovementDetail(idMovementDetail, dltAddress);
     }
 
@@ -41,7 +41,7 @@ public class AccountService implements IAccountService {
         return movementDetailRepository.getAllTransactions();
     }
 
-    public MovementDetail getMovementDetail(long idMovementDetail) throws DataAccessException{
+    public MovementDetail getMovementDetail(String idMovementDetail) throws DataAccessException{
         return movementDetailRepository.getMovementDetail(idMovementDetail);
     }
 }

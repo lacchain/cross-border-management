@@ -13,8 +13,8 @@ public class WebClientConfig {
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 
-        factory.setConnectTimeout(5000);
-        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(10000);
+        factory.setReadTimeout(10000);
 
         return new RestTemplate(factory);
     }

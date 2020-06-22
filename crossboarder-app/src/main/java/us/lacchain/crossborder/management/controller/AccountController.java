@@ -137,7 +137,7 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_CITI')")
     @GetMapping("/account/movements/{movementId}")
-    public ResponseEntity getMovementDetail(@PathVariable long movementId, Authentication auth){
+    public ResponseEntity getMovementDetail(@PathVariable String movementId, Authentication auth){
         logger.info("GET /account/movements/movementId");
         try {
             List<GrantedAuthority> authorities = new ArrayList<>(); 

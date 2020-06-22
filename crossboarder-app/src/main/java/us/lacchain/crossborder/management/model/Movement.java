@@ -15,7 +15,7 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 
 @SqlResultSetMapping(name = "movementResultMapping", classes = {
-    @ConstructorResult(targetClass = MovementResult.class, columns = { @ColumnResult(name = "id", type = Long.class),
+    @ConstructorResult(targetClass = MovementResult.class, columns = { @ColumnResult(name = "id", type = String.class),
             @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "transfer_type"), @ColumnResult(name = "company"), @ColumnResult(name = "amount_received", type = Float.class), @ColumnResult(name = "detail"), @ColumnResult(name = "status"), @ColumnResult(name = "dlt_address") }) })
 @NamedNativeQueries({
     @NamedNativeQuery(name = "MovementRepository.getAllMovementsByDltAddress", query = "SELECT DISTINCT movements.id AS id, movements.datetime, CASE WHEN movements.sender = :dltAddress THEN 'TRANSFER OUT' ELSE 'TRANSFER IN' END AS transfer_type,users.company,(movements.received_amount*movements.rate) AS amount_received,movements.detail,CASE WHEN movements.status = 1 THEN 'REQUESTED' WHEN movements.status = 2 THEN 'IN PROGRESS' ELSE 'COMPLETED' END AS status, CASE WHEN movements.sender = :dltAddress THEN movements.receiver ELSE movements.sender END AS dlt_address FROM movements INNER JOIN accounts ON accounts.dlt_address = dlt_address INNER JOIN users ON users.id = accounts.user_id WHERE (movements.sender = :dltAddress and movements.receiver = dlt_address) or (movements.receiver = :dltAddress and movements.sender = dlt_address)", resultSetMapping = "movementResultMapping")})
@@ -25,8 +25,7 @@ import javax.persistence.SqlResultSetMapping;
 public class Movement {
 
     @Id
-    @GeneratedValue(generator="movements_sequence")
-    private long id;
+    private String id;
     @Column(name = "datetime", columnDefinition = "TIMESTAMP")
     private LocalDateTime datetime;
     private String sender;
@@ -42,7 +41,7 @@ public class Movement {
     public Movement() {
     }
 
-    public Movement(long id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, int status) {
+    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -55,11 +54,11 @@ public class Movement {
         this.status = status;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
