@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import com.google.common.hash.Hashing;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -52,6 +53,15 @@ public class EventService implements IEventService {
     @Value("${resources.supplied.api.blockchain.setfeerate.url}")
     private String setFeeRateURL;
 
+    @Value("${resources.supplied.api.blockchain.sendDollarsToExchange.url}")
+    private String sendDollarsToExchange;
+
+    @Value("${resources.supplied.api.blockchain.changeDollarsToPesos.url}")
+    private String changeDollarsToPesos;
+
+    @Value("${resources.supplied.api.blockchain.sendPesosToRecepient.url}")
+    private String sendPesosToRecepient;
+
     public EventService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
@@ -59,8 +69,10 @@ public class EventService implements IEventService {
     public boolean processEvent(EventRequest request){
 
         logger.info("Event:"+request);
+        logger.info("Status:"+request.getStatus());
 
         if(request.getStatus().equalsIgnoreCase("CONFIRMED")){
+        logger.info("FilterId:"+request.getFilterId());    
             switch(request.getFilterId()){
                 case "WhitelistedAdded":
                     setWhitelistedAccount(request);
@@ -78,7 +90,7 @@ public class EventService implements IEventService {
                     executeTransfer(request);
                     break;
                 case "FeeRateSet":
-                    sendDolarToExchange(request);  
+                    sendDollarsToExchange(request);  
                     break;
                 case "SendedToMarket":
                     changeDolarToPesos(request);
@@ -100,18 +112,18 @@ public class EventService implements IEventService {
     }
 
     private void setWhitelistedAccount(EventRequest request){
-        logger.debug("index:"+request.getIndexedParameters().get(0));
+        logger.info("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
-        logger.debug("dltAddress:"+dltAddress);
+        logger.info("dltAddress:"+dltAddress);
         accountRepository.setWhitelisted(dltAddress);
     }
 
     private void setWhitelistedRemoved(EventRequest request){
-        logger.debug("index:"+request.getIndexedParameters().get(0));
+        logger.info("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
-        logger.debug("dltAddress:"+dltAddress);
+        logger.info("dltAddress:"+dltAddress);
         accountRepository.setWhitelistedRemove(dltAddress);
     }
 
@@ -122,11 +134,11 @@ public class EventService implements IEventService {
         String dltAddress = (String)accountParameter.get("value");
         int balance = (int)value.get("value");
         accountRepository.setBalance(dltAddress, balance);
-        logger.debug("new balance set");
+        logger.info("new balance set");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(movementRepository.getNextMovementId(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,1);
+        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,1);
         movementRepository.save(movement);
-        logger.debug("new movement registered");
+        logger.info("new movement registered");
     }
 
     private void setTransferOrdered(EventRequest request){
@@ -140,28 +152,52 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(Integer.parseInt(operationId), localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,0);
         movementRepository.save(movement);
-        logger.debug("new movement registered");
+        logger.info("new movement registered");
     }
 
     private void executeTransfer(EventRequest request){
         logger.info("-->>>CALLING TO CITIIII FOR TRANSFER<<<----");
         logger.info("-->>>WAITING ANSWER FROM CITIIII<<<----");
-        logger.debug("index:"+request.getNonIndexedParameters().get(0));
+        logger.info("index:"+request.getNonIndexedParameters().get(0));
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         String operationId = (String)operationIdParameter.get("value");
-        logger.debug("operationId:"+operationId);
+        logger.info("operationId:"+operationId);
         logger.info("CALLING BLOCKCHAIN ---> SET FEE");
         JSONObject body = new JSONObject();
         body.put("operationId", operationId);
-        webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
+        try{
+            String response = webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
+            logger.info("response:"+response);
+        }catch(Exception ex){
+            System.out.println("ERROR:"+ex.getMessage());
+            ex.printStackTrace();
+        }
         movementRepository.setTransferInProgress(operationId);
     }
 
-    private void sendDolarToExchange(EventRequest request){
+    private void sendDollarsToExchange(EventRequest request){
         logger.info("CALL BLOCKCHAIN GO");
         logger.info("CITI --> SENT DOLAR TO EXCHANGE");
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        Map<String,Object> feeParameter = request.getNonIndexedParameters().get(1);
+        Map<String,Object> rateParameter = request.getNonIndexedParameters().get(2);
+        String ordererAddress = (String)ordererParameter.get("value");
+        String operationId = (String)operationIdParameter.get("value");
+        int fee = (int)feeParameter.get("value");
+        int rate = (int)rateParameter.get("value");
+        JSONObject body = new JSONObject();
+        body.put("operationId", operationId);
+        try{
+            String response = webClient.postForObject(sendDollarsToExchange, client.getEntity(body), String.class);
+            logger.info("response:"+response);
+            movementRepository.setFeeRate(fee,rate,response,operationId); 
+        }catch(Exception ex){
+            System.out.println("ERROR:"+ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     private void changeDolarToPesos(EventRequest request){

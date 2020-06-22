@@ -13,7 +13,7 @@ import us.lacchain.crossborder.management.clients.response.TransactionHistory;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetMovementDetailResponse implements Serializable {
-    private long operationId;
+    private String operationId;
     private String status;
     private TransferDetail transferDetails;
     private CustomerDetail senderDetails;

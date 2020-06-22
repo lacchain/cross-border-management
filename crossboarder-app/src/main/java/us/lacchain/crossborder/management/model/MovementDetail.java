@@ -11,7 +11,7 @@ import javax.persistence.ConstructorResult;
 import javax.persistence.ColumnResult;
 
 @SqlResultSetMapping(name = "transactionResultMapping", classes = {
-    @ConstructorResult(targetClass = Transaction.class, columns = { @ColumnResult(name = "id", type = Long.class),
+    @ConstructorResult(targetClass = Transaction.class, columns = { @ColumnResult(name = "id", type = String.class),
             @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "sender_bank", type= String.class), @ColumnResult(name = "sender_dlt_address", type = String.class), 
             @ColumnResult(name = "receiver_bank", type = String.class), @ColumnResult(name = "receiver_dlt_address",type = String.class), 
             @ColumnResult(name = "sent_amount", type = Float.class), @ColumnResult(name = "recipient_will_get",type = Float.class),
@@ -26,7 +26,7 @@ import javax.persistence.ColumnResult;
 public class MovementDetail {
 
     @Id
-    private long id;
+    private String id;
     private String datetime;
     private float sent_amount;
     private float fee_applied;
@@ -53,7 +53,7 @@ public class MovementDetail {
     public MovementDetail() {
     }
 
-    public MovementDetail(long id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String status) {
+    public MovementDetail(String id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String status) {
         this.id = id;
         this.datetime = datetime;
         this.sent_amount = sent_amount;
@@ -77,11 +77,11 @@ public class MovementDetail {
         this.status = status;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

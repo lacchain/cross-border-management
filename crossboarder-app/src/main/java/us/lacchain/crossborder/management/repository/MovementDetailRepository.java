@@ -12,10 +12,10 @@ import java.util.List;
 public interface MovementDetailRepository extends JpaRepository<MovementDetail, String> {
 
     @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail and (sender_dlt_address = :dltAddress or receiver_dlt_address = :dltAddress)", nativeQuery = true)
-    MovementDetail getMovementDetail(@Param("idMovementDetail") long idMovementDetail, @Param("dltAddress") String dltAddress);
+    MovementDetail getMovementDetail(@Param("idMovementDetail") String idMovementDetail, @Param("dltAddress") String dltAddress);
 
     @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail", nativeQuery = true)
-    MovementDetail getMovementDetail(@Param("idMovementDetail") long idMovementDetail);
+    MovementDetail getMovementDetail(@Param("idMovementDetail") String idMovementDetail);
 
     @Query(name = "MovementDetailRepository.getAllTransactions", nativeQuery=true)
     List<Transaction> getAllTransactions();

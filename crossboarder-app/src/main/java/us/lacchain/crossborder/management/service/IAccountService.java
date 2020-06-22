@@ -10,8 +10,8 @@ import java.util.List;
 public interface IAccountService {
 
     List<MovementResult> getMovementsByAccount(String dltAddress);
-    MovementDetail getMovementDetail(long idMovementDetail, String dltAddress);
-    MovementDetail getMovementDetail(long idMovementDetail);
+    MovementDetail getMovementDetail(String idMovementDetail, String dltAddress);
+    MovementDetail getMovementDetail(String idMovementDetail);
     List<AccountResult> getAllAccounts();
     List<Transaction> getTransactions();
 

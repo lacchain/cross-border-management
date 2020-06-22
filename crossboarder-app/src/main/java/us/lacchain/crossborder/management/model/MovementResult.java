@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class MovementResult {
 
-    private long id;
+    private String id;
     private String datetime;
     private String transfer_type;
     private String company;
@@ -17,7 +17,7 @@ public class MovementResult {
     public MovementResult() {
     }
 
-    public MovementResult(long id, String datetime, String transfer_type, String company, float amount_received, String detail, String status, String dlt_address) {
+    public MovementResult(String id, String datetime, String transfer_type, String company, float amount_received, String detail, String status, String dlt_address) {
         this.id = id;
         this.datetime = datetime;
         this.transfer_type = transfer_type;
@@ -28,11 +28,11 @@ public class MovementResult {
         this.dlt_address = dlt_address;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
