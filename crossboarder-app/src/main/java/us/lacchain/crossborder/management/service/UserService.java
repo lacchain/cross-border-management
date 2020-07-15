@@ -55,7 +55,7 @@ public class UserService implements IUserService {
                 bankRepository.save(bank);
             }
         
-            Account account = new Account(request.getAccountDetails().getDltAddress(), request.getBankDetails().getBankAccount(), "USD",0,0,request.getBankDetails().getBankTaxId(), user.getId());
+            Account account = new Account(request.getAccountDetails().getDltAddress(), request.getBankDetails().getBankAccount(), null,0,0,request.getBankDetails().getBankTaxId(), user.getId());
             accountRepository.save(account);
         }else{
             throw new UserExistsException("User already exists");

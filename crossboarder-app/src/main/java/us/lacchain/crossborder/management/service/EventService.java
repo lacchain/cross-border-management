@@ -44,6 +44,12 @@ public class EventService implements IEventService {
     @Autowired
     private MovementRepository movementRepository;
 
+    @Value("${crossborder.contract.edollars}")
+    private String contractDollars;
+
+    @Value("${crossborder.contract.epesos}")
+    private String contractPesos;
+
     @Value("${crossborder.message.detail.mint}")
     private String mintMessage;
 
@@ -74,13 +80,22 @@ public class EventService implements IEventService {
         if(request.getStatus().equalsIgnoreCase("CONFIRMED")){
         logger.info("FilterId:"+request.getFilterId());    
             switch(request.getFilterId()){
-                case "WhitelistedAdded":
+                case "WhitelistedAddedDollars":
                     setWhitelistedAccount(request);
                     break;
-                case "WhitelistedRemoved":
+                case "WhitelistedRemovedDollars":
                     setWhitelistedRemoved(request);
                     break;    
-                case "Transfer":
+                case "TransferDollars":
+                    setBalanceMinted(request);
+                    break;
+                case "WhitelistedAddedPesos":
+                    setWhitelistedAccount(request);
+                    break;
+                case "WhitelistedRemovedPesos":
+                    setWhitelistedRemoved(request);
+                    break;    
+                case "TransferPesos":
                     setBalanceMinted(request);
                     break;
                 case "TransferOrdered":
@@ -93,7 +108,7 @@ public class EventService implements IEventService {
                     sendDollarsToExchange(request);  
                     break;
                 case "SendedToMarket":
-                    changeDolarToPesos(request);
+                    changeDollarsToPesos(request);
                     break;   
                 case "Exchanged":
                     sendPesosToRecipient(request);
@@ -105,7 +120,7 @@ public class EventService implements IEventService {
                     logger.info("Event doesn't registered");
             }
         }else{
-            logger.debug("Event UNCORFIMED");
+            logger.debug("Event UNCORFIRMED");
         }
 
         return true;
@@ -115,8 +130,13 @@ public class EventService implements IEventService {
         logger.info("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
+        String currency = "USD";
         logger.info("dltAddress:"+dltAddress);
-        accountRepository.setWhitelisted(dltAddress);
+        if (request.getAddress().equalsIgnoreCase(contractPesos)){
+            currency = "MXN";
+        }
+        
+        accountRepository.setWhitelisted(dltAddress,currency);
     }
 
     private void setWhitelistedRemoved(EventRequest request){
@@ -136,7 +156,7 @@ public class EventService implements IEventService {
         accountRepository.setBalance(dltAddress, balance);
         logger.info("new balance set");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,1);
+        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,2);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -152,7 +172,7 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -193,28 +213,64 @@ public class EventService implements IEventService {
         try{
             String response = webClient.postForObject(sendDollarsToExchange, client.getEntity(body), String.class);
             logger.info("response:"+response);
-            movementRepository.setFeeRate(fee,rate,response,operationId); 
+            movementRepository.setFeeRate(fee,rate,request.getTransactionHash(),operationId); 
         }catch(Exception ex){
             System.out.println("ERROR:"+ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    private void changeDolarToPesos(EventRequest request){
+    private void changeDollarsToPesos(EventRequest request){
         logger.info("CALLING BLOCKCHAIN GO");
         logger.info("MARKET-MAKER --> CHANGE DOLAR");
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        String ordererAddress = (String)ordererParameter.get("value");
+        String operationId = (String)operationIdParameter.get("value");
+        
+        JSONObject body = new JSONObject();
+        body.put("operationId", operationId);
+        try{
+            String response = webClient.postForObject(changeDollarsToPesos, client.getEntity(body), String.class);
+            logger.info("response:"+response);
+        }catch(Exception ex){
+            System.out.println("ERROR:"+ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     private void sendPesosToRecipient(EventRequest request){
         logger.info("CALLING BLOCKCHAIN GO");
         logger.info("MARKET-MAKER --> SEND PESOS");
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        String ordererAddress = (String)ordererParameter.get("value");
+        String operationId = (String)operationIdParameter.get("value");
+        
+        JSONObject body = new JSONObject();
+        body.put("operationId", operationId);
+        try{
+            String response = webClient.postForObject(sendPesosToRecepient, client.getEntity(body), String.class);
+            logger.info("response:"+response);
+        }catch(Exception ex){
+            System.out.println("ERROR:"+ex.getMessage());
+            ex.printStackTrace();
+        }
+
+
     }
 
     private void setTransferExecuted(EventRequest request){
+    //TransferExecuted(address indexed issuer, address indexed orderer, string operationId, address indexed to, uint256 value);
         logger.debug("index:"+request.getNonIndexedParameters().get(0));
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(1);
+        Map<String,Object> toParameter = request.getIndexedParameters().get(2);
+        Map<String,Object> valueParameter = request.getNonIndexedParameters().get(1);
         String operationId = (String)operationIdParameter.get("value");
+        int value = (int)valueParameter.get("value");
         logger.debug("operationId:"+operationId);
-        movementRepository.setTransferExecuted(operationId);
+        //accountRepository.setBalance(dltAddress, balance);
+        movementRepository.setTransferExecuted(request.getTransactionHash(),operationId,value);
     }
 }

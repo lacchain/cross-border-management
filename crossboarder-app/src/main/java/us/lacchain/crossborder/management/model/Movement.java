@@ -35,13 +35,15 @@ public class Movement {
     private float received_amount;
     private float fee;
     private float rate;
+    private String operation_requested;
+    private String set_fee;
+    private String operation_approved;
     private int status;
-
 
     public Movement() {
     }
 
-    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, int status) {
+    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -51,6 +53,9 @@ public class Movement {
         this.received_amount = received_amount;
         this.fee = fee;
         this.rate = rate;
+        this.operation_requested = operation_requested;
+        this.set_fee = set_fee;
+        this.operation_approved = operation_approved;
         this.status = status;
     }
 
@@ -126,6 +131,30 @@ public class Movement {
         this.rate = rate;
     }
 
+    public String getOperation_requested() {
+        return this.operation_requested;
+    }
+
+    public void setOperation_requested(String operation_requested) {
+        this.operation_requested = operation_requested;
+    }
+
+    public String getSet_fee() {
+        return this.set_fee;
+    }
+
+    public void setSet_fee(String set_fee) {
+        this.set_fee = set_fee;
+    }
+
+    public String getOperation_approved() {
+        return this.operation_approved;
+    }
+
+    public void setOperation_approved(String operation_approved) {
+        this.operation_approved = operation_approved;
+    }
+
     public int getStatus() {
         return this.status;
     }
@@ -142,12 +171,12 @@ public class Movement {
             return false;
         }
         Movement movement = (Movement) o;
-        return Objects.equals(id, movement.id) && Objects.equals(datetime, movement.datetime) && Objects.equals(sender, movement.sender) && Objects.equals(receiver, movement.receiver) && amount == movement.amount && Objects.equals(detail, movement.detail) && received_amount == movement.received_amount && fee == movement.fee && rate == movement.rate && status == movement.status;
+        return Objects.equals(id, movement.id) && Objects.equals(datetime, movement.datetime) && Objects.equals(sender, movement.sender) && Objects.equals(receiver, movement.receiver) && amount == movement.amount && Objects.equals(detail, movement.detail) && received_amount == movement.received_amount && fee == movement.fee && rate == movement.rate && Objects.equals(operation_requested, movement.operation_requested) && status == movement.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, status);
+        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, status);
     }
 
     @Override
@@ -162,6 +191,9 @@ public class Movement {
         sb.append(", received_amount=").append(received_amount).append('\'');
         sb.append(", fee=").append(fee).append('\'');
         sb.append(", rate=").append(rate).append('\'');
+        sb.append(", operation_requested=").append(operation_requested).append('\'');
+        sb.append(", set_fee=").append(set_fee).append('\'');
+        sb.append(", operation_approved=").append(operation_approved).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();
