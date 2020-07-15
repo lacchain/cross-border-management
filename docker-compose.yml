@@ -14,19 +14,19 @@ services:
     networks:
       - default
 
-#  cross-boarder:
-#    build:
-#      context: crossboarder-app/
-#      dockerfile: ./docker/Dockerfile
-#    ports:
-#      - 9092:9092
-#    environment:
-#      - POSTGRES_HOST=postgres
-#      - POSTGRES_PORT=5432
-#    depends_on:
-#    - postgres
-#    networks:
-#      - default
+  cross-boarder:
+    build:
+      context: crossboarder-app/
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 9092:9092
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+    - postgres
+    networks:
+      - default
 
   mongodb:
     image: mongo:latest
@@ -37,28 +37,28 @@ services:
     networks:
       - default
 
-#  eventeum:
-#    image: eventeum/eventeum:latest
-#    ports:
-#    - "8060:8060"
-#    depends_on:
-#      - cross-boarder
-#      - mongodb
-#    environment:
-#      SPRING_DATA_MONGODB_HOST: mongodb
-#      ETHEREUM_NODE_URL: http://34.74.56.215:4545
-#      BROADCASTER_TYPE: HTTP
-#      BROADCASTER_HTTP_CONTRACTEVENTSURL: http://cross-boarder:9092/crossborder/api/event
-#      BROADCASTER_HTTP_BLOCKEVENTSURL: http://cross-boarder:9092/crossborder/api/block
-#      BROADCASTER_EVENT_CONFIRMATION_NUMBLOCKSTOWAIT: 1
-#    networks:
-#      - default
+  eventeum:
+    image: eventeum/eventeum:latest
+    ports:
+    - "8060:8060"
+    depends_on:
+      - cross-boarder
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      ETHEREUM_NODE_URL: http://34.74.56.215:4545
+      BROADCASTER_TYPE: HTTP
+      BROADCASTER_HTTP_CONTRACTEVENTSURL: http://cross-boarder:9092/crossborder/api/event
+      BROADCASTER_HTTP_BLOCKEVENTSURL: http://cross-boarder:9092/crossborder/api/block
+      BROADCASTER_EVENT_CONFIRMATION_NUMBLOCKSTOWAIT: 1
+    networks:
+      - default
 
-#  curl:
-#    build:
-#      context: crossboarder-app/
-#      dockerfile: ./docker/curl/Dockerfile
-#    depends_on:
-#      - eventeum
-#    networks:
-#      - default
+  curl:
+    build:
+      context: crossboarder-app/
+      dockerfile: ./docker/curl/Dockerfile
+    depends_on:
+      - eventeum
+    networks:
+      - default

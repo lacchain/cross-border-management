@@ -18,8 +18,8 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update accounts set status = 1 where dlt_address = :dltAddress", nativeQuery=true)
-    void setWhitelisted(@Param("dltAddress") String dltAddress);
+    @Query(value = "update accounts set status = 1, currency = :currency where dlt_address = :dltAddress", nativeQuery=true)
+    void setWhitelisted(@Param("dltAddress") String dltAddress, @Param("currency") String currency);
 
     @Transactional
     @Modifying(clearAutomatically = true)

@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/crossborder
     username: postgres
-    password: 
+    password:   
   jpa:
     properties:
       hibernate:
@@ -20,6 +20,9 @@ server:
     context-path: /crossborder
 
 crossborder:
+  contract:
+    edollars: 0x50A1108bE0E4db5e87DB1B65c5DF3eE2cAba300D
+    epesos: 0x31f2A2F36F2A63f1E3fb51d582F285B26249F61F
   oauth:
     client:
       web:
