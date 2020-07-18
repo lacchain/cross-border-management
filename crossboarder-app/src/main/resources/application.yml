@@ -64,16 +64,20 @@ resources:
         read: 6000
         connect: 6000
     api:
-      security:
-        citi:
-          url: https://citi.com:7020/account/{0}
+      citi:
+        paymentinitiation:
+          url: http://${CITI_PROXY_HOST}:${CITI_PROXY_PORT}/citiconnect/sb/worldlinkservices/v1/payment/initiation
           timeout:
             read: 1000
             connect: 3000
-            enabled: false
+        paymentstatus:
+          url: http://${CITI_PROXY_HOST}:${CITI_PROXY_PORT}/citiconnect/sb/worldlinkservices/v1/payment/inquiry
+          timeout:
+            read: 1000
+            connect: 3000
       blockchain:
         setfeerate:
-          url: http://localhost:9000/setFeeRate
+          url: http://${POSTGRES_HOST}:${POSTGRES_PORT}/setFeeRate
         executeTransfer:
           url: http://localhost:9000/executeTransfer
         sendDollarsToExchange:
@@ -90,3 +94,7 @@ logging:
     file: ./management-app-local.log
     level:
       root: INFO
+
+fixedRate:
+    in:
+        milliseconds: 5000

@@ -5,6 +5,9 @@ import us.lacchain.crossborder.management.repository.AccountRepository;
 import us.lacchain.crossborder.management.repository.MovementRepository;
 import us.lacchain.crossborder.management.util.Client;
 import us.lacchain.crossborder.management.model.Movement;
+import us.lacchain.crossborder.management.mapper.PaymentInitiationMapper;
+import us.lacchain.crossborder.management.clients.response.PaymentInitiationResponse;
+import us.lacchain.crossborder.management.clients.response.PaymentStatusResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,7 @@ import org.json.JSONObject;
 public class EventService implements IEventService {
 
     private static final String ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+    private static final float FREE_FEE = 0.0f;
 
     Logger logger = LoggerFactory.getLogger(EventService.class);
 
@@ -58,7 +62,7 @@ public class EventService implements IEventService {
 
     @Value("${resources.supplied.api.blockchain.setfeerate.url}")
     private String setFeeRateURL;
-
+    
     @Value("${resources.supplied.api.blockchain.sendDollarsToExchange.url}")
     private String sendDollarsToExchange;
 
@@ -67,6 +71,12 @@ public class EventService implements IEventService {
 
     @Value("${resources.supplied.api.blockchain.sendPesosToRecepient.url}")
     private String sendPesosToRecepient;
+
+    @Value("${resources.supplied.api.citi.paymentinitiation.url}")
+    private String paymentInitiationURL;
+
+    @Value("${resources.supplied.api.citi.paymentstatus.url}")
+    private String paymentStatusURL;
 
     public EventService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -156,7 +166,7 @@ public class EventService implements IEventService {
         accountRepository.setBalance(dltAddress, balance);
         logger.info("new balance set");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,2);
+        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,null,2);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -172,29 +182,57 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
 
     private void executeTransfer(EventRequest request){
         logger.info("-->>>CALLING TO CITIIII FOR TRANSFER<<<----");
-        logger.info("-->>>WAITING ANSWER FROM CITIIII<<<----");
-        logger.info("index:"+request.getNonIndexedParameters().get(0));
+        Map<String,Object> amountParameter = request.getNonIndexedParameters().get(1);
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        int amount = (int)amountParameter.get("value");
         String operationId = (String)operationIdParameter.get("value");
-        logger.info("operationId:"+operationId);
-        logger.info("CALLING BLOCKCHAIN ---> SET FEE");
-        JSONObject body = new JSONObject();
-        body.put("operationId", operationId);
-        try{
-            String response = webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
-            logger.info("response:"+response);
-        }catch(Exception ex){
-            System.out.println("ERROR:"+ex.getMessage());
-            ex.printStackTrace();
-        }
+        PaymentInitiationMapper mapper = new PaymentInitiationMapper();
+        String paymentInitiationRequest = mapper.xmlToPaymentInitiationRequest(amount);
+        logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
+        String paymentInitiationResponse = webClient.postForObject(paymentInitiationURL, paymentInitiationRequest, String.class);
+        PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse);
+        System.out.println(paymentResponse);
+        
+        //Register on movement table on DataBase
+        //View if it goes
         movementRepository.setTransferInProgress(operationId);
+    }
+
+    public void setFeeRate(){
+        List<Movement> movements = movementRepository.getMovementsInProgress();
+        logger.info("Movements in progress:"+movements.size());
+        for (Movement movement:movements){
+            //Call Citi Api statusPayment
+            PaymentInitiationMapper mapper = new PaymentInitiationMapper();
+            logger.info("movement.getEndtoend_id:"+movement.getEndtoend_id());
+            String paymentStatusRequest = mapper.xmlToPaymentStatusRequest(movement.getEndtoend_id());
+            logger.info(">>>>PaymentStatusRequest<<<<:"+paymentStatusRequest);
+            String paymentStatusResponse = webClient.postForObject(paymentStatusURL, paymentStatusRequest, String.class);
+            PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse, movement.getEndtoend_id());    
+            if (paymentResponse.isExecuted()){
+                logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
+                JSONObject body = new JSONObject();
+                body.put("operationId", movement.getId());
+                body.put("fee", FREE_FEE);
+                logger.info("valor que llega:"+paymentResponse.getAddtlInf());
+                body.put("rate",paymentResponse.getAddtlInf());
+                try{
+                    String response = webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
+                    logger.info("response:"+response);
+                    movementRepository.setFeeRateStatus(movement.getId());
+                }catch(Exception ex){
+                    System.out.println("ERROR:"+ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     private void sendDollarsToExchange(EventRequest request){

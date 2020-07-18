@@ -1,0 +1,4 @@
+<PaymentInquiryRequest xmlns="http://com.citi.citiconnect/services/types/inquiries/payment/v1">
+    <EndToEndId>1230BI0R8Z4L100</EndToEndId>
+    <WLClientID>812660001</WLClientID>
+</PaymentInquiryRequest>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <CstmrPmtStsRpt>
+      <GrpHdr>
+         <MsgId>3677068</MsgId>
+         <CreDtTm>2020-07-14T16:32:55-04:00</CreDtTm>
+         <InitgPty>
+            <Nm>INTER-AMERICAN DEVELOPMENT BANK</Nm>
+            <Id>
+               <PrvtId>
+                  <Othr>
+                     <Id>81266</Id>
+                  </Othr>
+               </PrvtId>
+            </Id>
+         </InitgPty>
+      </GrpHdr>
+      <OrgnlGrpInfAndSts>
+         <OrgnlMsgId>Not Available</OrgnlMsgId>
+         <OrgnlMsgNmId>Not Available</OrgnlMsgNmId>
+      </OrgnlGrpInfAndSts>
+      <OrgnlPmtInfAndSts>
+         <OrgnlPmtInfId>Not Applicable</OrgnlPmtInfId>
+         <TxInfAndSts>
+            <OrgnlInstrId>SU2012927800</OrgnlInstrId>
+            <OrgnlEndToEndId>1230BI0R8Z4L800</OrgnlEndToEndId>
+            <TxSts>ACSP</TxSts>
+            <AccptncDtTm>2020-07-15T00:00:00-04:00</AccptncDtTm>
+            <AcctSvcrRef>KK6DDO29JIIL</AcctSvcrRef>
+            <OrgnlTxRef>
+               <IntrBkSttlmAmt Ccy="DOP">42575.84</IntrBkSttlmAmt>
+               <Amt>
+                  <EqvtAmt>
+                     <Amt Ccy="USD">800</Amt>
+                     <CcyOfTrf>DOP</CcyOfTrf>
+                  </EqvtAmt>
+               </Amt>
+               <IntrBkSttlmDt>2020-07-16</IntrBkSttlmDt>
+               <ReqdExctnDt>2020-07-13</ReqdExctnDt>
+               <PmtTpInf>
+                  <SvcLvl>
+                     <Cd>ACH</Cd>
+                  </SvcLvl>
+               </PmtTpInf>
+               <RmtInf>
+                  <Ustrd>12345678901</Ustrd>
+                  <Strd>
+                     <RfrdDocAmt>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>OFXR</Rsn>
+                           <AddtlInf>.01879</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>RMET</Rsn>
+                           <AddtlInf>I</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>FXDT</Rsn>
+                           <AddtlInf>2020-07-13 00:00:00.0</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>FAWF</Rsn>
+                           <AddtlInf>800</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>OFXN</Rsn>
+                           <AddtlInf>AA9597001703556</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>FAMT</Rsn>
+                           <AddtlInf>800</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>FCCY</Rsn>
+                           <AddtlInf>USD</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                        <AdjstmntAmtAndRsn>
+                           <Amt Ccy="USD">0</Amt>
+                           <Rsn>WLID</Rsn>
+                           <AddtlInf>812660001</AddtlInf>
+                        </AdjstmntAmtAndRsn>
+                     </RfrdDocAmt>
+                  </Strd>
+               </RmtInf>
+               <DbtrAgtAcct>
+                  <Id>
+                     <Othr>
+                        <Id>31208277</Id>
+                     </Othr>
+                  </Id>
+               </DbtrAgtAcct>
+               <CdtrAgt>
+                  <FinInstnId>
+                     <ClrSysMmbId>
+                        <MmbId>003</MmbId>
+                     </ClrSysMmbId>
+                     <Nm>Citi Bank</Nm>
+                  </FinInstnId>
+               </CdtrAgt>
+               <Cdtr>
+                  <Nm>TREASURY</Nm>
+                  <PstlAdr>
+                     <AdrLine>Street 123 DO/</AdrLine>
+                  </PstlAdr>
+                  <Id>
+                     <OrgId>
+                        <Othr>
+                           <Id>1230BI0R8Z4L800</Id>
+                        </Othr>
+                     </OrgId>
+                  </Id>
+               </Cdtr>
+               <CdtrAcct>
+                  <Id>
+                     <Othr>
+                        <Id>258400031</Id>
+                     </Othr>
+                  </Id>
+               </CdtrAcct>
+            </OrgnlTxRef>
+         </TxInfAndSts>
+      </OrgnlPmtInfAndSts>
+   </CstmrPmtStsRpt>
+</Document>
