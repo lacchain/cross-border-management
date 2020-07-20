@@ -12,9 +12,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ccamaleon5/CredentialServer/util"
-	store "github.com/ccamaleon5/IDBService/blockchain/contracts"
-	"github.com/ccamaleon5/IDBService/errors"
-	l "github.com/ccamaleon5/IDBService/utils"
+	store "github.com/lacchain/cross-border-management/IDBService/blockchain/contracts"
+	"github.com/lacchain/cross-border-management/IDBService/errors"
+	l "github.com/lacchain/cross-border-management/IDBService/utils"
 )
 
 //Client to manage Connection to Ethereum

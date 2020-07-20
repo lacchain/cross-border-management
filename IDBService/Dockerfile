@@ -2,8 +2,8 @@
 FROM golang:1.13-alpine as builder
 
 RUN apk update && apk add --no-cache make gcc musl-dev linux-headers git \
-    && git clone https://github.com/ccamaleon5/IDBService.git
-WORKDIR /go/IDBService
+    && git clone https://github.com/lacchain/cross-border-management.git
+WORKDIR /go/cross-border-management/IDBService
 RUN export GO111MODULE=on && go build
 
 # Pull Credential Provider Server into a second stage deploy alpine container
@@ -11,13 +11,11 @@ FROM alpine:3.12
 RUN apk add --no-cache ca-certificates \
     && update-ca-certificates
 
-RUN mkdir -p /CredentialMother 
-WORKDIR /CredentialMother
+RUN mkdir -p /IDBService/log
+WORKDIR /IDBService
 
-COPY --from=builder go/CredentialServer/cmd/credential-provider-server /usr/local/bin/
-COPY --from=builder go/CredentialServer/cmd/credential-provider-server/server.crt /CredentialMother/
-COPY --from=builder go/CredentialServer/cmd/credential-provider-server/server.key /CredentialMother/
-COPY --from=builder go/CredentialServer/swagger/ /CredentialMother/
+COPY --from=builder go/cross-border-management/IDBService/IDBService /usr/local/bin/
+COPY --from=builder go/cross-border-management/IDBService/config.toml /IDBService/config.toml
 
-EXPOSE 9002
-CMD ["sh","-c","credential-provider-server start --host=0.0.0.0 --tlscertificate=/usr/local/bin/server.crt --tlskey=/usr/local/bin/server.key --port 8000 --secret Password."]
+EXPOSE 9000
+CMD ["sh","-c","IDBService start"]

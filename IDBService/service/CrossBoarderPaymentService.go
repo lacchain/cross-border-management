@@ -12,9 +12,9 @@ import (
 	"fmt"
 	"math/big"
 	"github.com/ethereum/go-ethereum/common"
-	bl "github.com/ccamaleon5/IDBService/blockchain"
-	"github.com/ccamaleon5/IDBService/model"
-	"github.com/ccamaleon5/IDBService/errors"
+	bl "github.com/lacchain/cross-border-management/IDBService/blockchain"
+	"github.com/lacchain/cross-border-management/IDBService/model"
+	"github.com/lacchain/cross-border-management/IDBService/errors"
 )
 
 //CrossBoarderPaymentService is the main service

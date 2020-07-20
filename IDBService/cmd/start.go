@@ -25,8 +25,8 @@ import (
 	"math/big"
 	"encoding/json"
 
-	"github.com/ccamaleon5/IDBService/model"
-	"github.com/ccamaleon5/IDBService/service"
+	"github.com/lacchain/cross-border-management/IDBService/model"
+	"github.com/lacchain/cross-border-management/IDBService/service"
 )
 
 var config *model.Config

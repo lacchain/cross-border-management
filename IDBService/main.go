@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/ccamaleon5/IDBService/cmd"
+import "github.com/lacchain/cross-border-management/IDBService/cmd"
 
 func main() {
 	cmd.Execute()
