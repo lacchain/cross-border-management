@@ -15,6 +15,7 @@ RUN mkdir -p /IDBService/log
 WORKDIR /IDBService
 
 COPY --from=builder go/cross-border-management/IDBService/IDBService /usr/local/bin/
+COPY --from=builder go/cross-border-management/IDBService/UTC--2020-06-26T19-00-23.241896464Z--bceda2ba9af65c18c7992849c312d1db77cf008e /IDBService/UTC--2020-06-26T19-00-23.241896464Z--bceda2ba9af65c18c7992849c312d1db77cf008e
 COPY --from=builder go/cross-border-management/IDBService/config.toml /IDBService/config.toml
 
 EXPOSE 9000

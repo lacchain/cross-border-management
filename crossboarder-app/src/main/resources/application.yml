@@ -21,8 +21,8 @@ server:
 
 crossborder:
   contract:
-    edollars: 0x50A1108bE0E4db5e87DB1B65c5DF3eE2cAba300D
-    epesos: 0x31f2A2F36F2A63f1E3fb51d582F285B26249F61F
+    edollars: 0xC00ba2556FD08604c64DBa93B7ee8Ca7E5f351B2
+    epesos: 0x90e5cCB8f4Cb80c8846DA46D696AcF088F825386
   oauth:
     client:
       web:
@@ -77,15 +77,15 @@ resources:
             connect: 3000
       blockchain:
         setfeerate:
-          url: http://${POSTGRES_HOST}:${POSTGRES_PORT}/setFeeRate
+          url: http://${BACK_BLOCKCHAIN_HOST}:${BACK_BLOCKCHAIN_PORT}/setFeeRate
         executeTransfer:
-          url: http://localhost:9000/executeTransfer
+          url: http://${BACK_BLOCKCHAIN_HOST}:${BACK_BLOCKCHAIN_PORT}/executeTransfer
         sendDollarsToExchange:
-          url: http://localhost:9000/sendDollarsToExchange
+          url: http://${BACK_BLOCKCHAIN_HOST}:${BACK_BLOCKCHAIN_PORT}/sendDollarsToExchange
         changeDollarsToPesos:
-          url: http://localhost:9000/changeDollarsToPesos
+          url: http://${BACK_BLOCKCHAIN_HOST}:${BACK_BLOCKCHAIN_PORT}/changeDollarsToPesos
         sendPesosToRecepient:
-          url: http://localhost:9000/sendPesosToRecepient
+          url: http://${BACK_BLOCKCHAIN_HOST}:${BACK_BLOCKCHAIN_PORT}/sendPesosToRecepient
 
 # Logging config
 logging:
@@ -97,4 +97,4 @@ logging:
 
 fixedRate:
     in:
-        milliseconds: 5000
+        milliseconds: 10000
