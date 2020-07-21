@@ -313,6 +313,6 @@ public class EventService implements IEventService {
         int value = (int)valueParameter.get("value");
         logger.debug("operationId:"+operationId);
         //accountRepository.setBalance(dltAddress, balance);
-        movementRepository.setTransferExecuted(request.getTransactionHash(),operationId,value);
+        movementRepository.setTransferExecuted(request.getTransactionHash(),operationId,(float)value/10000);
     }
 }

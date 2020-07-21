@@ -29,6 +29,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "9000:9000"
+    environment:
+      - ETHEREUM_NODE_URL=http://34.74.56.215:4545
     networks:
       - default
 

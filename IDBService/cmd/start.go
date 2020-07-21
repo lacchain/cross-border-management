@@ -50,6 +50,11 @@ func init() {
 func start(args []string){
 	config = getConfigFromFile()
 
+	urlNode, exist := os.LookupEnv("ETHEREUM_NODE_URL")
+	if (exist){
+		config.Application.NodeURL = urlNode
+	}
+
 	crossBoarderPaymentService = new(service.CrossBoarderPaymentService)
 	crossBoarderPaymentService.Init(config)
 	
