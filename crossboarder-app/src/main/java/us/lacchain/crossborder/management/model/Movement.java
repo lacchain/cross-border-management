@@ -40,13 +40,13 @@ public class Movement {
     private String operation_approved;
     private String operation_executed;
     private String endtoend_id;
-    private String acctsvrref;
+    private String acctsvcrref;
     private int status;
 
     public Movement() {
     }
 
-    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String acctsvrref, int status) {
+    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String acctsvcrref, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -61,7 +61,7 @@ public class Movement {
         this.operation_approved = operation_approved;
         this.operation_executed = operation_executed;
         this.endtoend_id = endtoend_id;
-        this.acctsvrref = acctsvrref;
+        this.acctsvcrref = acctsvcrref;
         this.status = status;
     }
 
@@ -177,12 +177,12 @@ public class Movement {
         this.endtoend_id = endtoend_id;
     }
 
-    public String getAcctsvrref(){
-        return this.acctsvrref;
+    public String getAcctsvcrref(){
+        return this.acctsvcrref;
     }
 
-    public void setAcctsvrref(String acctsvrref){
-        this.acctsvrref = acctsvrref;
+    public void setAcctsvcrref(String acctsvcrref){
+        this.acctsvcrref = acctsvcrref;
     }
 
     public int getStatus() {
@@ -201,12 +201,12 @@ public class Movement {
             return false;
         }
         Movement movement = (Movement) o;
-        return Objects.equals(id, movement.id) && Objects.equals(datetime, movement.datetime) && Objects.equals(sender, movement.sender) && Objects.equals(receiver, movement.receiver) && amount == movement.amount && Objects.equals(detail, movement.detail) && received_amount == movement.received_amount && fee == movement.fee && rate == movement.rate && Objects.equals(operation_requested, movement.operation_requested) && Objects.equals(endtoend_id, movement.endtoend_id) && Objects.equals(acctsvrref,movement.acctsvrref) && status == movement.status;
+        return Objects.equals(id, movement.id) && Objects.equals(datetime, movement.datetime) && Objects.equals(sender, movement.sender) && Objects.equals(receiver, movement.receiver) && amount == movement.amount && Objects.equals(detail, movement.detail) && received_amount == movement.received_amount && fee == movement.fee && rate == movement.rate && Objects.equals(operation_requested, movement.operation_requested) && Objects.equals(endtoend_id, movement.endtoend_id) && Objects.equals(acctsvcrref,movement.acctsvcrref) && status == movement.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, acctsvrref, status);
+        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, acctsvcrref, status);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class Movement {
         sb.append(", operation_approved=").append(operation_approved).append('\'');
         sb.append(", operation_executed=").append(operation_executed).append('\'');
         sb.append(", endtoend_id=").append(endtoend_id).append('\'');
-        sb.append(", acctsvrref=").append(acctsvrref).append('\'');
+        sb.append(", acctsvcrref=").append(acctsvcrref).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();

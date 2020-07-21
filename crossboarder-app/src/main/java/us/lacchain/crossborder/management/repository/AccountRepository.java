@@ -29,6 +29,6 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "update accounts set balance = :balance where dlt_address = :dltAddress", nativeQuery=true)
-    void setBalance(@Param("dltAddress") String dltAddress, @Param("balance") int balance);
+    void setBalance(@Param("dltAddress") String dltAddress, @Param("balance") float balance);
 
 }

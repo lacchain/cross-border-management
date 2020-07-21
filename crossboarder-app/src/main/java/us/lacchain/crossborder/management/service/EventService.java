@@ -168,10 +168,10 @@ public class EventService implements IEventService {
         String dltAddress = (String)accountParameter.get("value");
         int balance = (int)value.get("value");
         if (ZERO_ADDRESS.equalsIgnoreCase(fromDltAddress)){
-            accountRepository.setBalance(dltAddress, balance);
+            accountRepository.setBalance(dltAddress, (float)balance/10000);
             logger.info("new balance set");
             LocalDateTime localDateTime = LocalDateTime.now();
-            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,null,null,null,4);
+            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance/10000,mintMessage,balance/10000,0,0,null,null,null,null,null,null,4);
             movementRepository.save(movement);
             logger.info("new movement registered");
         }
