@@ -76,14 +76,14 @@ public class PaymentInitiationMapper{
         Map<String, String> namespaceContext = new HashMap<>();
         namespaceContext.put("ns", "urn:iso:std:iso:20022:tech:xsd:pain.002.001.03");
 
-        Element msgId = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:GrpHdr[1]/ns:MsgId[1]", document, namespaceContext);
-        System.out.println("txSts:"+msgId.getText()); 
+        Element msgId = (Element) select("//ns:CstmrPmtStsRpt[1]/ns:GrpHdr[1]/ns:MsgId[1]", document, namespaceContext);
+        System.out.println("msgId:"+msgId.getText()); 
 
-        Element instrId = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:PmtId[1]/ns:InstrId[1]", document, namespaceContext);
-        System.out.println("txSts:"+instrId.getText()); 
+        Element instrId = (Element) select("//ns:CstmrPmtStsRpt[1]/ns:OrgnlPmtInfAndSts[1]/ns:TxInfAndSts[1]/ns:OrgnlInstrId[1]", document, namespaceContext);
+        System.out.println("instrId:"+instrId.getText()); 
 
-        Element endToEndId = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:PmtId[1]/ns:EndToEndId[1]", document, namespaceContext);
-        System.out.println("txSts:"+endToEndId.getText()); 
+        Element endToEndId = (Element) select("//ns:CstmrPmtStsRpt[1]/ns:OrgnlPmtInfAndSts[1]/ns:TxInfAndSts[1]/ns:OrgnlEndToEndId[1]", document, namespaceContext);
+        System.out.println("endToEndId:"+endToEndId.getText()); 
 
         Element txSts = (Element) select("//ns:CstmrPmtStsRpt[1]/ns:OrgnlPmtInfAndSts[1]/ns:TxInfAndSts[1]/ns:TxSts[1]", document, namespaceContext);
         System.out.println("txSts:"+txSts.getText()); 
@@ -102,6 +102,7 @@ public class PaymentInitiationMapper{
 
         PaymentInitiationResponse paymentResponse =  new PaymentInitiationResponse(msgId.getText(), instrId.getText(), endToEndId.getText(), txSts.getText(), acctSvcrRef.getText(), addtlInf);
 
+        return paymentResponse;
         }catch(Exception ex){
             ex.printStackTrace();
         }

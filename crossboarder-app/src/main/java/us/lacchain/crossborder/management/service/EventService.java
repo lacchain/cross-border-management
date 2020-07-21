@@ -142,8 +142,10 @@ public class EventService implements IEventService {
         String dltAddress = (String)accountParameter.get("value");
         String currency = "USD";
         logger.info("dltAddress:"+dltAddress);
-        if (request.getAddress().equalsIgnoreCase(contractPesos)){
-            currency = "MXN";
+        logger.info("contractPesosParam:"+contractPesos);
+        logger.info("contractPesos:"+request.getAddress());
+        if (contractPesos.equalsIgnoreCase(request.getAddress())){
+            currency = "DOP";
         }
         
         accountRepository.setWhitelisted(dltAddress,currency);
@@ -159,16 +161,20 @@ public class EventService implements IEventService {
 
     private void setBalanceMinted(EventRequest request){
         logger.info("index"+request.getIndexedParameters().get(1));
+        Map<String,Object> fromParameter = request.getIndexedParameters().get(0);
         Map<String,Object> accountParameter = request.getIndexedParameters().get(1);
         Map<String,Object> value = request.getNonIndexedParameters().get(0);
+        String fromDltAddress = (String)fromParameter.get("value");
         String dltAddress = (String)accountParameter.get("value");
         int balance = (int)value.get("value");
-        accountRepository.setBalance(dltAddress, balance);
-        logger.info("new balance set");
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,null,2);
-        movementRepository.save(movement);
-        logger.info("new movement registered");
+        if (ZERO_ADDRESS.equalsIgnoreCase(fromDltAddress)){
+            accountRepository.setBalance(dltAddress, balance);
+            logger.info("new balance set");
+            LocalDateTime localDateTime = LocalDateTime.now();
+            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance,mintMessage,balance,0,0,null,null,null,null,null,null,4);
+            movementRepository.save(movement);
+            logger.info("new movement registered");
+        }
     }
 
     private void setTransferOrdered(EventRequest request){
@@ -182,7 +188,7 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -198,11 +204,11 @@ public class EventService implements IEventService {
         logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
         String paymentInitiationResponse = webClient.postForObject(paymentInitiationURL, paymentInitiationRequest, String.class);
         PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse);
-        System.out.println(paymentResponse);
+        System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
         
         //Register on movement table on DataBase
         //View if it goes
-        movementRepository.setTransferInProgress(operationId);
+        movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), paymentResponse.getAcctSvcrRef());
     }
 
     public void setFeeRate(){
@@ -251,7 +257,7 @@ public class EventService implements IEventService {
         try{
             String response = webClient.postForObject(sendDollarsToExchange, client.getEntity(body), String.class);
             logger.info("response:"+response);
-            movementRepository.setFeeRate(fee,rate,request.getTransactionHash(),operationId); 
+            movementRepository.setFeeRate((float)fee,(float)rate/10000,request.getTransactionHash(),operationId); 
         }catch(Exception ex){
             System.out.println("ERROR:"+ex.getMessage());
             ex.printStackTrace();
@@ -294,8 +300,6 @@ public class EventService implements IEventService {
             System.out.println("ERROR:"+ex.getMessage());
             ex.printStackTrace();
         }
-
-
     }
 
     private void setTransferExecuted(EventRequest request){

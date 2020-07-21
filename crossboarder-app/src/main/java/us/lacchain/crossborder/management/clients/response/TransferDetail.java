@@ -16,4 +16,5 @@ public class TransferDetail implements Serializable {
     private float totalAmount;
     private String senderCurrency;
     private String receiverCurrency;
+    private String transactionReference;
 }

@@ -11,5 +11,6 @@ import java.io.Serializable;
 public class TransactionHistory implements Serializable {
     private String operationRequested;
     private String setFee;
-    private String operationApproved; 
+    private String operationApproved;
+    private String operationExecuted; 
 }

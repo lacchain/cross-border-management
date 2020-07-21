@@ -155,10 +155,10 @@ public class AccountController {
             if (movementDetail == null){
                 return ResponseEntity.noContent().build();
             }
-            TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get(), movementDetail.getSender_currency(), movementDetail.getReceiver_currency());
+            TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get(), movementDetail.getSender_currency(), movementDetail.getReceiver_currency(), movementDetail.getAcctsvrref());
             CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
             CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
-            TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved());
+            TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved(),movementDetail.getOperation_executed());
             GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
             logger.debug("Response:"+response);
             return ResponseEntity.ok().body(response);

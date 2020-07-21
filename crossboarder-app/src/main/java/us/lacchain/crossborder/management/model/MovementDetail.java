@@ -46,14 +46,14 @@ public class MovementDetail {
     private String operation_requested;
     private String set_fee;
     private String operation_approved;
+    private String operation_executed;
+    private String acctsvrref;
     private String status;
-
-
 
     public MovementDetail() {
     }
 
-    public MovementDetail(String id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String status) {
+    public MovementDetail(String id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String operation_executed, String acctsvrref, String status) {
         this.id = id;
         this.datetime = datetime;
         this.sent_amount = sent_amount;
@@ -74,6 +74,8 @@ public class MovementDetail {
         this.operation_requested = operation_requested;
         this.set_fee = set_fee;
         this.operation_approved = operation_approved;
+        this.operation_executed = operation_executed;
+        this.acctsvrref = acctsvrref;
         this.status = status;
     }
 
@@ -237,6 +239,22 @@ public class MovementDetail {
         this.operation_approved = operation_approved;
     }
 
+    public String getOperation_executed() {
+        return this.operation_executed;
+    }
+
+    public void setOperation_executed(String operation_executed) {
+        this.operation_executed = operation_executed;
+    }
+
+    public String getAcctsvrref() {
+        return this.acctsvrref;
+    }
+
+    public void setAcctsvrref(String acctsvrref) {
+        this.acctsvrref = acctsvrref;
+    }
+
     public String getStatus() {
         return this.status;
     }
@@ -253,12 +271,12 @@ public class MovementDetail {
             return false;
         }
         MovementDetail movementDetail = (MovementDetail) o;
-        return id == movementDetail.id && Objects.equals(datetime, movementDetail.datetime) && sent_amount == movementDetail.sent_amount && fee_applied == movementDetail.fee_applied && converted_amount == movementDetail.converted_amount && rate_applied == movementDetail.rate_applied && recipient_will_get == movementDetail.recipient_will_get && Objects.equals(sender_name, movementDetail.sender_name) && Objects.equals(sender_bank, movementDetail.sender_bank) && Objects.equals(sender_bank_account, movementDetail.sender_bank_account) && Objects.equals(sender_dlt_address, movementDetail.sender_dlt_address) && Objects.equals(sender_currency, movementDetail.sender_currency) && Objects.equals(receiver_name, movementDetail.receiver_name) && Objects.equals(receiver_bank, movementDetail.receiver_bank) && Objects.equals(receiver_bank_account, movementDetail.receiver_bank_account) && Objects.equals(receiver_dlt_address, movementDetail.receiver_dlt_address) && Objects.equals(receiver_currency, movementDetail.receiver_currency) && Objects.equals(operation_requested, movementDetail.operation_requested) && Objects.equals(set_fee, movementDetail.set_fee) && Objects.equals(operation_approved, movementDetail.operation_approved) && Objects.equals(status, movementDetail.status);
+        return id == movementDetail.id && Objects.equals(datetime, movementDetail.datetime) && sent_amount == movementDetail.sent_amount && fee_applied == movementDetail.fee_applied && converted_amount == movementDetail.converted_amount && rate_applied == movementDetail.rate_applied && recipient_will_get == movementDetail.recipient_will_get && Objects.equals(sender_name, movementDetail.sender_name) && Objects.equals(sender_bank, movementDetail.sender_bank) && Objects.equals(sender_bank_account, movementDetail.sender_bank_account) && Objects.equals(sender_dlt_address, movementDetail.sender_dlt_address) && Objects.equals(sender_currency, movementDetail.sender_currency) && Objects.equals(receiver_name, movementDetail.receiver_name) && Objects.equals(receiver_bank, movementDetail.receiver_bank) && Objects.equals(receiver_bank_account, movementDetail.receiver_bank_account) && Objects.equals(receiver_dlt_address, movementDetail.receiver_dlt_address) && Objects.equals(receiver_currency, movementDetail.receiver_currency) && Objects.equals(operation_requested, movementDetail.operation_requested) && Objects.equals(set_fee, movementDetail.set_fee) && Objects.equals(operation_approved, movementDetail.operation_approved) && Objects.equals(operation_executed, movementDetail.operation_executed) && Objects.equals(status, movementDetail.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sent_amount, fee_applied, converted_amount, rate_applied, recipient_will_get, sender_name, sender_bank, sender_bank_account, sender_dlt_address, sender_currency, receiver_name, receiver_bank, receiver_bank_account, receiver_dlt_address, receiver_currency, operation_requested, set_fee, operation_approved, status);
+        return Objects.hash(id, datetime, sent_amount, fee_applied, converted_amount, rate_applied, recipient_will_get, sender_name, sender_bank, sender_bank_account, sender_dlt_address, sender_currency, receiver_name, receiver_bank, receiver_bank_account, receiver_dlt_address, receiver_currency, operation_requested, set_fee, operation_approved, operation_executed, acctsvrref, status);
     }
 
     @Override
@@ -284,6 +302,8 @@ public class MovementDetail {
             ", operation_requested='" + getOperation_requested() + "'" +
             ", set_fee='" + getSet_fee() + "'" +
             ", operation_approved='" + getOperation_approved() + "'" +
+            ", operation_executed='" + getOperation_approved() + "'" +
+            ", acctsvrref ='" + getAcctsvrref() + "'" +
             ", status='" + getStatus() + "'" +
             "}";
     }    

@@ -53,7 +53,9 @@ CREATE TABLE IF NOT EXISTS public.movements
   "operation_requested" text,
   "set_fee" text,
   "operation_approved" text,
+  "operation_executed" text,
   "endtoend_id" text,
+  "acctsvrref" text,
   "status" int,
   PRIMARY KEY ("id"),
   FOREIGN KEY ("sender") REFERENCES public.accounts ("dlt_address"),
@@ -112,11 +114,12 @@ INSERT INTO public.movements
   "operation_requested",
   "set_fee",
   "operation_approved",
+  "operation_executed",
   "endtoend_id",
-  "status"
-) VALUES('654565','2020-05-10 09:00:00','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E','0xAAACF75f0905338597fcd38F5cE13E6840b230eA',500,'Conversion to Pesos',490,0.10,0.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','1230BI0R8Z4L800',1),
- ('978798','2020-05-10 10:00:00','0x173CF75f0905338597fcd38F5cE13E6840b230e9','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E',100,'conversion to dollars',96,0.70,1,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','END23456',2), 
- ('12656547','2020-05-10 11:00:00','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E','0x39316977859458E9dDf5B2Ae74196a059927bf56',100,'send to citi',100,0.66,1.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','END876786',1);  
+  "acctsvrref",
+  "status") VALUES('654565','2020-05-10 09:00:00','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E','0xAAACF75f0905338597fcd38F5cE13E6840b230eA',500,'Conversion to Pesos',490,0.10,0.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','1230BI0R8Z4L800','KK6DDO29JIIL',1),
+ ('978798','2020-05-10 10:00:00','0x173CF75f0905338597fcd38F5cE13E6840b230e9','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E',100,'conversion to dollars',96,0.70,1,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END23456','KK6DDO29JIIL',4), 
+ ('12656547','2020-05-10 11:00:00','0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E','0x39316977859458E9dDf5B2Ae74196a059927bf56',100,'send to citi',100,0.66,1.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END876786','KK6DDO29JIIL',1);  
  
 
 CREATE VIEW users_view AS
@@ -132,12 +135,12 @@ CREATE VIEW movements_view AS
 SELECT DISTINCT movements.id AS "id",
     movements.datetime AS "datetime",
     movements.amount AS "sent_amount",
-	movements.fee AS "fee_applied",
-	movements.received_amount AS "converted_amount",
-	movements.rate AS "rate_applied",
-	(movements.received_amount*movements.rate) AS "recipient_will_get",
+	  movements.fee AS "fee_applied",
+	  movements.received_amount AS "converted_amount",
+	  movements.rate AS "rate_applied",
+	  (movements.received_amount*movements.rate) AS "recipient_will_get",
 	
-    sender.fullname AS "sender_name",
+  sender.fullname AS "sender_name",
 	sender.name AS "sender_bank",
 	sender.bank_account AS "sender_bank_account",
 	sender.dlt_address AS "sender_dlt_address",
@@ -147,12 +150,14 @@ SELECT DISTINCT movements.id AS "id",
 	receiver.name AS "receiver_bank",
 	receiver.bank_account AS "receiver_bank_account",
 	receiver.dlt_address AS "receiver_dlt_address",
-    receiver.currency AS "receiver_currency",
+  receiver.currency AS "receiver_currency",
 
   movements.operation_requested,
   movements.set_fee,
   movements.operation_approved,
-  CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'IN PROGRESS' WHEN movements.status = 2 THEN 'FEE-RATE SETED' ELSE 'COMPLETED' END AS status
+  movements.operation_executed,
+  movements.acctsvrref,
+  CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' ELSE 'COMPLETED' END AS status
 	
 	FROM movements, users, banks, (
     								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency
