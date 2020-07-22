@@ -25,4 +25,12 @@ public class Client{
         return request;    
     }
 
+    public HttpEntity<String> getEntity(String body){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_XML);
+
+        HttpEntity<String> request = new HttpEntity<String>(body, headers);
+        return request;    
+    }
+
 }

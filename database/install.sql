@@ -157,7 +157,7 @@ SELECT DISTINCT movements.id AS "id",
   movements.operation_approved,
   movements.operation_executed,
   movements.acctsvrref,
-  CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' ELSE 'COMPLETED' END AS status
+  CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' WHEN movements.status = 4 THEN 'COMPLETED' ELSE 'FAILED' END AS status
 	
 	FROM movements, users, banks, (
     								SELECT users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency
