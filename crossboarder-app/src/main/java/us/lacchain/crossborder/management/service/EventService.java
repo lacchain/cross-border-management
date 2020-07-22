@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,6 @@ public class EventService implements IEventService {
     }
 
     public boolean processEvent(EventRequest request){
-
         logger.info("Event:"+request);
         logger.info("Status:"+request.getStatus());
 
@@ -230,11 +230,13 @@ public class EventService implements IEventService {
                 logger.info("valor que llega:"+paymentResponse.getAddtlInf());
                 body.put("rate",paymentResponse.getAddtlInf());
                 try{
-                    String response = webClient.postForObject(setFeeRateURL, client.getEntity(body), String.class);
+                    ResponseEntity<String> response = webClient.postForObject(setFeeRateURL, client.getEntity(body), ResponseEntity.class);
+                    logger.info("status code:"+response.getStatusCode());
                     logger.info("response:"+response);
+                    
                     movementRepository.setFeeRateStatus(movement.getId());
                 }catch(Exception ex){
-                    System.out.println("ERROR:"+ex.getMessage());
+                    logger.error("ERROR:"+ex.getMessage());
                     ex.printStackTrace();
                 }
             }
