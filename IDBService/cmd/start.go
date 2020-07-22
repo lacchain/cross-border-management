@@ -85,14 +85,16 @@ func setFeeRate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("operationId:",request.Rate)
 	fee := new(big.Int).SetInt64(int64(request.Fee * 10000))
 	rate := new(big.Int).SetInt64(int64(request.Rate * 10000))
-	code := crossBoarderPaymentService.SetFeeTasaTransfer(request.OperationId, fee, rate, config.Application.ContractAddress)
-	if code == 100{
-		log.Println("Reintentar envio de transacción")
+	code, tx := crossBoarderPaymentService.SetFeeTasaTransfer(request.OperationId, fee, rate, config.Application.ContractAddress)
+	if code == 500{
+		log.Println("Retrying to send transaction")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("500 - Transaction won't pass"))
 	}else{
 		log.Println("Success")
 	}
 
-	w.Write([]byte("{'success':12}"))
+	w.Write([]byte("{'txHash':'"+tx.Hex()+"'}"))
 }
 
 func executeTransfer(w http.ResponseWriter, r *http.Request){
@@ -115,7 +117,14 @@ func sendDollarsToExchange(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("operationId:",request.OperationId)
-	crossBoarderPaymentService.SendDollarsToExchange(request.OperationId, config.Application.ContractAddress)
+	code, tx := crossBoarderPaymentService.SendDollarsToExchange(request.OperationId, config.Application.ContractAddress)
+
+	if code == 500{
+		log.Println("Retrying to send transaction")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("500 - Transaction won't pass"))
+	}
+	w.Write([]byte("{'txHash':'"+tx.Hex()+"'}"))
 }
 
 func changeDollarsToPesos(w http.ResponseWriter, r *http.Request){
@@ -132,7 +141,14 @@ func changeDollarsToPesos(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("operationId:",request.OperationId)
-	crossBoarderPaymentService.ChangeDollarsToPesos(request.OperationId, config.Application.ContractAddress)
+	code, tx := crossBoarderPaymentService.ChangeDollarsToPesos(request.OperationId, config.Application.ContractAddress)
+
+	if code == 500{
+		log.Println("Retrying to send transaction")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("500 - Transaction won't pass"))
+	}
+	w.Write([]byte("{'txHash':'"+tx.Hex()+"'}"))
 }
 
 func sendPesosToRecepient(w http.ResponseWriter, r *http.Request){
@@ -149,7 +165,14 @@ func sendPesosToRecepient(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("operationId:",request.OperationId)
-	crossBoarderPaymentService.SendPesosToRecepient(request.OperationId, config.Application.ContractAddress)
+	code,tx := crossBoarderPaymentService.SendPesosToRecepient(request.OperationId, config.Application.ContractAddress)
+	
+	if code == 500{
+		log.Println("Retrying to send transaction")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("500 - Transaction won't pass"))
+	}
+	w.Write([]byte("{'txHash':'"+tx.Hex()+"'}"))
 }
 
 func getConfigFromFile()(*model.Config){

@@ -1,6 +1,6 @@
 [application]
 nodeURL = "http://34.74.56.215:4545"
-contractAddress = "0x286f3bC1cD9d5238f94eA6ce7Ad86297Cd97363d"
+contractAddress = "0x92792dB87079D2A13ecfC2639C912282a98313A5"
 
 [keystore]
 feeAgent = "/IDBService/UTC--2020-06-26T19-00-23.241896464Z--bceda2ba9af65c18c7992849c312d1db77cf008e"
