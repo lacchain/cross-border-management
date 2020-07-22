@@ -188,7 +188,7 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -303,7 +303,6 @@ public class EventService implements IEventService {
     }
 
     private void setTransferExecuted(EventRequest request){
-    //TransferExecuted(address indexed issuer, address indexed orderer, string operationId, address indexed to, uint256 value);
         logger.debug("index:"+request.getNonIndexedParameters().get(0));
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         Map<String,Object> ordererParameter = request.getIndexedParameters().get(1);

@@ -11,6 +11,7 @@ import org.dom4j.*;
 import org.dom4j.io.*;
 import java.util.*;
 import org.dom4j.XPath;
+import org.apache.commons.codec.binary.Base64;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -61,7 +62,12 @@ public class PaymentInitiationMapper{
             Element amt = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:Amt[1]/ns:EqvtAmt[1]/ns:Amt[1]", document, namespaceContext);
             amt.setText(getAmount(amount));
 
-            return document.asXML();
+            byte[] bytesEncoded = Base64.encodeBase64(document.asXML().getBytes());
+
+            String requestEncoded = "<Request><paymentBase64>"+new String(bytesEncoded)+"</paymentBase64></Request>";
+
+            return requestEncoded;
+
         } catch (Exception e) {
             e.printStackTrace(); 
         }
