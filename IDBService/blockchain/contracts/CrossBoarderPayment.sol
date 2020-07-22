@@ -13,9 +13,9 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
     EmoneyToken internal eDollars;
     EmoneyToken internal ePesos;
 
-    constructor(address _feeAgent) public {
-        eDollars = new EmoneyToken();
-        ePesos = new EmoneyToken();
+    constructor(address _feeAgent, string memory name, string memory symbol) public {
+        eDollars = new EmoneyToken(name, symbol);
+        ePesos = new EmoneyToken(name, symbol);
         eDollars.addMinter(msg.sender);
         eDollars.addWhitelistAdmin(msg.sender);
         ePesos.addMinter(msg.sender);
@@ -72,30 +72,22 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
 
     function approveTransfer(string calldata operationId) external returns (bool) {
         require(msg.sender == transferAgent, "A transfer can only be approved by the Citi's Agent");
-        _approveTransfer(operationId);
-        
-        return true;
+        return _approveTransfer(operationId);
     }
     
     function sendDollarsToExchange(string calldata operationId) external returns (bool){
         require(msg.sender == transferAgent, "A transfer can only be executed by the Citi's transferAgent");
-        _sendDollarsToExchange(operationId);
-        
-        return true;
+        return _sendDollarsToExchange(operationId);
     }
     
     function changeDollarsToPesos(string calldata operationId) external returns (bool){
         require(msg.sender == transferAgent, "A transfer can only be executed by the Citi's transferAgent");
-        _changeDollarsToPesos(operationId);
-        
-        return true;
+        return _changeDollarsToPesos(operationId);
     }
     
     function sendPesosToRecepient(string calldata operationId) external returns (bool){
         require(msg.sender == transferAgent, "A transfer can only be executed by the Citi's transferAgent");
-        _sendPesosToRecepient(operationId);
-        
-        return true;
+        return _sendPesosToRecepient(operationId);
     }
 
     function retrieveTransferData(string calldata operationId) external view returns (
@@ -105,6 +97,7 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
         uint256 value,
         uint256 fee,
         uint256 rate,
+        uint256 valueExchanged,
         TransferStatusCode status
     )
     {
@@ -119,6 +112,7 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
             retrievedTransfer.value,
             retrievedTransfer.fee,
             retrievedTransfer.rate,
+            retrievedTransfer.valueExchanged,
             retrievedTransfer.status
         );
     }
@@ -171,7 +165,8 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
         
         emit TransferApproved(
             transferOnHold.issuer,
-            operationId
+            operationId,
+            transferOnHold.value
         );
         
         return true;
@@ -192,7 +187,8 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
         require(sendedMarketTransfer.value != 0, "This operationId doesn't exist");
         require(sendedMarketTransfer.status == TransferStatusCode.SendedToMarket, "A transfer can only be executed from status SendedToMarket");
     //    eDollars.burn(sendedMarketTransfer.operatorExchange,sendedMarketTransfer.value.sub(sendedMarketTransfer.fee));
-        ePesos.mint(sendedMarketTransfer.operatorExchange, sendedMarketTransfer.rate.mul(sendedMarketTransfer.value.sub(sendedMarketTransfer.fee)));
+        sendedMarketTransfer.valueExchanged = sendedMarketTransfer.value.sub(sendedMarketTransfer.fee).div(sendedMarketTransfer.rate).mul(10**uint256(ePesos.decimals()));
+        ePesos.mint(sendedMarketTransfer.operatorExchange, sendedMarketTransfer.valueExchanged);
         sendedMarketTransfer.status = TransferStatusCode.Exchanged;
         emit Exchanged(msg.sender, operationId);
         return true;
@@ -202,20 +198,18 @@ contract CrossBoarderPayment is ICrossBoarderPayment{
         Transfer storage exchangedTransfer = orderedTransfers[operationId.toHash()];
         require(exchangedTransfer.value != 0, "This operationId doesn't exist");
         require(exchangedTransfer.status == TransferStatusCode.Exchanged, "A transfer can only be executed from status Exchanged");
-        uint256 valueToTransfer = exchangedTransfer.value.sub(exchangedTransfer.fee);
-        ePesos.transferFrom(exchangedTransfer.operatorExchange, exchangedTransfer.target, valueToTransfer.mul(exchangedTransfer.rate));
+    //    uint256 valueToTransfer = exchangedTransfer.value.sub(exchangedTransfer.fee);
+        ePesos.transferFrom(exchangedTransfer.operatorExchange, exchangedTransfer.target, exchangedTransfer.valueExchanged);
         exchangedTransfer.status = TransferStatusCode.Executed;
-        emit TransferExecuted(msg.sender, operationId);
+        emit TransferExecuted(msg.sender, exchangedTransfer.issuer, operationId, exchangedTransfer.target, exchangedTransfer.valueExchanged);
         return true;
     }
-    
-    
     
     function _setFeeRate(string memory operationId, uint256 fee, uint256 rate) internal returns(bool){
         Transfer storage orderedTransfer = orderedTransfers[operationId.toHash()];
         require(orderedTransfer.value != 0, "This operationId doesn't exist");
         require(orderedTransfer.status == TransferStatusCode.Approved, "A transfer can only set fee from status Approved");
-        require(fee > 0, "Fee must be greater than zero");
+        require(fee >= 0, "Fee must be greater than zero");
         require(rate > 0, "Tasa must be greater than zero");
         orderedTransfer.fee = fee;
         orderedTransfer.rate = rate;

@@ -1,10 +1,20 @@
 [
-	{
+    {
       "inputs": [
         {
           "internalType": "address",
           "name": "_feeAgent",
           "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
         }
       ],
       "payable": false,
@@ -113,6 +123,12 @@
           "internalType": "string",
           "name": "operationId",
           "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
         }
       ],
       "name": "TransferApproved",
@@ -147,10 +163,28 @@
           "type": "address"
         },
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "orderer",
+          "type": "address"
+        },
+        {
           "indexed": false,
           "internalType": "string",
           "name": "operationId",
           "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
         }
       ],
       "name": "TransferExecuted",
@@ -398,6 +432,11 @@
           "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "valueExchanged",
+          "type": "uint256"
+        },
+        {
           "internalType": "enum ICrossBoarderPayment.TransferStatusCode",
           "name": "status",
           "type": "uint8"
@@ -516,4 +555,4 @@
       "stateMutability": "view",
       "type": "function"
     }
-]
+  ]

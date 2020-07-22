@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -202,13 +203,16 @@ public class EventService implements IEventService {
         PaymentInitiationMapper mapper = new PaymentInitiationMapper();
         String paymentInitiationRequest = mapper.xmlToPaymentInitiationRequest(amount);
         logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
-        String paymentInitiationResponse = webClient.postForObject(paymentInitiationURL, paymentInitiationRequest, String.class);
-        PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse);
-        System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
-        
-        //Register on movement table on DataBase
-        //View if it goes
-        movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), paymentResponse.getAcctSvcrRef());
+
+        ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);
+        logger.info("statuscode:"+paymentInitiationResponse.getStatusCode());
+        if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
+            PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse.getBody());
+            System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
+            movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), paymentResponse.getAcctSvcrRef());
+        }else{
+            movementRepository.setTransferFailed(operationId);
+        }
     }
 
     public void setFeeRate(){
@@ -220,24 +224,26 @@ public class EventService implements IEventService {
             logger.info("movement.getEndtoend_id:"+movement.getEndtoend_id());
             String paymentStatusRequest = mapper.xmlToPaymentStatusRequest(movement.getEndtoend_id());
             logger.info(">>>>PaymentStatusRequest<<<<:"+paymentStatusRequest);
-            String paymentStatusResponse = webClient.postForObject(paymentStatusURL, paymentStatusRequest, String.class);
-            PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse, movement.getEndtoend_id());    
-            if (paymentResponse.isExecuted()){
-                logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
-                JSONObject body = new JSONObject();
-                body.put("operationId", movement.getId());
-                body.put("fee", FREE_FEE);
-                logger.info("valor que llega:"+paymentResponse.getAddtlInf());
-                body.put("rate",paymentResponse.getAddtlInf());
-                try{
-                    ResponseEntity<String> response = webClient.postForObject(setFeeRateURL, client.getEntity(body), ResponseEntity.class);
-                    logger.info("status code:"+response.getStatusCode());
-                    logger.info("response:"+response);
-                    
-                    movementRepository.setFeeRateStatus(movement.getId());
-                }catch(Exception ex){
-                    logger.error("ERROR:"+ex.getMessage());
-                    ex.printStackTrace();
+            ResponseEntity<String> paymentStatusResponse = webClient.postForEntity(paymentStatusURL, client.getEntity(paymentStatusRequest), String.class);
+            logger.info("statuscode:"+paymentInitiationResponse.getStatusCode());
+            if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
+                PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse, movement.getEndtoend_id());    
+                if (paymentResponse.isExecuted()){
+                    logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
+                    JSONObject body = new JSONObject();
+                    body.put("operationId", movement.getId());
+                    body.put("fee", FREE_FEE);
+                    logger.info("valor que llega:"+paymentResponse.getAddtlInf());
+                    body.put("rate",paymentResponse.getAddtlInf());
+                    try{
+                        ResponseEntity<String> response = webClient.postForObject(setFeeRateURL, client.getEntity(body), ResponseEntity.class);
+                        logger.info("status code:"+response.getStatusCode());
+                        logger.info("response:"+response);
+                        movementRepository.setFeeRateStatus(movement.getId());
+                    }catch(Exception ex){
+                        logger.error("ERROR:"+ex.getMessage());
+                        ex.printStackTrace();
+                    }
                 }
             }
         }

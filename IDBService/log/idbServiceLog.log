@@ -97,3 +97,16 @@ General Logger:	2020/07/18 15:09:34 client.go:34: Connected to Ethereum Node: ht
 General Logger:	2020/07/18 15:09:36 client.go:82: OptionsTransaction=[From:0xbceda2ba9af65c18c7992849c312d1db77cf008e,nonce:568,gasPrice:0,gasLimit:4000700,gas:0
 General Logger:	2020/07/18 15:13:28 client.go:34: Connected to Ethereum Node: http://34.74.56.215:4545
 General Logger:	2020/07/18 15:13:29 client.go:82: OptionsTransaction=[From:0xbceda2ba9af65c18c7992849c312d1db77cf008e,nonce:569,gasPrice:0,gasLimit:4000700,gas:0
+General Logger:	2020/07/22 16:08:16 client.go:40: Connected to Ethereum Node: http://34.74.56.215:4545
+General Logger:	2020/07/22 16:08:17 client.go:88: OptionsTransaction=[From:0xbceda2ba9af65c18c7992849c312d1db77cf008e,nonce:713,gasPrice:0,gasLimit:4000700,gas:0
+General Logger:	2020/07/22 16:08:17 client.go:280: Call From: 0xbcEda2Ba9aF65c18C7992849C312d1Db77cF008E
+General Logger:	2020/07/22 16:08:17 client.go:281: Call To: 0x92792dB87079D2A13ecfC2639C912282a98313A5
+General Logger:	2020/07/22 16:08:17 client.go:282: Call Data: 0xbe791e4a0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000bc00000000000000000000000000000000000000000000000000000000000000063737373737370000000000000000000000000000000000000000000000000000
+General Logger:	2020/07/22 16:08:17 client.go:283: Call GasLimit: 0x3d0bbc
+General Logger:	2020/07/22 16:08:18 client.go:265: result: 0x0000000000000000000000000000000000000000000000000000000000000001
+General Logger:	2020/07/22 16:08:18 client.go:270: value: 1
+General Logger:	2020/07/22 16:08:18 client.go:102: CrossBoarderPayment Contract instanced
+General Logger:	2020/07/22 16:08:18 client.go:104: operationId: 777777
+General Logger:	2020/07/22 16:08:18 client.go:105: fee: 0
+General Logger:	2020/07/22 16:08:18 client.go:106: tasa: 188
+General Logger:	2020/07/22 16:08:18 client.go:120: Tx sent: 0xe44f1b1933519fe4def6417bd3338b26c1ae4b07728d258cf1efc89dc139a2ae

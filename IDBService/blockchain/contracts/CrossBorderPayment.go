@@ -27,7 +27,7 @@ var (
 )
 
 // CrossBorderPaymentABI is the input ABI used to generate the binding from.
-const CrossBorderPaymentABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeAgent\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"eDollars\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"ePesos\",\"type\":\"address\"}],\"name\":\"CrossBorderCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"Exchanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"}],\"name\":\"FeeRateSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"SendedToMarket\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferApproved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferCancelled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferOnHold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"orderer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferOrdered\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"approveTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"cancelTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"changeDollarsToPesos\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeAgent\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getDollarAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPesosAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"orderTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"retrieveTransferData\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"origin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"internalType\":\"enumICrossBoarderPayment.TransferStatusCode\",\"name\":\"status\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"sendDollarsToExchange\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"sendPesosToRecepient\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"}],\"name\":\"setFeeRate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTransferAgent\",\"type\":\"address\"}],\"name\":\"setTransferAgent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transferAgent\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const CrossBorderPaymentABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_feeAgent\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"eDollars\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"ePesos\",\"type\":\"address\"}],\"name\":\"CrossBorderCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"Exchanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"}],\"name\":\"FeeRateSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"SendedToMarket\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TransferApproved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferCancelled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"orderer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"TransferOnHold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"orderer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferOrdered\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"approveTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"cancelTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"changeDollarsToPesos\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeAgent\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getDollarAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPesosAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"orderTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"retrieveTransferData\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"origin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorExchange\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"valueExchanged\",\"type\":\"uint256\"},{\"internalType\":\"enumICrossBoarderPayment.TransferStatusCode\",\"name\":\"status\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"sendDollarsToExchange\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"}],\"name\":\"sendPesosToRecepient\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"operationId\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"}],\"name\":\"setFeeRate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTransferAgent\",\"type\":\"address\"}],\"name\":\"setTransferAgent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transferAgent\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // CrossBorderPayment is an auto generated Go binding around an Ethereum contract.
 type CrossBorderPayment struct {
@@ -251,7 +251,7 @@ func (_CrossBorderPayment *CrossBorderPaymentCallerSession) GetPesosAddress() (c
 
 // RetrieveTransferData is a free data retrieval call binding the contract method 0xe1c2df34.
 //
-// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint8 status)
+// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint256 valueExchanged, uint8 status)
 func (_CrossBorderPayment *CrossBorderPaymentCaller) RetrieveTransferData(opts *bind.CallOpts, operationId string) (struct {
 	Origin           common.Address
 	To               common.Address
@@ -259,6 +259,7 @@ func (_CrossBorderPayment *CrossBorderPaymentCaller) RetrieveTransferData(opts *
 	Value            *big.Int
 	Fee              *big.Int
 	Rate             *big.Int
+	ValueExchanged   *big.Int
 	Status           uint8
 }, error) {
 	ret := new(struct {
@@ -268,6 +269,7 @@ func (_CrossBorderPayment *CrossBorderPaymentCaller) RetrieveTransferData(opts *
 		Value            *big.Int
 		Fee              *big.Int
 		Rate             *big.Int
+		ValueExchanged   *big.Int
 		Status           uint8
 	})
 	out := ret
@@ -277,7 +279,7 @@ func (_CrossBorderPayment *CrossBorderPaymentCaller) RetrieveTransferData(opts *
 
 // RetrieveTransferData is a free data retrieval call binding the contract method 0xe1c2df34.
 //
-// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint8 status)
+// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint256 valueExchanged, uint8 status)
 func (_CrossBorderPayment *CrossBorderPaymentSession) RetrieveTransferData(operationId string) (struct {
 	Origin           common.Address
 	To               common.Address
@@ -285,6 +287,7 @@ func (_CrossBorderPayment *CrossBorderPaymentSession) RetrieveTransferData(opera
 	Value            *big.Int
 	Fee              *big.Int
 	Rate             *big.Int
+	ValueExchanged   *big.Int
 	Status           uint8
 }, error) {
 	return _CrossBorderPayment.Contract.RetrieveTransferData(&_CrossBorderPayment.CallOpts, operationId)
@@ -292,7 +295,7 @@ func (_CrossBorderPayment *CrossBorderPaymentSession) RetrieveTransferData(opera
 
 // RetrieveTransferData is a free data retrieval call binding the contract method 0xe1c2df34.
 //
-// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint8 status)
+// Solidity: function retrieveTransferData(string operationId) view returns(address origin, address to, address operatorExchange, uint256 value, uint256 fee, uint256 rate, uint256 valueExchanged, uint8 status)
 func (_CrossBorderPayment *CrossBorderPaymentCallerSession) RetrieveTransferData(operationId string) (struct {
 	Origin           common.Address
 	To               common.Address
@@ -300,6 +303,7 @@ func (_CrossBorderPayment *CrossBorderPaymentCallerSession) RetrieveTransferData
 	Value            *big.Int
 	Fee              *big.Int
 	Rate             *big.Int
+	ValueExchanged   *big.Int
 	Status           uint8
 }, error) {
 	return _CrossBorderPayment.Contract.RetrieveTransferData(&_CrossBorderPayment.CallOpts, operationId)
@@ -1138,12 +1142,13 @@ func (it *CrossBorderPaymentTransferApprovedIterator) Close() error {
 type CrossBorderPaymentTransferApproved struct {
 	Issuer      common.Address
 	OperationId string
+	Amount      *big.Int
 	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterTransferApproved is a free log retrieval operation binding the contract event 0xc1b8717a0db50803474129e022233b3b5e3d5c319cba269f91a3e25055d7bbe2.
+// FilterTransferApproved is a free log retrieval operation binding the contract event 0x55bdc159e06129409554f3fd0913c9b2ed6a7c3e7dfdf3bf17fe29617107ca6b.
 //
-// Solidity: event TransferApproved(address indexed issuer, string operationId)
+// Solidity: event TransferApproved(address indexed issuer, string operationId, uint256 amount)
 func (_CrossBorderPayment *CrossBorderPaymentFilterer) FilterTransferApproved(opts *bind.FilterOpts, issuer []common.Address) (*CrossBorderPaymentTransferApprovedIterator, error) {
 
 	var issuerRule []interface{}
@@ -1158,9 +1163,9 @@ func (_CrossBorderPayment *CrossBorderPaymentFilterer) FilterTransferApproved(op
 	return &CrossBorderPaymentTransferApprovedIterator{contract: _CrossBorderPayment.contract, event: "TransferApproved", logs: logs, sub: sub}, nil
 }
 
-// WatchTransferApproved is a free log subscription operation binding the contract event 0xc1b8717a0db50803474129e022233b3b5e3d5c319cba269f91a3e25055d7bbe2.
+// WatchTransferApproved is a free log subscription operation binding the contract event 0x55bdc159e06129409554f3fd0913c9b2ed6a7c3e7dfdf3bf17fe29617107ca6b.
 //
-// Solidity: event TransferApproved(address indexed issuer, string operationId)
+// Solidity: event TransferApproved(address indexed issuer, string operationId, uint256 amount)
 func (_CrossBorderPayment *CrossBorderPaymentFilterer) WatchTransferApproved(opts *bind.WatchOpts, sink chan<- *CrossBorderPaymentTransferApproved, issuer []common.Address) (event.Subscription, error) {
 
 	var issuerRule []interface{}
@@ -1200,9 +1205,9 @@ func (_CrossBorderPayment *CrossBorderPaymentFilterer) WatchTransferApproved(opt
 	}), nil
 }
 
-// ParseTransferApproved is a log parse operation binding the contract event 0xc1b8717a0db50803474129e022233b3b5e3d5c319cba269f91a3e25055d7bbe2.
+// ParseTransferApproved is a log parse operation binding the contract event 0x55bdc159e06129409554f3fd0913c9b2ed6a7c3e7dfdf3bf17fe29617107ca6b.
 //
-// Solidity: event TransferApproved(address indexed issuer, string operationId)
+// Solidity: event TransferApproved(address indexed issuer, string operationId, uint256 amount)
 func (_CrossBorderPayment *CrossBorderPaymentFilterer) ParseTransferApproved(log types.Log) (*CrossBorderPaymentTransferApproved, error) {
 	event := new(CrossBorderPaymentTransferApproved)
 	if err := _CrossBorderPayment.contract.UnpackLog(event, "TransferApproved", log); err != nil {
@@ -1425,38 +1430,59 @@ func (it *CrossBorderPaymentTransferExecutedIterator) Close() error {
 // CrossBorderPaymentTransferExecuted represents a TransferExecuted event raised by the CrossBorderPayment contract.
 type CrossBorderPaymentTransferExecuted struct {
 	Issuer      common.Address
+	Orderer     common.Address
 	OperationId string
+	To          common.Address
+	Value       *big.Int
 	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterTransferExecuted is a free log retrieval operation binding the contract event 0x3ab04c4b61dfe99d86c9fc866f66c8fbdb378b8b5f05dc4954dd56e31fd76446.
+// FilterTransferExecuted is a free log retrieval operation binding the contract event 0x409b2602763aef65469e8a34108db217c5664ef1cb6b5eb5cf63bd946f2e4ee0.
 //
-// Solidity: event TransferExecuted(address indexed issuer, string operationId)
-func (_CrossBorderPayment *CrossBorderPaymentFilterer) FilterTransferExecuted(opts *bind.FilterOpts, issuer []common.Address) (*CrossBorderPaymentTransferExecutedIterator, error) {
+// Solidity: event TransferExecuted(address indexed issuer, address indexed orderer, string operationId, address indexed to, uint256 value)
+func (_CrossBorderPayment *CrossBorderPaymentFilterer) FilterTransferExecuted(opts *bind.FilterOpts, issuer []common.Address, orderer []common.Address, to []common.Address) (*CrossBorderPaymentTransferExecutedIterator, error) {
 
 	var issuerRule []interface{}
 	for _, issuerItem := range issuer {
 		issuerRule = append(issuerRule, issuerItem)
 	}
+	var ordererRule []interface{}
+	for _, ordererItem := range orderer {
+		ordererRule = append(ordererRule, ordererItem)
+	}
 
-	logs, sub, err := _CrossBorderPayment.contract.FilterLogs(opts, "TransferExecuted", issuerRule)
+	var toRule []interface{}
+	for _, toItem := range to {
+		toRule = append(toRule, toItem)
+	}
+
+	logs, sub, err := _CrossBorderPayment.contract.FilterLogs(opts, "TransferExecuted", issuerRule, ordererRule, toRule)
 	if err != nil {
 		return nil, err
 	}
 	return &CrossBorderPaymentTransferExecutedIterator{contract: _CrossBorderPayment.contract, event: "TransferExecuted", logs: logs, sub: sub}, nil
 }
 
-// WatchTransferExecuted is a free log subscription operation binding the contract event 0x3ab04c4b61dfe99d86c9fc866f66c8fbdb378b8b5f05dc4954dd56e31fd76446.
+// WatchTransferExecuted is a free log subscription operation binding the contract event 0x409b2602763aef65469e8a34108db217c5664ef1cb6b5eb5cf63bd946f2e4ee0.
 //
-// Solidity: event TransferExecuted(address indexed issuer, string operationId)
-func (_CrossBorderPayment *CrossBorderPaymentFilterer) WatchTransferExecuted(opts *bind.WatchOpts, sink chan<- *CrossBorderPaymentTransferExecuted, issuer []common.Address) (event.Subscription, error) {
+// Solidity: event TransferExecuted(address indexed issuer, address indexed orderer, string operationId, address indexed to, uint256 value)
+func (_CrossBorderPayment *CrossBorderPaymentFilterer) WatchTransferExecuted(opts *bind.WatchOpts, sink chan<- *CrossBorderPaymentTransferExecuted, issuer []common.Address, orderer []common.Address, to []common.Address) (event.Subscription, error) {
 
 	var issuerRule []interface{}
 	for _, issuerItem := range issuer {
 		issuerRule = append(issuerRule, issuerItem)
 	}
+	var ordererRule []interface{}
+	for _, ordererItem := range orderer {
+		ordererRule = append(ordererRule, ordererItem)
+	}
 
-	logs, sub, err := _CrossBorderPayment.contract.WatchLogs(opts, "TransferExecuted", issuerRule)
+	var toRule []interface{}
+	for _, toItem := range to {
+		toRule = append(toRule, toItem)
+	}
+
+	logs, sub, err := _CrossBorderPayment.contract.WatchLogs(opts, "TransferExecuted", issuerRule, ordererRule, toRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1488,9 +1514,9 @@ func (_CrossBorderPayment *CrossBorderPaymentFilterer) WatchTransferExecuted(opt
 	}), nil
 }
 
-// ParseTransferExecuted is a log parse operation binding the contract event 0x3ab04c4b61dfe99d86c9fc866f66c8fbdb378b8b5f05dc4954dd56e31fd76446.
+// ParseTransferExecuted is a log parse operation binding the contract event 0x409b2602763aef65469e8a34108db217c5664ef1cb6b5eb5cf63bd946f2e4ee0.
 //
-// Solidity: event TransferExecuted(address indexed issuer, string operationId)
+// Solidity: event TransferExecuted(address indexed issuer, address indexed orderer, string operationId, address indexed to, uint256 value)
 func (_CrossBorderPayment *CrossBorderPaymentFilterer) ParseTransferExecuted(log types.Log) (*CrossBorderPaymentTransferExecuted, error) {
 	event := new(CrossBorderPaymentTransferExecuted)
 	if err := _CrossBorderPayment.contract.UnpackLog(event, "TransferExecuted", log); err != nil {
