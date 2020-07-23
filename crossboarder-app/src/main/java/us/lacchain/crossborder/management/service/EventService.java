@@ -205,7 +205,7 @@ public class EventService implements IEventService {
         logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
 
         ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);
-        logger.info("statuscode:"+paymentInitiationResponse.getStatusCode());
+        logger.info("response statusCode:"+paymentInitiationResponse.getStatusCode());
         if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
             PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse.getBody());
             System.out.println(">>>>PaymentResponse>>>"+paymentResponse);

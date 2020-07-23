@@ -62,6 +62,8 @@ public class PaymentInitiationMapper{
             Element amt = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:Amt[1]/ns:EqvtAmt[1]/ns:Amt[1]", document, namespaceContext);
             amt.setText(getAmount(amount));
 
+            System.out.println("<<<paymentInitiationRequest>>"+document.asXML());
+
             byte[] bytesEncoded = Base64.encodeBase64(document.asXML().getBytes());
 
             String requestEncoded = "<Request><paymentBase64>"+new String(bytesEncoded)+"</paymentBase64></Request>";
@@ -78,6 +80,13 @@ public class PaymentInitiationMapper{
         try{
         SAXReader reader = new SAXReader();
         Document document = reader.read(new StringReader(response));
+
+        Element psr1 = (Element) document.selectSingleNode("//Response[1]/psr1[1]");
+        System.out.println("psr1:"+psr1.getText()); 
+
+        byte[] bytesDecoded = Base64.decodeBase64(psr1.getText().getBytes());
+
+        document = reader.read(new StringReader(new String(bytesDecoded)));
 
         Map<String, String> namespaceContext = new HashMap<>();
         namespaceContext.put("ns", "urn:iso:std:iso:20022:tech:xsd:pain.002.001.03");
@@ -185,8 +194,10 @@ public class PaymentInitiationMapper{
     }
 
     private String getAmount(int amount){
-        float flo = (float) amount/100;
-        return String.valueOf(flo);
+        float flo = (float) amount/10000;
+        DecimalFormat df = new DecimalFormat("########.00");
+        df.setMaximumFractionDigits(2);
+        return df.format(flo);
     }
 
     private String getRandomId(int count){
