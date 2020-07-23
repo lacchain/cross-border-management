@@ -225,9 +225,9 @@ public class EventService implements IEventService {
             String paymentStatusRequest = mapper.xmlToPaymentStatusRequest(movement.getEndtoend_id());
             logger.info(">>>>PaymentStatusRequest<<<<:"+paymentStatusRequest);
             ResponseEntity<String> paymentStatusResponse = webClient.postForEntity(paymentStatusURL, client.getEntity(paymentStatusRequest), String.class);
-            logger.info("statuscode:"+paymentInitiationResponse.getStatusCode());
-            if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
-                PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse, movement.getEndtoend_id());    
+            logger.info("statuscode:"+paymentStatusResponse.getStatusCode());
+            if (HttpStatus.OK == paymentStatusResponse.getStatusCode()){
+                PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse.getBody(), movement.getEndtoend_id());    
                 if (paymentResponse.isExecuted()){
                     logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
                     JSONObject body = new JSONObject();
