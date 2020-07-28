@@ -144,12 +144,12 @@ public class EventService implements IEventService {
         String currency = "USD";
         logger.info("dltAddress:"+dltAddress);
         logger.info("contractPesosParam:"+contractPesos);
-        logger.info("contractPesos:"+request.getAddress());
+        logger.info("contract:"+request.getAddress());
         if (contractPesos.equalsIgnoreCase(request.getAddress())){
             currency = "DOP";
         }
         
-        accountRepository.setWhitelisted(dltAddress,currency);
+        accountRepository.setWhitelisted(dltAddress.toUpperCase(),currency);
     }
 
     private void setWhitelistedRemoved(EventRequest request){
@@ -157,7 +157,7 @@ public class EventService implements IEventService {
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
         logger.info("dltAddress:"+dltAddress);
-        accountRepository.setWhitelistedRemove(dltAddress);
+        accountRepository.setWhitelistedRemove(dltAddress.toUpperCase());
     }
 
     private void setBalanceMinted(EventRequest request){
@@ -169,7 +169,7 @@ public class EventService implements IEventService {
         String dltAddress = (String)accountParameter.get("value");
         int balance = (int)value.get("value");
         if (ZERO_ADDRESS.equalsIgnoreCase(fromDltAddress)){
-            accountRepository.setBalance(dltAddress, (float)balance/10000);
+            accountRepository.setBalance(dltAddress.toUpperCase(), (float)balance/10000);
             logger.info("new balance set");
             LocalDateTime localDateTime = LocalDateTime.now();
             Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance/10000,mintMessage,balance/10000,0,0,null,null,null,null,null,null,4);
@@ -189,7 +189,7 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress, toAddress,(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress.toUpperCase(), toAddress.toUpperCase(),(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
