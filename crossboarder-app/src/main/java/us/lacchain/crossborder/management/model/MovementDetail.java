@@ -47,13 +47,13 @@ public class MovementDetail {
     private String set_fee;
     private String operation_approved;
     private String operation_executed;
-    private String acctsvrref;
+    private String acctsvcrref;
     private String status;
 
     public MovementDetail() {
     }
 
-    public MovementDetail(String id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String operation_executed, String acctsvrref, String status) {
+    public MovementDetail(String id, String datetime, float sent_amount, float fee_applied, float converted_amount, float rate_applied, float recipient_will_get, String sender_name, String sender_bank, String sender_bank_account, String sender_dlt_address, String sender_currency, String receiver_name, String receiver_bank, String receiver_bank_account, String receiver_dlt_address, String receiver_currency, String operation_requested, String set_fee, String operation_approved, String operation_executed, String acctsvcrref, String status) {
         this.id = id;
         this.datetime = datetime;
         this.sent_amount = sent_amount;
@@ -75,7 +75,7 @@ public class MovementDetail {
         this.set_fee = set_fee;
         this.operation_approved = operation_approved;
         this.operation_executed = operation_executed;
-        this.acctsvrref = acctsvrref;
+        this.acctsvcrref = acctsvcrref;
         this.status = status;
     }
 
@@ -247,12 +247,12 @@ public class MovementDetail {
         this.operation_executed = operation_executed;
     }
 
-    public String getAcctsvrref() {
-        return this.acctsvrref;
+    public String getAcctsvcrref() {
+        return this.acctsvcrref;
     }
 
-    public void setAcctsvrref(String acctsvrref) {
-        this.acctsvrref = acctsvrref;
+    public void setAcctsvcrref(String acctsvcrref) {
+        this.acctsvcrref = acctsvcrref;
     }
 
     public String getStatus() {
@@ -276,7 +276,7 @@ public class MovementDetail {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sent_amount, fee_applied, converted_amount, rate_applied, recipient_will_get, sender_name, sender_bank, sender_bank_account, sender_dlt_address, sender_currency, receiver_name, receiver_bank, receiver_bank_account, receiver_dlt_address, receiver_currency, operation_requested, set_fee, operation_approved, operation_executed, acctsvrref, status);
+        return Objects.hash(id, datetime, sent_amount, fee_applied, converted_amount, rate_applied, recipient_will_get, sender_name, sender_bank, sender_bank_account, sender_dlt_address, sender_currency, receiver_name, receiver_bank, receiver_bank_account, receiver_dlt_address, receiver_currency, operation_requested, set_fee, operation_approved, operation_executed, acctsvcrref, status);
     }
 
     @Override
@@ -303,7 +303,7 @@ public class MovementDetail {
             ", set_fee='" + getSet_fee() + "'" +
             ", operation_approved='" + getOperation_approved() + "'" +
             ", operation_executed='" + getOperation_approved() + "'" +
-            ", acctsvrref ='" + getAcctsvrref() + "'" +
+            ", acctsvcrref ='" + getAcctsvcrref() + "'" +
             ", status='" + getStatus() + "'" +
             "}";
     }    

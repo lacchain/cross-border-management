@@ -172,7 +172,7 @@ public class EventService implements IEventService {
             accountRepository.setBalance(dltAddress.toUpperCase(), (float)balance/10000);
             logger.info("new balance set");
             LocalDateTime localDateTime = LocalDateTime.now();
-            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS,dltAddress,(float)balance/10000,mintMessage,balance/10000,0,0,null,null,null,null,null,null,4);
+            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS.toUpperCase(),dltAddress.toUpperCase(),(float)balance/10000,mintMessage,balance/10000,0,1,null,null,null,null,null,null,null,4);
             movementRepository.save(movement);
             logger.info("new movement registered");
         }
@@ -189,7 +189,7 @@ public class EventService implements IEventService {
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress.toUpperCase(), toAddress.toUpperCase(),(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress.toUpperCase(), toAddress.toUpperCase(),(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }
@@ -207,9 +207,11 @@ public class EventService implements IEventService {
         ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);
         logger.info("response statusCode:"+paymentInitiationResponse.getStatusCode());
         if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
+            String apimguid = paymentInitiationResponse.getHeaders().getFirst("apim-guid");
+            System.out.println("apimguid"+apimguid);
             PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse.getBody());
             System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
-            movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), paymentResponse.getAcctSvcrRef());
+            movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), apimguid, paymentResponse.getAcctSvcrRef());
         }else{
             movementRepository.setTransferFailed(operationId);
         }

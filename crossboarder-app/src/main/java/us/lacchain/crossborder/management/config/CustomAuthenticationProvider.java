@@ -48,7 +48,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             final String username = authentication.getName();
             final String password = authentication.getCredentials().toString();
 
-            UserLogin user = userRepository.getUserLogin(username,password,request.getHeader("dlt-address"));
+            UserLogin user = userRepository.getUserLogin(username,password,request.getHeader("dlt-address").toUpperCase());
 
             if (user == null){
                 throw new BadCredentialsException("User or password is incorrect");    

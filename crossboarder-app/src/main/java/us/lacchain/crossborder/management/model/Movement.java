@@ -18,7 +18,7 @@ import javax.persistence.SqlResultSetMapping;
     @ConstructorResult(targetClass = MovementResult.class, columns = { @ColumnResult(name = "id", type = String.class),
             @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "transfer_type"), @ColumnResult(name = "company"), @ColumnResult(name = "amount_received", type = Float.class), @ColumnResult(name = "detail"), @ColumnResult(name = "status"), @ColumnResult(name = "dlt_address") }) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = "MovementRepository.getAllMovementsByDltAddress", query = "SELECT DISTINCT movements.id AS id, movements.datetime, CASE WHEN movements.sender = :dltAddress THEN 'TRANSFER OUT' ELSE 'TRANSFER IN' END AS transfer_type,users.company,(movements.received_amount*movements.rate) AS amount_received,movements.detail,CASE WHEN movements.status = 1 THEN 'REQUESTED' WHEN movements.status = 2 THEN 'IN PROGRESS' ELSE 'COMPLETED' END AS status, CASE WHEN movements.sender = :dltAddress THEN movements.receiver ELSE movements.sender END AS dlt_address FROM movements INNER JOIN accounts ON accounts.dlt_address = dlt_address INNER JOIN users ON users.id = accounts.user_id WHERE (movements.sender = :dltAddress and movements.receiver = dlt_address) or (movements.receiver = :dltAddress and movements.sender = dlt_address)", resultSetMapping = "movementResultMapping")})
+    @NamedNativeQuery(name = "MovementRepository.getAllMovementsByDltAddress", query = "SELECT DISTINCT movements.id AS id, movements.datetime, CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN 'TRANSFER OUT' ELSE 'TRANSFER IN' END AS transfer_type,users.company,(movements.received_amount*movements.rate) AS amount_received,movements.detail,CASE WHEN movements.status = 1 THEN 'REQUESTED' WHEN movements.status = 2 THEN 'IN PROGRESS' ELSE 'COMPLETED' END AS status, CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN movements.receiver ELSE movements.sender END AS dlt_address FROM movements INNER JOIN accounts ON UPPER(accounts.dlt_address) = UPPER(dlt_address) INNER JOIN users ON users.id = accounts.user_id WHERE (UPPER(movements.sender) = UPPER(:dltAddress) and UPPER(movements.receiver) = UPPER(dlt_address)) or (UPPER(movements.receiver) = UPPER(:dltAddress) and UPPER(movements.sender) = UPPER(dlt_address))", resultSetMapping = "movementResultMapping")})
     
 @Entity
 @Table(name = "movements")
@@ -40,13 +40,14 @@ public class Movement {
     private String operation_approved;
     private String operation_executed;
     private String endtoend_id;
+    private String apimguid;
     private String acctsvcrref;
     private int status;
 
     public Movement() {
     }
 
-    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String acctsvcrref, int status) {
+    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String apimguid, String acctsvcrref, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -61,6 +62,7 @@ public class Movement {
         this.operation_approved = operation_approved;
         this.operation_executed = operation_executed;
         this.endtoend_id = endtoend_id;
+        this.apimguid = apimguid;
         this.acctsvcrref = acctsvcrref;
         this.status = status;
     }
@@ -177,6 +179,14 @@ public class Movement {
         this.endtoend_id = endtoend_id;
     }
 
+    public String getApimguid(){
+        return this.apimguid;
+    }
+
+    public void setApimguid(String apimguid){
+        this.apimguid = apimguid;
+    }
+
     public String getAcctsvcrref(){
         return this.acctsvcrref;
     }
@@ -206,7 +216,7 @@ public class Movement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, acctsvcrref, status);
+        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, apimguid, acctsvcrref, status);
     }
 
     @Override
@@ -226,6 +236,7 @@ public class Movement {
         sb.append(", operation_approved=").append(operation_approved).append('\'');
         sb.append(", operation_executed=").append(operation_executed).append('\'');
         sb.append(", endtoend_id=").append(endtoend_id).append('\'');
+        sb.append(", apimguid=").append(apimguid).append('\'');
         sb.append(", acctsvcrref=").append(acctsvcrref).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');

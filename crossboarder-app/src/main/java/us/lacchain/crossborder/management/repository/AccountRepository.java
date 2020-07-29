@@ -18,17 +18,17 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update accounts set status = 1, currency = :currency where dlt_address = :dltAddress", nativeQuery=true)
+    @Query(value = "update accounts set status = 1, currency = :currency where UPPER(dlt_address) = UPPER(:dltAddress)", nativeQuery=true)
     void setWhitelisted(@Param("dltAddress") String dltAddress, @Param("currency") String currency);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update accounts set status = 0 where dlt_address = :dltAddress", nativeQuery=true)
+    @Query(value = "update accounts set status = 0 where UPPER(dlt_address) = UPPER(:dltAddress)", nativeQuery=true)
     void setWhitelistedRemove(@Param("dltAddress") String dltAddress);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update accounts set balance = :balance where dlt_address = :dltAddress", nativeQuery=true)
+    @Query(value = "update accounts set balance = :balance where UPPER(dlt_address) = UPPER(:dltAddress)", nativeQuery=true)
     void setBalance(@Param("dltAddress") String dltAddress, @Param("balance") float balance);
 
 }

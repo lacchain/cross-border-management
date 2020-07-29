@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MovementDetailRepository extends JpaRepository<MovementDetail, String> {
 
-    @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail and (sender_dlt_address = :dltAddress or receiver_dlt_address = :dltAddress)", nativeQuery = true)
+    @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail and (UPPER(sender_dlt_address) = UPPER(:dltAddress) or UPPER(receiver_dlt_address) = UPPER(:dltAddress))", nativeQuery = true)
     MovementDetail getMovementDetail(@Param("idMovementDetail") String idMovementDetail, @Param("dltAddress") String dltAddress);
 
     @Query(value="SELECT * FROM movements_view m WHERE m.id = :idMovementDetail", nativeQuery = true)

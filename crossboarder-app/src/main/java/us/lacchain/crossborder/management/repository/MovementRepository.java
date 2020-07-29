@@ -29,8 +29,8 @@ public interface MovementRepository extends JpaRepository<Movement, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update movements set status = 2, operation_approved = :transactionHash, endtoend_id = :endToEndId, acctsvcrref = :acctSvcrRef where id = :operationId", nativeQuery=true)
-    void setTransferInProgress(@Param("operationId") String operationId, @Param("transactionHash") String transactionHash, @Param("endToEndId") String endToEndId, @Param("acctSvcrRef") String acctSvcrRef);
+    @Query(value = "update movements set status = 2, operation_approved = :transactionHash, endtoend_id = :endToEndId, apimguid = :apimguid, acctsvcrref = :acctSvcrRef where id = :operationId", nativeQuery=true)
+    void setTransferInProgress(@Param("operationId") String operationId, @Param("transactionHash") String transactionHash, @Param("endToEndId") String endToEndId, @Param("apimguid") String apimguid,@Param("acctSvcrRef") String acctSvcrRef);
 
     @Transactional
     @Modifying(clearAutomatically = true)

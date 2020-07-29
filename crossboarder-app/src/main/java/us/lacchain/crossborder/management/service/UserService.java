@@ -50,7 +50,7 @@ public class UserService implements IUserService {
             }
             userRepository.save(user);
        
-            if (!bankRepository.existsById(request.getBankDetails().getBankTaxId())){
+            if (!bankRepository.existsById(request.getBankDetails().getBankTaxId().toUpperCase())){
                 Bank bank = new Bank(request.getBankDetails().getBankTaxId().toUpperCase(), request.getBankDetails().getBankName().toUpperCase(), request.getBankDetails().getBankCity().toUpperCase());
                 bankRepository.save(bank);
             }
@@ -65,10 +65,10 @@ public class UserService implements IUserService {
     }
 
     public UserView getUser(String dltAddress)throws DataAccessException{
-        return userViewRepository.findUserByDltAddress(dltAddress);
+        return userViewRepository.findUserByDltAddress(dltAddress.toUpperCase());
     }
 
     public UserView getUser(String dltAddress, String accountNumber)throws DataAccessException{
-        return userViewRepository.findUserByAddressAccount(dltAddress, accountNumber);
+        return userViewRepository.findUserByAddressAccount(dltAddress.toUpperCase(), accountNumber);
     }
 }
