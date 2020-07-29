@@ -5,6 +5,7 @@ var app = express();
 
 app.post('/citiconnect/sb/worldlinkservices/v1/payment/initiation', function(req, res){
     res.contentType('application/xml');
+    res.setHeader('apim-guid','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603b');
     res.sendFile(path.join(__dirname , 'paymentInitiationResponse.xml'));
 });
 
