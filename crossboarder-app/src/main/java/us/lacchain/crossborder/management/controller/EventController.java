@@ -37,24 +37,25 @@ public class EventController {
         try {
             logger.info("Process Event");
             eventService.processEvent(requestBody);
-            return ResponseEntity.ok().build();
         }
         catch  (Exception ex){
             logger.error(ex.getMessage(),ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/block")
     public ResponseEntity processBlock(@RequestBody EventRequest requestBody){
         try {
             logger.info("Process Block");
-            return ResponseEntity.ok().build();
+    //        return ResponseEntity.ok().build();
         }
         catch  (Exception ex){
             logger.error(ex.getMessage(),ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+        return ResponseEntity.ok().build();
     }
 
     

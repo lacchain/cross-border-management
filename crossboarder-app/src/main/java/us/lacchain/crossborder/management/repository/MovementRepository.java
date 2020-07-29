@@ -44,6 +44,11 @@ public interface MovementRepository extends JpaRepository<Movement, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update movements set status = 5 where id = :operationId", nativeQuery=true)    
+    @Query(value = "update movements set status = 6 where id = :operationId", nativeQuery=true)    
     void setTransferFailed(@Param("operationId") String operationId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update movements set status = 5 where id = :operationId", nativeQuery=true)    
+    void setTransferCancelled(@Param("operationId") String operationId);
 }

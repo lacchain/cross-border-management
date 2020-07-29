@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClientException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -127,6 +128,9 @@ public class EventService implements IEventService {
                 case "TransferExecuted":
                     setTransferExecuted(request);
                     break;
+                case "TransferCancelled":
+                    setTransferCancelled(request);
+                    break;
                 default:
                     logger.info("Event doesn't registered");
             }
@@ -137,7 +141,7 @@ public class EventService implements IEventService {
         return true;
     }
 
-    private void setWhitelistedAccount(EventRequest request){
+    private void setWhitelistedAccount(EventRequest request)throws DataAccessException{
         logger.info("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
@@ -148,19 +152,20 @@ public class EventService implements IEventService {
         if (contractPesos.equalsIgnoreCase(request.getAddress())){
             currency = "DOP";
         }
-        
         accountRepository.setWhitelisted(dltAddress.toUpperCase(),currency);
+        logger.info("account was whitelisted");
     }
 
-    private void setWhitelistedRemoved(EventRequest request){
+    private void setWhitelistedRemoved(EventRequest request)throws DataAccessException{
         logger.info("index:"+request.getIndexedParameters().get(0));
         Map<String,Object> accountParameter = request.getIndexedParameters().get(0);
         String dltAddress = (String)accountParameter.get("value");
         logger.info("dltAddress:"+dltAddress);
         accountRepository.setWhitelistedRemove(dltAddress.toUpperCase());
+        logger.info("account was removed from whitelist");
     }
 
-    private void setBalanceMinted(EventRequest request){
+    private void setBalanceMinted(EventRequest request)throws DataAccessException{
         logger.info("index"+request.getIndexedParameters().get(1));
         Map<String,Object> fromParameter = request.getIndexedParameters().get(0);
         Map<String,Object> accountParameter = request.getIndexedParameters().get(1);
@@ -178,7 +183,7 @@ public class EventService implements IEventService {
         }
     }
 
-    private void setTransferOrdered(EventRequest request){
+    private void setTransferOrdered(EventRequest request)throws DataAccessException{
         logger.info("index"+request.getIndexedParameters().get(1));
         Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
         Map<String,Object> toParameter = request.getIndexedParameters().get(1);
@@ -194,7 +199,7 @@ public class EventService implements IEventService {
         logger.info("new movement registered");
     }
 
-    private void executeTransfer(EventRequest request){
+    private void executeTransfer(EventRequest request)throws DataAccessException{
         logger.info("-->>>CALLING TO CITIIII FOR TRANSFER<<<----");
         Map<String,Object> amountParameter = request.getNonIndexedParameters().get(1);
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
@@ -203,21 +208,25 @@ public class EventService implements IEventService {
         PaymentInitiationMapper mapper = new PaymentInitiationMapper();
         String paymentInitiationRequest = mapper.xmlToPaymentInitiationRequest(amount);
         logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
-
-        ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);
-        logger.info("response statusCode:"+paymentInitiationResponse.getStatusCode());
-        if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
-            String apimguid = paymentInitiationResponse.getHeaders().getFirst("apim-guid");
-            System.out.println("apimguid"+apimguid);
-            PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse.getBody());
-            System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
-            movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), apimguid, paymentResponse.getAcctSvcrRef());
-        }else{
+        try{
+            ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);
+            logger.info("response statusCode:"+paymentInitiationResponse.getStatusCode());
+            if (HttpStatus.OK == paymentInitiationResponse.getStatusCode()){
+                String apimguid = paymentInitiationResponse.getHeaders().getFirst("apim-guid");
+                System.out.println("apimguid"+apimguid);
+                PaymentInitiationResponse paymentResponse = mapper.mapPaymentInitiationResponse(paymentInitiationResponse.getBody());
+                System.out.println(">>>>PaymentResponse>>>"+paymentResponse);
+                movementRepository.setTransferInProgress(operationId, request.getTransactionHash(), paymentResponse.getEndToEndId(), apimguid, paymentResponse.getAcctSvcrRef());
+            }else{
+                movementRepository.setTransferFailed(operationId);
+            }
+        }catch(RestClientException ex){
+            logger.error(ex.getMessage(),ex);
             movementRepository.setTransferFailed(operationId);
         }
     }
 
-    public void setFeeRate(){
+    public void setFeeRate()throws DataAccessException{
         List<Movement> movements = movementRepository.getMovementsInProgress();
         logger.info("Movements in progress:"+movements.size());
         for (Movement movement:movements){
@@ -226,27 +235,27 @@ public class EventService implements IEventService {
             logger.info("movement.getEndtoend_id:"+movement.getEndtoend_id());
             String paymentStatusRequest = mapper.xmlToPaymentStatusRequest(movement.getEndtoend_id());
             logger.info(">>>>PaymentStatusRequest<<<<:"+paymentStatusRequest);
-            ResponseEntity<String> paymentStatusResponse = webClient.postForEntity(paymentStatusURL, client.getEntity(paymentStatusRequest), String.class);
-            logger.info("statuscode:"+paymentStatusResponse.getStatusCode());
-            if (HttpStatus.OK == paymentStatusResponse.getStatusCode()){
-                PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse.getBody(), movement.getEndtoend_id());    
-                if (paymentResponse.isExecuted()){
-                    logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
-                    JSONObject body = new JSONObject();
-                    body.put("operationId", movement.getId());
-                    body.put("fee", FREE_FEE);
-                    logger.info("valor que llega:"+paymentResponse.getAddtlInf());
-                    body.put("rate",paymentResponse.getAddtlInf());
-                    try{
+            try{
+                ResponseEntity<String> paymentStatusResponse = webClient.postForEntity(paymentStatusURL, client.getEntity(paymentStatusRequest), String.class);
+                logger.info("statuscode:"+paymentStatusResponse.getStatusCode());
+                if (HttpStatus.OK == paymentStatusResponse.getStatusCode()){
+                    PaymentStatusResponse paymentResponse = mapper.mapPaymentStatusResponse(paymentStatusResponse.getBody(), movement.getEndtoend_id());    
+                    if (paymentResponse.isExecuted()){
+                        logger.info("CALLING BLOCKCHAIN ---> SET FEE-RATE");
+                        JSONObject body = new JSONObject();
+                        body.put("operationId", movement.getId());
+                        body.put("fee", FREE_FEE);
+                        logger.info("valor que llega:"+paymentResponse.getAddtlInf());
+                        body.put("rate",paymentResponse.getAddtlInf());
                         ResponseEntity<String> response = webClient.postForObject(setFeeRateURL, client.getEntity(body), ResponseEntity.class);
                         logger.info("status code:"+response.getStatusCode());
                         logger.info("response:"+response);
                         movementRepository.setFeeRateStatus(movement.getId());
-                    }catch(Exception ex){
-                        logger.error("ERROR:"+ex.getMessage());
-                        ex.printStackTrace();
                     }
                 }
+            }catch(Exception ex){
+                logger.error(ex.getMessage(),ex);
+                movementRepository.setTransferFailed(movement.getId());   
             }
         }
     }
@@ -269,8 +278,8 @@ public class EventService implements IEventService {
             logger.info("response:"+response);
             movementRepository.setFeeRate((float)fee,(float)rate/10000,request.getTransactionHash(),operationId); 
         }catch(Exception ex){
-            System.out.println("ERROR:"+ex.getMessage());
-            ex.printStackTrace();
+            logger.error(ex.getMessage(),ex);
+            movementRepository.setTransferFailed(operationId);   
         }
     }
 
@@ -288,8 +297,8 @@ public class EventService implements IEventService {
             String response = webClient.postForObject(changeDollarsToPesos, client.getEntity(body), String.class);
             logger.info("response:"+response);
         }catch(Exception ex){
-            System.out.println("ERROR:"+ex.getMessage());
-            ex.printStackTrace();
+            logger.error(ex.getMessage(),ex);
+            movementRepository.setTransferFailed(operationId);
         }
     }
 
@@ -307,12 +316,12 @@ public class EventService implements IEventService {
             String response = webClient.postForObject(sendPesosToRecepient, client.getEntity(body), String.class);
             logger.info("response:"+response);
         }catch(Exception ex){
-            System.out.println("ERROR:"+ex.getMessage());
-            ex.printStackTrace();
+            logger.error(ex.getMessage(),ex);
+            movementRepository.setTransferFailed(operationId);
         }
     }
 
-    private void setTransferExecuted(EventRequest request){
+    private void setTransferExecuted(EventRequest request)throws DataAccessException{
         logger.debug("index:"+request.getNonIndexedParameters().get(0));
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         Map<String,Object> ordererParameter = request.getIndexedParameters().get(1);
@@ -323,5 +332,16 @@ public class EventService implements IEventService {
         logger.debug("operationId:"+operationId);
         //accountRepository.setBalance(dltAddress, balance);
         movementRepository.setTransferExecuted(request.getTransactionHash(),operationId,(float)value/10000);
+        logger.info("transaction was executed");
+    }
+
+    private void setTransferCancelled(EventRequest request)throws DataAccessException{
+        logger.debug("index:"+request.getNonIndexedParameters().get(0));
+        Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
+        Map<String,Object> ordererParameter = request.getIndexedParameters().get(0);
+        String operationId = (String)operationIdParameter.get("value");
+        logger.debug("operationId:"+operationId);
+        movementRepository.setTransferCancelled(operationId);
+        logger.info("transaction was cancelled");
     }
 }
