@@ -158,6 +158,8 @@ SELECT DISTINCT movements.id AS "id",
   movements.set_fee,
   movements.operation_approved,
   movements.operation_executed,
+  movements.endtoend_id,
+  movements.apimguid,
   movements.acctsvcrref,
   CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' WHEN movements.status = 4 THEN 'COMPLETED' ELSE 'FAILED' END AS status
 	

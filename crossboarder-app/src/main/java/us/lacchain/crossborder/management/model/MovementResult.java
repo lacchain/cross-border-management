@@ -9,6 +9,7 @@ public class MovementResult {
     private String transfer_type;
     private String company;
     private float amount_received;
+    private String currency;
     private String detail;
     private String status;
     private String dlt_address;
@@ -17,12 +18,13 @@ public class MovementResult {
     public MovementResult() {
     }
 
-    public MovementResult(String id, String datetime, String transfer_type, String company, float amount_received, String detail, String status, String dlt_address) {
+    public MovementResult(String id, String datetime, String transfer_type, String company, float amount_received, String currency, String detail, String status, String dlt_address) {
         this.id = id;
         this.datetime = datetime;
         this.transfer_type = transfer_type;
         this.company = company;
         this.amount_received = amount_received;
+        this.currency = currency;
         this.detail = detail;
         this.status = status;
         this.dlt_address = dlt_address;
@@ -68,6 +70,14 @@ public class MovementResult {
         this.amount_received = amount_received;
     }
 
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public String getDetail() {
         return this.detail;
     }
@@ -100,12 +110,12 @@ public class MovementResult {
             return false;
         }
         MovementResult movement = (MovementResult) o;
-        return id == movement.id && Objects.equals(datetime, movement.datetime) && Objects.equals(transfer_type, movement.transfer_type) && Objects.equals(company, movement.company) && amount_received == movement.amount_received && Objects.equals(detail, movement.detail) && Objects.equals(status, movement.status) && Objects.equals(dlt_address, movement.dlt_address);
+        return id == movement.id && Objects.equals(datetime, movement.datetime) && Objects.equals(transfer_type, movement.transfer_type) && Objects.equals(company, movement.company) && amount_received == movement.amount_received && Objects.equals(currency, movement.currency) && Objects.equals(detail, movement.detail) && Objects.equals(status, movement.status) && Objects.equals(dlt_address, movement.dlt_address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, transfer_type, company, amount_received, detail, status, dlt_address);
+        return Objects.hash(id, datetime, transfer_type, company, amount_received, currency, detail, status, dlt_address);
     }
 
     @Override
@@ -116,6 +126,7 @@ public class MovementResult {
             ", transfer_type='" + getTransfer_type() + "'" +
             ", company='" + getCompany() + "'" +
             ", amount_received='" + getAmount_received() + "'" +
+            ", currency='" + getCurrency() + "'" +
             ", detail='" + getDetail() + "'" +
             ", status='" + getStatus() + "'" +
             ", dlt_address='" + getDlt_address() + "'" +

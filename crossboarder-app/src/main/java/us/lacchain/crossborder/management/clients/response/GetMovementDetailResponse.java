@@ -14,6 +14,8 @@ import us.lacchain.crossborder.management.clients.response.TransactionHistory;
 @NoArgsConstructor
 public class GetMovementDetailResponse implements Serializable {
     private String operationId;
+    private String endtoendId;
+    private String apimguid;
     private String status;
     private TransferDetail transferDetails;
     private CustomerDetail senderDetails;

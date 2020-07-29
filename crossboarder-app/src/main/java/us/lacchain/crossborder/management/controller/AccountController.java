@@ -159,7 +159,7 @@ public class AccountController {
             CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
             CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
             TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved(),movementDetail.getOperation_executed());
-            GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
+            GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getEndtoend_id(), movementDetail.getApimguid(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
             logger.debug("Response:"+response);
             return ResponseEntity.ok().body(response);
         }
