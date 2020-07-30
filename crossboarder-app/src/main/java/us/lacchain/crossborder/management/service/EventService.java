@@ -177,7 +177,7 @@ public class EventService implements IEventService {
             accountRepository.setBalance(dltAddress.toUpperCase(), (float)balance/10000);
             logger.info("new balance set");
             LocalDateTime localDateTime = LocalDateTime.now();
-            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS.toUpperCase(),dltAddress.toUpperCase(),(float)balance/10000,mintMessage,balance/10000,0,1,null,null,null,null,null,null,null,4);
+            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS.toUpperCase(),dltAddress.toUpperCase(),(float)balance/10000,mintMessage,balance/10000,balance/10000,0,1,1,null,null,null,null,null,null,null,4);
             movementRepository.save(movement);
             logger.info("new movement registered");
         }
@@ -189,12 +189,14 @@ public class EventService implements IEventService {
         Map<String,Object> toParameter = request.getIndexedParameters().get(1);
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         Map<String,Object> valueParameter = request.getNonIndexedParameters().get(1);
+        Map<String,Object> rateParameter = request.getNonIndexedParameters().get(2);
         String ordererAddress = (String)ordererParameter.get("value");
         String toAddress = (String)toParameter.get("value");
         String operationId = (String)operationIdParameter.get("value");
         int balance = (int)valueParameter.get("value");
+        int estimatedRate = (int)rateParameter.get("value");
         LocalDateTime localDateTime = LocalDateTime.now();
-        Movement movement = new Movement(operationId, localDateTime, ordererAddress.toUpperCase(), toAddress.toUpperCase(),(float)balance/10000,detailMessage,0,0,0,request.getTransactionHash(),null,null,null,null,null,null,0);
+        Movement movement = new Movement(operationId, localDateTime, ordererAddress.toUpperCase(), toAddress.toUpperCase(),(float)balance/10000,detailMessage,0,0,0,0,(float)estimatedRate/10000,request.getTransactionHash(),null,null,null,null,null,null,0);
         movementRepository.save(movement);
         logger.info("new movement registered");
     }

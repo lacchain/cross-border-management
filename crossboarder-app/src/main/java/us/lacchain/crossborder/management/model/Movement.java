@@ -18,7 +18,7 @@ import javax.persistence.SqlResultSetMapping;
     @ConstructorResult(targetClass = MovementResult.class, columns = { @ColumnResult(name = "id", type = String.class),
             @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "transfer_type"), @ColumnResult(name = "company"), @ColumnResult(name = "amount_received", type = Float.class), @ColumnResult(name = "currency", type = String.class), @ColumnResult(name = "detail"), @ColumnResult(name = "status"), @ColumnResult(name = "dlt_address") }) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = "MovementRepository.getAllMovementsByDltAddress", query = "SELECT DISTINCT movements.id AS id, movements.datetime,CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN 'TRANSFER OUT' ELSE 'TRANSFER IN' END AS transfer_type,users.company,CASE WHEN UPPER(movements.sender) = UPPER('0X0000000000000000000000000000000000000000') THEN movements.amount WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN movements.amount ELSE (movements.received_amount*movements.rate) END AS amount_received,CASE WHEN UPPER(movements.sender) = UPPER('0X0000000000000000000000000000000000000000') THEN accounts.currency WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN 'USD' ELSE 'DOP' END AS currency,movements.detail,CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' WHEN movements.status = 4 THEN 'COMPLETED' WHEN movements.status = 5 THEN 'CANCELLED' ELSE 'FAILED' END AS status,CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN movements.receiver ELSE movements.sender END AS dlt_address FROM movements INNER JOIN accounts ON UPPER(accounts.dlt_address) = UPPER(dlt_address) INNER JOIN users ON users.id = accounts.user_id WHERE (UPPER(movements.sender) = UPPER(:dltAddress) and UPPER(movements.receiver) = UPPER(dlt_address)) or (UPPER(movements.receiver) = UPPER(:dltAddress) and UPPER(movements.sender) = UPPER(dlt_address))", resultSetMapping = "movementResultMapping")})
+    @NamedNativeQuery(name = "MovementRepository.getAllMovementsByDltAddress", query = "SELECT DISTINCT movements.id AS id, movements.datetime,CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN 'TRANSFER OUT' ELSE 'TRANSFER IN' END AS transfer_type,users.company,CASE WHEN movements.status IN (0,1,2,5) THEN movements.amount/movements.estimatedrate WHEN movements.status IN (3,4) THEN movements.amount ELSE (movements.received_amount/movements.rate) END AS amount_received,CASE WHEN UPPER(movements.sender) = UPPER('0X0000000000000000000000000000000000000000') THEN accounts.currency WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN 'USD' ELSE 'DOP' END AS currency,movements.detail,CASE WHEN movements.status = 0 THEN 'REQUESTED' WHEN movements.status = 1 THEN 'APPROVED' WHEN movements.status = 2 THEN 'IN PROGRESS' WHEN movements.status = 3 THEN 'FEE-RATE SETED' WHEN movements.status = 4 THEN 'COMPLETED' WHEN movements.status = 5 THEN 'CANCELLED' ELSE 'FAILED' END AS status,CASE WHEN UPPER(movements.sender) = UPPER(:dltAddress) THEN movements.receiver ELSE movements.sender END AS dlt_address FROM movements INNER JOIN accounts ON UPPER(accounts.dlt_address) = UPPER(dlt_address) INNER JOIN users ON users.id = accounts.user_id WHERE (UPPER(movements.sender) = UPPER(:dltAddress) and UPPER(movements.receiver) = UPPER(dlt_address)) or (UPPER(movements.receiver) = UPPER(:dltAddress) and UPPER(movements.sender) = UPPER(dlt_address))", resultSetMapping = "movementResultMapping")})
     
 @Entity
 @Table(name = "movements")
@@ -33,8 +33,10 @@ public class Movement {
     private float amount;
     private String detail;
     private float received_amount;
+    private float estimated_received_amount;
     private float fee;
     private float rate;
+    private float estimatedrate;
     private String operation_requested;
     private String set_fee;
     private String operation_approved;
@@ -47,7 +49,7 @@ public class Movement {
     public Movement() {
     }
 
-    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float fee, float rate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String apimguid, String acctsvcrref, int status) {
+    public Movement(String id, LocalDateTime datetime, String sender, String receiver, float amount, String detail, float received_amount, float estimated_received_amount, float fee, float rate, float estimatedrate, String operation_requested, String set_fee, String operation_approved, String operation_executed, String endtoend_id, String apimguid, String acctsvcrref, int status) {
         this.id = id;
         this.datetime = datetime;
         this.sender = sender;
@@ -55,8 +57,10 @@ public class Movement {
         this.amount = amount;
         this.detail = detail;
         this.received_amount = received_amount;
+        this.estimated_received_amount = estimated_received_amount;
         this.fee = fee;
         this.rate = rate;
+        this.estimatedrate = estimatedrate;
         this.operation_requested = operation_requested;
         this.set_fee = set_fee;
         this.operation_approved = operation_approved;
@@ -123,6 +127,14 @@ public class Movement {
         this.received_amount = received_amount;
     }
 
+    public float getEstimated_received_amount() {
+        return this.estimated_received_amount;
+    }
+
+    public void setEstimated_received_amount(float estimated_received_amount) {
+        this.estimated_received_amount = estimated_received_amount;
+    }
+
     public float getFee() {
         return this.fee;
     }
@@ -137,6 +149,14 @@ public class Movement {
 
     public void setRate(float rate) {
         this.rate = rate;
+    }
+
+    public float getEstimatedrate() {
+        return this.estimatedrate;
+    }
+
+    public void setEstimatedrate(float estimatedrate) {
+        this.estimatedrate = estimatedrate;
     }
 
     public String getOperation_requested() {
@@ -216,7 +236,7 @@ public class Movement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, fee, rate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, apimguid, acctsvcrref, status);
+        return Objects.hash(id, datetime, sender, receiver, amount, detail, received_amount, estimated_received_amount, fee, rate, estimatedrate, operation_requested, set_fee, operation_approved, operation_executed, endtoend_id, apimguid, acctsvcrref, status);
     }
 
     @Override
@@ -229,8 +249,10 @@ public class Movement {
         sb.append(", amount=").append(amount).append('\'');
         sb.append(", detail=").append(detail).append('\'');
         sb.append(", received_amount=").append(received_amount).append('\'');
+        sb.append(", estimated_received_amount=").append(estimated_received_amount).append('\'');
         sb.append(", fee=").append(fee).append('\'');
         sb.append(", rate=").append(rate).append('\'');
+        sb.append(", estimatedRate=").append(estimatedrate).append('\'');
         sb.append(", operation_requested=").append(operation_requested).append('\'');
         sb.append(", set_fee=").append(set_fee).append('\'');
         sb.append(", operation_approved=").append(operation_approved).append('\'');

@@ -21,8 +21,8 @@ server:
 
 crossborder:
   contract:
-    edollars: "0x367D2cF5b7469995C9bF04d98f36232E823912Af"
-    epesos: "0xe318ba12c914AFD1B3E6f3Ea20231b84fEAA62F5"
+    edollars: "0x2F8d5A4eFB11bDCAb2701ca82430A22d93C13c8c"
+    epesos: "0x309807a604cd741a70232b90892E82CB342709ec"
   oauth:
     client:
       web:
@@ -97,4 +97,4 @@ logging:
 
 fixedRate:
     in:
-        milliseconds: 10000
+        milliseconds: 30000

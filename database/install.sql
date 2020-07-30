@@ -48,8 +48,10 @@ CREATE TABLE IF NOT EXISTS public.movements
   "amount" decimal,
   "detail" text,
   "received_amount" decimal,
+  "estimated_received_amount" decimal,
   "fee" decimal,
   "rate" decimal,
+  "estimatedrate" decimal,
   "operation_requested" text,
   "set_fee" text,
   "operation_approved" text,
@@ -110,8 +112,10 @@ INSERT INTO public.movements
   "amount",
   "detail",
   "received_amount",
+  "estimated_received_amount",
   "fee",
   "rate",
+  "estimatedrate",
   "operation_requested",
   "set_fee",
   "operation_approved",
@@ -119,9 +123,9 @@ INSERT INTO public.movements
   "endtoend_id",
   "apimguid",
   "acctsvcrref",
-  "status") VALUES('654565','2020-05-10 09:00:00','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E','0XAAACF75F0905338597FCD38F5CE13E6840B230EA',500,'Conversion to Pesos',490,0.10,0.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','1230BI0R8Z4L800','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603a','KK6DDO29JIIL',1),
- ('978798','2020-05-10 10:00:00','0X173CF75F0905338597FCD38F5CE13E6840B230E9','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E',100,'conversion to dollars',96,0.70,1,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END23456','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603b','KK6DDO29JIIL',4), 
- ('12656547','2020-05-10 11:00:00','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E','0X39316977859458E9DDF5B2AE74196A059927BF56',100,'send to citi',100,0.66,1.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END876786','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603c','KK6DDO29JIIL',1);  
+  "status") VALUES('654565','2020-05-10 09:00:00','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E','0XAAACF75F0905338597FCD38F5CE13E6840B230EA',500,'Conversion to Pesos',490,490,0.10,0.5,0.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','1230BI0R8Z4L800','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603a','KK6DDO29JIIL',1),
+ ('978798','2020-05-10 10:00:00','0X173CF75F0905338597FCD38F5CE13E6840B230E9','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E',100,'conversion to dollars',96,96,0.70,1,1,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END23456','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603b','KK6DDO29JIIL',4), 
+ ('12656547','2020-05-10 11:00:00','0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E','0X39316977859458E9DDF5B2AE74196A059927BF56',100,'send to citi',100,100,0.66,1.5,1.5,'0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838','0xff38ab554666098ccda9c521fb8eb400198431012a10bf95c0b005d17ec5d838','0xe125bc611e84edc1a647f8e3bea4198078559e534b6d39af8a82fb78d24fd9b8','0xfeff518a00baf4d48f842dcc223dc70ed294b869b08a3d34d1bc07aaaf211d6a','END876786','na-apimgwgtdu03~60505978-6ccd-4a40-8ddb-1580c310603c','KK6DDO29JIIL',1);  
  
 
 CREATE VIEW users_view AS
@@ -138,9 +142,9 @@ SELECT DISTINCT movements.id AS "id",
     movements.datetime AS "datetime",
     movements.amount AS "sent_amount",
 	  movements.fee AS "fee_applied",
-	  movements.received_amount AS "converted_amount",
-	  movements.rate AS "rate_applied",
-	  (movements.received_amount*movements.rate) AS "recipient_will_get",
+	  CASE WHEN movements.status IN (0,1,2,5) THEN (movements.amount/movements.estimatedrate) ELSE movements.received_amount END AS "converted_amount",
+	  CASE WHEN movements.status IN (0,1,2,5) THEN movements.estimatedrate ELSE movements.rate END AS "rate_applied",
+	  CASE WHEN movements.status IN (0,1,2,5) THEN (movements.amount/movements.estimatedrate) ELSE (movements.received_amount/movements.rate) END AS "recipient_will_get",
 	
   sender.fullname AS "sender_name",
 	sender.name AS "sender_bank",
