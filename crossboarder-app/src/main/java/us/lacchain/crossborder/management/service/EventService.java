@@ -256,8 +256,7 @@ public class EventService implements IEventService {
                     }
                 }
             }catch(Exception ex){
-                logger.error(ex.getMessage(),ex);
-                movementRepository.setTransferFailed(movement.getId());   
+                logger.error(ex.getMessage(),ex);   
             }
         }
     }

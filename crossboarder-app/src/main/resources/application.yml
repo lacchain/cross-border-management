@@ -97,4 +97,4 @@ logging:
 
 fixedRate:
     in:
-        milliseconds: 30000
+        milliseconds: 600000
