@@ -6,10 +6,9 @@ import java.util.Objects;
 public class Transaction implements Serializable {
     private String id;
     private String datetime;
-    private String senderBank; 
-    private String senderDltAddress;
-    private String receiverBank;
-    private String receiverDltAddress;
+    private String transferType;
+    private String senderName;
+    private String receiverName;
     private float amountSent;
     private float amountReceived;
     private float fee;
@@ -20,13 +19,12 @@ public class Transaction implements Serializable {
     public Transaction() {
     }
 
-    public Transaction(String id, String datetime, String senderBank, String senderDltAddress, String receiverBank, String receiverDltAddress, float amountSent, float amountReceived, float fee, float rateApplied, String status) {
+    public Transaction(String id, String datetime, String transferType, String senderName, String receiverName, float amountSent, float amountReceived, float fee, float rateApplied, String status) {
         this.id = id;
         this.datetime = datetime;
-        this.senderBank = senderBank;
-        this.senderDltAddress = senderDltAddress;
-        this.receiverBank = receiverBank;
-        this.receiverDltAddress = receiverDltAddress;
+        this.transferType = transferType;
+        this.senderName = senderName;
+        this.receiverName = receiverName;
         this.amountSent = amountSent;
         this.amountReceived = amountReceived;
         this.fee = fee;
@@ -50,36 +48,28 @@ public class Transaction implements Serializable {
         this.datetime = datetime;
     }
 
-    public String getSenderBank() {
-        return this.senderBank;
+    public String getTransferType() {
+        return this.transferType;
     }
 
-    public void setSenderBank(String senderBank) {
-        this.senderBank = senderBank;
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
     }
 
-    public String getSenderDltAddress() {
-        return this.senderDltAddress;
+    public String getSenderName() {
+        return this.senderName;
     }
 
-    public void setSenderDltAddress(String senderDltAddress) {
-        this.senderDltAddress = senderDltAddress;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
-    public String getReceiverBank() {
-        return this.receiverBank;
+    public String getReceiverName() {
+        return this.receiverName;
     }
 
-    public void setReceiverBank(String receiverBank) {
-        this.receiverBank = receiverBank;
-    }
-
-    public String getReceiverDltAddress() {
-        return this.receiverDltAddress;
-    }
-
-    public void setReceiverDltAddress(String receiverDltAddress) {
-        this.receiverDltAddress = receiverDltAddress;
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
     public float getAmountSent() {
@@ -122,6 +112,56 @@ public class Transaction implements Serializable {
         this.status = status;
     }
 
+    public Transaction id(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public Transaction datetime(String datetime) {
+        this.datetime = datetime;
+        return this;
+    }
+
+    public Transaction transferType(String transferType) {
+        this.transferType = transferType;
+        return this;
+    }
+
+    public Transaction senderName(String senderName) {
+        this.senderName = senderName;
+        return this;
+    }
+
+    public Transaction receiverName(String receiverName) {
+        this.receiverName = receiverName;
+        return this;
+    }
+
+    public Transaction amountSent(float amountSent) {
+        this.amountSent = amountSent;
+        return this;
+    }
+
+    public Transaction amountReceived(float amountReceived) {
+        this.amountReceived = amountReceived;
+        return this;
+    }
+
+    public Transaction fee(float fee) {
+        this.fee = fee;
+        return this;
+    }
+
+    public Transaction rateApplied(float rateApplied) {
+        this.rateApplied = rateApplied;
+        return this;
+    }
+
+    public Transaction status(String status) {
+        this.status = status;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -130,12 +170,12 @@ public class Transaction implements Serializable {
             return false;
         }
         Transaction transaction = (Transaction) o;
-        return id == transaction.id && datetime == transaction.datetime && Objects.equals(senderBank, transaction.senderBank) && Objects.equals(senderDltAddress, transaction.senderDltAddress) && Objects.equals(receiverBank, transaction.receiverBank) && Objects.equals(receiverDltAddress, transaction.receiverDltAddress) && amountSent == transaction.amountSent && amountReceived == transaction.amountReceived && fee == transaction.fee && rateApplied == transaction.rateApplied && status == transaction.status;
+        return Objects.equals(id, transaction.id) && Objects.equals(datetime, transaction.datetime) && Objects.equals(transferType, transaction.transferType) && Objects.equals(senderName, transaction.senderName) && Objects.equals(receiverName, transaction.receiverName) && amountSent == transaction.amountSent && amountReceived == transaction.amountReceived && fee == transaction.fee && rateApplied == transaction.rateApplied && Objects.equals(status, transaction.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, senderBank, senderDltAddress, receiverBank, receiverDltAddress, amountSent, amountReceived, fee, rateApplied, status);
+        return Objects.hash(id, datetime, transferType, senderName, receiverName, amountSent, amountReceived, fee, rateApplied, status);
     }
 
     @Override
@@ -143,10 +183,9 @@ public class Transaction implements Serializable {
         return "{" +
             " id='" + getId() + "'" +
             ", datetime='" + getDatetime() + "'" +
-            ", senderBank='" + getSenderBank() + "'" +
-            ", senderDltAddress='" + getSenderDltAddress() + "'" +
-            ", receiverBank='" + getReceiverBank() + "'" +
-            ", receiverDltAddress='" + getReceiverDltAddress() + "'" +
+            ", transferType='" + getTransferType() + "'" +
+            ", senderName='" + getSenderName() + "'" +
+            ", receiverName='" + getReceiverName() + "'" +
             ", amountSent='" + getAmountSent() + "'" +
             ", amountReceived='" + getAmountReceived() + "'" +
             ", fee='" + getFee() + "'" +
@@ -154,5 +193,5 @@ public class Transaction implements Serializable {
             ", status='" + getStatus() + "'" +
             "}";
     }
-
+    
 }

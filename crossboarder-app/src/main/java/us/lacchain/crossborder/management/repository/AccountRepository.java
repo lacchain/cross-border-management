@@ -23,7 +23,7 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update accounts set status = 0 where UPPER(dlt_address) = UPPER(:dltAddress)", nativeQuery=true)
+    @Query(value = "update accounts set status = 2 where UPPER(dlt_address) = UPPER(:dltAddress)", nativeQuery=true)
     void setWhitelistedRemove(@Param("dltAddress") String dltAddress);
 
     @Transactional
