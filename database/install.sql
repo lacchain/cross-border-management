@@ -98,7 +98,7 @@ INSERT INTO public.accounts
   "user_id"
 ) VALUES ('0X39316977859458E9DDF5B2AE74196A059927BF56','111-1111-111111','USD',0,0,'US111111', '123456'),
   ('0X173CF75F0905338597FCD38F5CE13E6840B230E9','222-2222-222222','MXN',0,0,'MX222222', '789012'),
-  ('0XAAACF75F0905338597FCD38F5CE13E6840B230EA','333-3333-333333','PPR',0,0,'PR333333', '345678'),
+  ('0XAAACF75F0905338597FCD38F5CE13E6840B230EA','333-3333-333333','PPR',0,2,'PR333333', '345678'),
   ('0XBCEDA2BA9AF65C18C7992849C312D1DB77CF008E','123-45678-9012345','USD',0,0,'US111111','901234'),
   ('0X0000000000000000000000000000000000000000','123-45678-9012345','USD',0,0,'US111111','123456');
 
@@ -131,7 +131,7 @@ INSERT INTO public.movements
 CREATE VIEW users_view AS
 SELECT accounts.dlt_address, users.company, users.fullname, users.email, banks.name, banks.tax_id, 
        banks.city, accounts.bank_account, accounts.currency, accounts.balance, 
-       CASE WHEN accounts.status = 0 THEN 'Requested' ELSE 'Active' END AS status
+       CASE WHEN accounts.status = 0 THEN 'Pending' WHEN accounts.status = 1 THEN 'Active' ELSE 'Inactive' END AS status
 FROM users
 INNER JOIN accounts ON accounts.user_id = users.id
 INNER JOIN banks ON banks.tax_id = accounts.bank_id;
@@ -139,12 +139,12 @@ INNER JOIN banks ON banks.tax_id = accounts.bank_id;
 
 CREATE VIEW movements_view AS 
 SELECT DISTINCT movements.id AS "id",
-    movements.datetime AS "datetime",
-    movements.amount AS "sent_amount",
-	  movements.fee AS "fee_applied",
-	  CASE WHEN movements.status IN (0,1,2,5,6) THEN (movements.amount/movements.estimatedrate) ELSE movements.received_amount END AS "converted_amount",
-	  CASE WHEN movements.status IN (0,1,2,5,6) THEN movements.estimatedrate ELSE movements.rate END AS "rate_applied",
-	  CASE WHEN movements.status IN (0,1,2,5,6) THEN (movements.amount/movements.estimatedrate) ELSE (movements.received_amount/movements.rate) END AS "recipient_will_get",
+    to_char(movements.datetime,'MM/DD/YYYY') AS "datetime",
+    round(movements.amount,2) AS "sent_amount",
+	  round(movements.fee,2) AS "fee_applied",
+	  CASE WHEN movements.status IN (0,1,2,5,6) THEN round((movements.amount/movements.estimatedrate),2) ELSE round(movements.received_amount,2) END AS "converted_amount",
+	  CASE WHEN movements.status IN (0,1,2,5,6) THEN round(movements.estimatedrate,4) ELSE round(movements.rate,4) END AS "rate_applied",
+	  CASE WHEN movements.status IN (0,1,2,5,6) THEN round((movements.amount/movements.estimatedrate),2) ELSE round((movements.received_amount/movements.rate),2) END AS "recipient_will_get",
 	
   sender.fullname AS "sender_name",
 	sender.name AS "sender_bank",

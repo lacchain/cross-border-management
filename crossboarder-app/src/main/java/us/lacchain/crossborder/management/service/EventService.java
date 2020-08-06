@@ -177,7 +177,7 @@ public class EventService implements IEventService {
             accountRepository.setBalance(dltAddress.toUpperCase(), (float)balance/10000);
             logger.info("new balance set");
             LocalDateTime localDateTime = LocalDateTime.now();
-            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS.toUpperCase(),dltAddress.toUpperCase(),(float)balance/10000,mintMessage,balance/10000,balance/10000,0,1,1,null,null,null,null,null,null,null,4);
+            Movement movement = new Movement(UUID.randomUUID().toString(),localDateTime,ZERO_ADDRESS.toUpperCase(),dltAddress.toUpperCase(),(float)balance/10000,mintMessage,(float)balance/10000,(float)balance/10000,0,1,1,null,null,null,request.getTransactionHash(),null,null,null,4);
             movementRepository.save(movement);
             logger.info("new movement registered");
         }

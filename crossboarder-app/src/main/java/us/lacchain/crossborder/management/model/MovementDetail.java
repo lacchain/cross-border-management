@@ -12,13 +12,12 @@ import javax.persistence.ColumnResult;
 
 @SqlResultSetMapping(name = "transactionResultMapping", classes = {
     @ConstructorResult(targetClass = Transaction.class, columns = { @ColumnResult(name = "id", type = String.class),
-            @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "sender_bank", type= String.class), @ColumnResult(name = "sender_dlt_address", type = String.class), 
-            @ColumnResult(name = "receiver_bank", type = String.class), @ColumnResult(name = "receiver_dlt_address",type = String.class), 
-            @ColumnResult(name = "sent_amount", type = Float.class), @ColumnResult(name = "recipient_will_get",type = Float.class),
+            @ColumnResult(name = "datetime", type= String.class), @ColumnResult(name = "transfer_type", type= String.class), @ColumnResult(name = "sender_name", type = String.class), 
+            @ColumnResult(name = "receiver_name", type = String.class), @ColumnResult(name = "sent_amount", type = Float.class), @ColumnResult(name = "recipient_will_get",type = Float.class),
             @ColumnResult(name = "fee_applied",type = Float.class), @ColumnResult(name = "rate_applied",type = Float.class), 
             @ColumnResult(name = "status",type = String.class) }) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = "MovementDetailRepository.getAllTransactions", query = "SELECT * from movements_view m", resultSetMapping = "transactionResultMapping")})
+    @NamedNativeQuery(name = "MovementDetailRepository.getAllTransactions", query = "SELECT id, datetime, CASE WHEN UPPER(sender_dlt_address) = UPPER('0X0000000000000000000000000000000000000000') THEN 'TOKENIZATION' ELSE 'ACH' END AS transfer_type, CASE WHEN UPPER(sender_dlt_address) = UPPER('0X0000000000000000000000000000000000000000') THEN 'Citibank' ELSE sender_name END AS sender_name, receiver_name, sent_amount,recipient_will_get,fee_applied,rate_applied, status from movements_view m", resultSetMapping = "transactionResultMapping")})
     
 
 @Entity

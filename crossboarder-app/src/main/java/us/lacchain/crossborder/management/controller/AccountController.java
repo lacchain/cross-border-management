@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 @RequestMapping(value = "/api")
 public class AccountController {
 
+    private static final String ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
     Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
@@ -156,7 +158,10 @@ public class AccountController {
                 return ResponseEntity.noContent().build();
             }
             TransferDetail transferDetail = new TransferDetail(movementDetail.getSent_amount(),movementDetail.getFee_applied(),movementDetail.getConverted_amount(),movementDetail.getRate_applied(),movementDetail.getRecipient_will_get(), movementDetail.getSender_currency(), movementDetail.getReceiver_currency(), movementDetail.getAcctsvcrref());
-            CustomerDetail senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
+            CustomerDetail senderDetail = null;
+            if (!ZERO_ADDRESS.equalsIgnoreCase(movementDetail.getSender_dlt_address())){
+                senderDetail = new CustomerDetail(movementDetail.getSender_name(),movementDetail.getSender_bank(),movementDetail.getSender_bank_account(),movementDetail.getSender_dlt_address());
+            }
             CustomerDetail recipientDetail = new CustomerDetail(movementDetail.getReceiver_name(),movementDetail.getReceiver_bank(),movementDetail.getReceiver_bank_account(),movementDetail.getReceiver_dlt_address());
             TransactionHistory transactionHistory = new TransactionHistory(movementDetail.getOperation_requested(),movementDetail.getSet_fee(),movementDetail.getOperation_approved(),movementDetail.getOperation_executed());
             GetMovementDetailResponse response = new GetMovementDetailResponse(movementDetail.getId(),movementDetail.getEndtoend_id(), movementDetail.getApimguid(),movementDetail.getStatus(),transferDetail,senderDetail,recipientDetail,transactionHistory);
