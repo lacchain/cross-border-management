@@ -14,7 +14,7 @@ import javax.persistence.SqlResultSetMapping;
     @ConstructorResult(targetClass = AccountResult.class, columns = { @ColumnResult(name = "company", type = String.class),
             @ColumnResult(name = "fullname", type= String.class), @ColumnResult(name = "name"), @ColumnResult(name = "bank_account"), @ColumnResult(name = "dlt_address", type = String.class), @ColumnResult(name = "currency",type = String.class), @ColumnResult(name = "balance", type = Float.class), @ColumnResult(name = "status",type = String.class) }) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = "AccountRepository.getAllAccounts", query = "SELECT users.company, users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency, accounts.balance, CASE WHEN accounts.status = 0 THEN 'Pending' WHEN accounts.status = 1 'Active' ELSE 'Inactive' END AS status FROM users INNER JOIN accounts ON accounts.user_id = users.id INNER JOIN banks ON banks.tax_id = accounts.bank_id", resultSetMapping = "accountResultMapping")})
+    @NamedNativeQuery(name = "AccountRepository.getAllAccounts", query = "SELECT users.company, users.fullname, banks.name, accounts.bank_account, accounts.dlt_address, accounts.currency, accounts.balance, CASE WHEN accounts.status = 0 THEN 'Pending' WHEN accounts.status = 1 THEN 'Active' ELSE 'Inactive' END AS status FROM users INNER JOIN accounts ON accounts.user_id = users.id INNER JOIN banks ON banks.tax_id = accounts.bank_id", resultSetMapping = "accountResultMapping")})
     
 @Entity
 @Table(name = "accounts")
