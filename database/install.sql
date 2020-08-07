@@ -14,6 +14,17 @@ CREATE TABLE IF NOT EXISTS public.users
   PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS public.password_token;
+CREATE TABLE IF NOT EXISTS public.password_token
+(
+  "id" serial NOT NULL,
+  "token" text NOT NULL,
+  "expirydate" timestamp NOT NULL,
+  "user_id" text NOT NULL,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("user_id") REFERENCES public.users ("id")
+);
+
 DROP TABLE IF EXISTS public.banks;
 CREATE TABLE IF NOT EXISTS public.banks
 (
@@ -86,7 +97,14 @@ INSERT INTO public.users
   ('789012', 'Jose Ruiz', 'jose@mexico.com','222222','Mexican Bank','ROLE_USER'),
   ('345678', 'Julio Garcia', 'julio@puerto.com','333333','Puerto Rico Bank','ROLE_USER'),
   ('901234', 'Mario Cardenas', 'mario@iadb.org','444444','BiD','ROLE_USER');
-  
+
+INSERT INTO public.password_token
+(
+  "token",
+  "expirydate",
+  "user_id"
+) VALUES ('111-222-333-444','2020-05-10 09:00:00','123456');
+
 INSERT INTO public.accounts
 (
   "dlt_address",

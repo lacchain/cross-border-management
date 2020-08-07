@@ -2,7 +2,9 @@ package us.lacchain.crossborder.management.controller;
 
 import us.lacchain.crossborder.management.service.IUserService;
 import us.lacchain.crossborder.management.model.UserView;
+import us.lacchain.crossborder.management.service.IEmailService;
 import us.lacchain.crossborder.management.clients.request.AddUserRequest;
+import us.lacchain.crossborder.management.clients.request.ForgotPasswordRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import org.springframework.mail.SimpleMailMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+	private IEmailService emailService;
 
     @Autowired
     private Token token;
@@ -123,6 +129,23 @@ public class UserController {
             CustomerDetail response = new CustomerDetail(userView.getFullname(), userView.getName(), userView.getBank_account(), userView.getDlt_address()); 
             logger.debug("response:"+response);
             return ResponseEntity.ok().body(response);
+        }
+        catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/user/forgot")
+    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest requestBody){
+        try {
+            logger.info("FORGOT-PASSWORD");
+            SimpleMailMessage passwordResetEmail = userService.generatePasswordToken(requestBody.getEmail());
+            emailService.sendEmail(passwordResetEmail);
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());
