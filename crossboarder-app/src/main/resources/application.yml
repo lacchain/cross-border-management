@@ -10,7 +10,22 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none     
+      ddl-auto: none
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    protocol: smtps
+    username: USERNAME@gmail.com
+    password: PASSWORD
+    properties: 
+      mail:
+        transport:
+          protocol: smtps
+        smtps:
+          auth: true
+          starttls: 
+            enable: true
+          timeout: 8000    
 
 # Server config
 

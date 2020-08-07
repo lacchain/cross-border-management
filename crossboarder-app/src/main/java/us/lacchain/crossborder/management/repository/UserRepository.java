@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query(name = "UserRepository.getUserLogin", nativeQuery=true)
     UserLogin getUserLogin(@Param("email") String email, @Param("password") String password, @Param("dltAddress") String dltAddress);
+
+    User findByEmail(String email);
 }
