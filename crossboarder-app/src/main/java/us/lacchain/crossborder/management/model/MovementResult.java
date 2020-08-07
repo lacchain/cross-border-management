@@ -12,13 +12,16 @@ public class MovementResult {
     private float amount;
     private float amount_received;
     private String currency;
+    private float fee_applied;
+    private float rate_applied;
     private String status;
     private String dlt_address;
+
 
     public MovementResult() {
     }
 
-    public MovementResult(String id, String datetime, String transfer_type, String sender_name, String receiver_name, float amount, float amount_received, String currency, String status, String dlt_address) {
+    public MovementResult(String id, String datetime, String transfer_type, String sender_name, String receiver_name, float amount, float amount_received, String currency, float fee_applied, float rate_applied, String status, String dlt_address) {
         this.id = id;
         this.datetime = datetime;
         this.transfer_type = transfer_type;
@@ -27,6 +30,8 @@ public class MovementResult {
         this.amount = amount;
         this.amount_received = amount_received;
         this.currency = currency;
+        this.fee_applied = fee_applied;
+        this.rate_applied = rate_applied;
         this.status = status;
         this.dlt_address = dlt_address;
     }
@@ -95,6 +100,22 @@ public class MovementResult {
         this.currency = currency;
     }
 
+    public float getFee_applied() {
+        return this.fee_applied;
+    }
+
+    public void setFee_applied(float fee_applied) {
+        this.fee_applied = fee_applied;
+    }
+
+    public float getRate_applied() {
+        return this.rate_applied;
+    }
+
+    public void setRate_applied(float rate_applied) {
+        this.rate_applied = rate_applied;
+    }
+
     public String getStatus() {
         return this.status;
     }
@@ -151,6 +172,16 @@ public class MovementResult {
         return this;
     }
 
+    public MovementResult fee_applied(float fee_applied) {
+        this.fee_applied = fee_applied;
+        return this;
+    }
+
+    public MovementResult rate_applied(float rate_applied) {
+        this.rate_applied = rate_applied;
+        return this;
+    }
+
     public MovementResult status(String status) {
         this.status = status;
         return this;
@@ -169,12 +200,12 @@ public class MovementResult {
             return false;
         }
         MovementResult movementResult = (MovementResult) o;
-        return Objects.equals(id, movementResult.id) && Objects.equals(datetime, movementResult.datetime) && Objects.equals(transfer_type, movementResult.transfer_type) && Objects.equals(sender_name, movementResult.sender_name) && Objects.equals(receiver_name, movementResult.receiver_name) && amount == movementResult.amount && amount_received == movementResult.amount_received && Objects.equals(currency, movementResult.currency) && Objects.equals(status, movementResult.status) && Objects.equals(dlt_address, movementResult.dlt_address);
+        return Objects.equals(id, movementResult.id) && Objects.equals(datetime, movementResult.datetime) && Objects.equals(transfer_type, movementResult.transfer_type) && Objects.equals(sender_name, movementResult.sender_name) && Objects.equals(receiver_name, movementResult.receiver_name) && amount == movementResult.amount && amount_received == movementResult.amount_received && Objects.equals(currency, movementResult.currency) && fee_applied == movementResult.fee_applied && rate_applied == movementResult.rate_applied && Objects.equals(status, movementResult.status) && Objects.equals(dlt_address, movementResult.dlt_address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, transfer_type, sender_name, receiver_name, amount, amount_received, currency, status, dlt_address);
+        return Objects.hash(id, datetime, transfer_type, sender_name, receiver_name, amount, amount_received, currency, fee_applied, rate_applied, status, dlt_address);
     }
 
     @Override
@@ -188,12 +219,12 @@ public class MovementResult {
             ", amount='" + getAmount() + "'" +
             ", amount_received='" + getAmount_received() + "'" +
             ", currency='" + getCurrency() + "'" +
+            ", fee_applied='" + getFee_applied() + "'" +
+            ", rate_applied='" + getRate_applied() + "'" +
             ", status='" + getStatus() + "'" +
             ", dlt_address='" + getDlt_address() + "'" +
             "}";
     }
-
-    
 }
 
 
