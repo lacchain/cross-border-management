@@ -17,11 +17,10 @@ CREATE TABLE IF NOT EXISTS public.users
 DROP TABLE IF EXISTS public.password_token;
 CREATE TABLE IF NOT EXISTS public.password_token
 (
-  "id" serial NOT NULL,
   "token" text NOT NULL,
   "expirydate" timestamp NOT NULL,
   "user_id" text NOT NULL,
-  PRIMARY KEY ("id"),
+  PRIMARY KEY ("token"),
   FOREIGN KEY ("user_id") REFERENCES public.users ("id")
 );
 

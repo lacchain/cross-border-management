@@ -6,34 +6,26 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 
 @Entity
 @Table(name = "password_token")
 public class PasswordToken {
 
     @Id
-    private String id;
     private String token;
     @Column(name = "expirydate", columnDefinition = "TIMESTAMP")
     private LocalDateTime expiryDate;
     private String user_id;
     
+
     public PasswordToken() {
     }
 
-    public PasswordToken(String id, String token, LocalDateTime expiryDate, String user_id) {
-        this.id = id;
+    public PasswordToken(String token, LocalDateTime expiryDate, String user_id) {
         this.token = token;
         this.expiryDate = expiryDate;
         this.user_id = user_id;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getToken() {
@@ -60,11 +52,6 @@ public class PasswordToken {
         this.user_id = user_id;
     }
 
-    public PasswordToken id(String id) {
-        this.id = id;
-        return this;
-    }
-
     public PasswordToken token(String token) {
         this.token = token;
         return this;
@@ -88,21 +75,20 @@ public class PasswordToken {
             return false;
         }
         PasswordToken passwordToken = (PasswordToken) o;
-        return Objects.equals(id, passwordToken.id) && Objects.equals(token, passwordToken.token) && Objects.equals(expiryDate, passwordToken.expiryDate) && Objects.equals(user_id, passwordToken.user_id);
+        return Objects.equals(token, passwordToken.token) && Objects.equals(expiryDate, passwordToken.expiryDate) && Objects.equals(user_id, passwordToken.user_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, token, expiryDate, user_id);
+        return Objects.hash(token, expiryDate, user_id);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", token='" + getToken() + "'" +
+            " token='" + getToken() + "'" +
             ", expiryDate='" + getExpiryDate() + "'" +
             ", user_id='" + getUser_id() + "'" +
             "}";
-    }
+    }    
 }

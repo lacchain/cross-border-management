@@ -12,11 +12,11 @@ spring:
     hibernate:
       ddl-auto: none
   mail:
-    host: smtp.gmail.com
+    host: smtp.serviciodecorreo.es
     port: 465
     protocol: smtps
-    username: USERNAME@gmail.com
-    password: PASSWORD
+    username:  crossborder@lacchain.net
+    password: ${SMTP_PASSWORD}
     properties: 
       mail:
         transport:
@@ -63,7 +63,14 @@ crossborder:
   message:
     detail:
       mint: Bank Deposit
-      transfer: Convert USD to DOP 
+      transfer: Convert USD to DOP
+  mail:
+    from: crossborder@lacchain.net
+    subject: Password Reset Request
+  token:
+    url: ${RESET_PASSWORD_URL}
+#    url: http://www.monarca.org/reset-password
+    hours: 24 
 
 # APIs config
 resources:

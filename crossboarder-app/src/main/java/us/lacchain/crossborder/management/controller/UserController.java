@@ -5,6 +5,7 @@ import us.lacchain.crossborder.management.model.UserView;
 import us.lacchain.crossborder.management.service.IEmailService;
 import us.lacchain.crossborder.management.clients.request.AddUserRequest;
 import us.lacchain.crossborder.management.clients.request.ForgotPasswordRequest;
+import us.lacchain.crossborder.management.clients.request.ResetPasswordRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import us.lacchain.crossborder.management.clients.response.GetUserResponse;
 import us.lacchain.crossborder.management.util.Token;
 import us.lacchain.crossborder.management.exception.UserExistsException;
 import us.lacchain.crossborder.management.exception.DLTAddressExistsException;
+import us.lacchain.crossborder.management.exception.TokenNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -144,8 +146,11 @@ public class UserController {
         try {
             logger.info("FORGOT-PASSWORD");
             SimpleMailMessage passwordResetEmail = userService.generatePasswordToken(requestBody.getEmail());
-            emailService.sendEmail(passwordResetEmail);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            if (passwordResetEmail!=null){
+                emailService.sendEmail(passwordResetEmail);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+            return ResponseEntity.notFound().build();
         }
         catch (EntityNotFoundException e){
             logger.warn(e.getMessage());
@@ -155,4 +160,45 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/user/forgot/validate/{token}")
+    public ResponseEntity<GetUserResponse> validatePasswordToken(@PathVariable String token){
+        try {
+            logger.info("VALIDATE-PASSWORD-TOKEN");
+            logger.info("token:"+token);
+            if (userService.validatePasswordToken(token)){
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }else{
+                return ResponseEntity.status(HttpStatus.GONE).build();
+            }  
+        }catch(TokenNotFoundException bex){
+            logger.warn(bex.getMessage());
+            return ResponseEntity.notFound().build();    
+        }catch  (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/user/reset")
+    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest requestBody){
+        try {
+            logger.info("RESET-PASSWORD");
+            if(userService.resetPassword(requestBody.getToken(),requestBody.getPassword())){
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }else{
+                return ResponseEntity.status(HttpStatus.GONE).build();
+            }
+        }catch(TokenNotFoundException bex){
+            logger.warn(bex.getMessage());
+            return ResponseEntity.notFound().build();    
+        }catch (EntityNotFoundException e){
+            logger.warn(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }catch  (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

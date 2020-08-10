@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class ForgotPasswordRequest implements Serializable {
-    @Email
-    @NotNull(message="email can't be null")
-    private String email;
+public class ResetPasswordRequest implements Serializable {
+    @NotNull(message="token can't be null")
+    private String token;
+    @Size(min = 6)
+    private String password;
 }

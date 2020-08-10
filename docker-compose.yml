@@ -47,6 +47,8 @@ services:
       - CITI_PROXY_PORT=8080
       - BACK_BLOCKCHAIN_HOST=idb
       - BACK_BLOCKCHAIN_PORT=9000
+      - RESET_PASSWORD_URL=http://localhost:3000/reset-password
+      - SMTP_PASSWORD=Password
     depends_on:
     - postgres
     - mockserver
