@@ -80,6 +80,9 @@
                      <MmbId>003</MmbId>
                   </ClrSysMmbId>
                   <Nm>Citi Bank</Nm>
+                  <PstlAdr>
+                     <Ctry>DO</Ctry>
+                  </PstlAdr>
                </FinInstnId>
             </CdtrAgt>
             <Cdtr>
