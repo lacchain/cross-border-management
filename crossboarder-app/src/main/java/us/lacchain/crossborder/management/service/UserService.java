@@ -4,6 +4,8 @@ import us.lacchain.crossborder.management.model.UserView;
 import us.lacchain.crossborder.management.model.User;
 import us.lacchain.crossborder.management.model.Bank;
 import us.lacchain.crossborder.management.model.Account;
+import us.lacchain.crossborder.management.model.PasswordToken;
+import us.lacchain.crossborder.management.repository.PasswordTokenRepository;
 import us.lacchain.crossborder.management.repository.UserRepository;
 import us.lacchain.crossborder.management.repository.BankRepository;
 import us.lacchain.crossborder.management.repository.AccountRepository;
@@ -11,6 +13,7 @@ import us.lacchain.crossborder.management.repository.UserViewRepository;
 import us.lacchain.crossborder.management.clients.request.AddUserRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
@@ -19,10 +22,29 @@ import java.nio.charset.StandardCharsets;
 
 import org.springframework.dao.DataAccessException;
 import us.lacchain.crossborder.management.exception.UserExistsException;
+import us.lacchain.crossborder.management.exception.TokenNotFoundException;
 import us.lacchain.crossborder.management.exception.DLTAddressExistsException;
+
+import org.springframework.mail.SimpleMailMessage;
+
+import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 @Service
 public class UserService implements IUserService {
+
+    @Value("${crossborder.token.hours}")
+    private int hours;
+
+    @Value("${crossborder.token.url}")
+    private String appURL;
+
+    @Value("${crossborder.mail.from}")
+    private String from;
+
+    @Value("${crossborder.mail.subject}")
+    private String subject;
 
     @Autowired
     private UserRepository userRepository;
@@ -35,6 +57,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserViewRepository userViewRepository;
+
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -71,4 +96,49 @@ public class UserService implements IUserService {
     public UserView getUser(String dltAddress, String accountNumber)throws DataAccessException{
         return userViewRepository.findUserByAddressAccount(dltAddress.toUpperCase(), accountNumber);
     }
+
+    public SimpleMailMessage generatePasswordToken(String email)throws DataAccessException{
+        User user = userRepository.findByEmail(email);
+        if (user!=null){
+            PasswordToken passwordToken = new PasswordToken();
+            passwordToken.setToken(UUID.randomUUID().toString());
+            passwordToken.setExpiryDate(LocalDateTime.now().plusHours(hours));
+            passwordToken.setUser_id(user.getId());
+            passwordTokenRepository.save(passwordToken);
+
+            SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+			passwordResetEmail.setFrom(from);
+			passwordResetEmail.setTo(user.getEmail());
+			passwordResetEmail.setSubject(subject);
+			passwordResetEmail.setText("To reset your password, click the link below:\n" + appURL + "/" + passwordToken.getToken());
+                    
+            return passwordResetEmail;
+        }
+        return null;
+    }
+
+    public boolean validatePasswordToken(String token)throws TokenNotFoundException, Exception{
+        PasswordToken passwordToken = passwordTokenRepository.findByToken(token);
+        if (passwordToken!=null){
+            if (LocalDateTime.now().isBefore(passwordToken.getExpiryDate())){    
+                return true;
+            }else{
+                return false;
+            }
+        }
+        throw new TokenNotFoundException("Token doesn't exist");
+    }
+
+    public boolean resetPassword(String token, String newPassword)throws TokenNotFoundException, DataAccessException, Exception{
+        if (validatePasswordToken(token)){
+            if (userRepository.resetPassword(token, newPassword)>0){
+                passwordTokenRepository.removeToken(token);
+                return true;
+            }else{
+                throw new TokenNotFoundException("Token doesn't exist");
+            }
+        }
+        return false;
+    }
+
 }

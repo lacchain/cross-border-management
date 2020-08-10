@@ -10,7 +10,22 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none     
+      ddl-auto: none
+  mail:
+    host: smtp.serviciodecorreo.es
+    port: 465
+    protocol: smtps
+    username:  crossborder@lacchain.net
+    password: ${SMTP_PASSWORD}
+    properties: 
+      mail:
+        transport:
+          protocol: smtps
+        smtps:
+          auth: true
+          starttls: 
+            enable: true
+          timeout: 8000    
 
 # Server config
 
@@ -48,7 +63,14 @@ crossborder:
   message:
     detail:
       mint: Bank Deposit
-      transfer: Convert USD to DOP 
+      transfer: Convert USD to DOP
+  mail:
+    from: crossborder@lacchain.net
+    subject: Password Reset Request
+  token:
+    url: ${RESET_PASSWORD_URL}
+#    url: http://www.monarca.org/reset-password
+    hours: 24 
 
 # APIs config
 resources:
