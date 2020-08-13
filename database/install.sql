@@ -167,7 +167,7 @@ SELECT DISTINCT movements.id AS "id",
 	sender.name AS "sender_bank",
 	sender.bank_account AS "sender_bank_account",
 	sender.dlt_address AS "sender_dlt_address",
-	sender.currency AS "sender_currency",
+	CASE WHEN UPPER(sender.dlt_address) = UPPER('0X0000000000000000000000000000000000000000') THEN receiver.currency ELSE sender.currency END AS "sender_currency",
 	
 	receiver.fullname AS "receiver_name",
 	receiver.name AS "receiver_bank",
