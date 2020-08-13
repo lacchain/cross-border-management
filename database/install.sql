@@ -156,7 +156,7 @@ INNER JOIN banks ON banks.tax_id = accounts.bank_id;
 
 CREATE VIEW movements_view AS 
 SELECT DISTINCT movements.id AS "id",
-    to_char(movements.datetime,'MM/DD/YYYY') AS "datetime",
+    movements.datetime AS "datetime",
     round(movements.amount,2) AS "sent_amount",
 	  round(movements.fee,2) AS "fee_applied",
 	  CASE WHEN movements.status IN (0,1,2,5,6) THEN round((movements.amount/movements.estimatedrate),2) ELSE round(movements.received_amount,2) END AS "converted_amount",
