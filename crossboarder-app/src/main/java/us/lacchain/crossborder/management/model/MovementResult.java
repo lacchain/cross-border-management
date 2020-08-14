@@ -11,17 +11,18 @@ public class MovementResult {
     private String receiver_name;
     private float amount;
     private float amount_received;
-    private String sender_currency;
-    private String receiver_currency;
+    private String senderCurrency;
+    private String receiverCurrency;
     private float fee_applied;
     private float rate_applied;
     private String status;
     private String dlt_address;
 
+
     public MovementResult() {
     }
 
-    public MovementResult(String id, String datetime, String transfer_type, String sender_name, String receiver_name, float amount, float amount_received, String sender_currency, String receiver_currency, float fee_applied, float rate_applied, String status, String dlt_address) {
+    public MovementResult(String id, String datetime, String transfer_type, String sender_name, String receiver_name, float amount, float amount_received, String senderCurrency, String receiverCurrency, float fee_applied, float rate_applied, String status, String dlt_address) {
         this.id = id;
         this.datetime = datetime;
         this.transfer_type = transfer_type;
@@ -29,8 +30,8 @@ public class MovementResult {
         this.receiver_name = receiver_name;
         this.amount = amount;
         this.amount_received = amount_received;
-        this.sender_currency = sender_currency;
-        this.receiver_currency = receiver_currency;
+        this.senderCurrency = senderCurrency;
+        this.receiverCurrency = receiverCurrency;
         this.fee_applied = fee_applied;
         this.rate_applied = rate_applied;
         this.status = status;
@@ -93,20 +94,20 @@ public class MovementResult {
         this.amount_received = amount_received;
     }
 
-    public String getSender_currency() {
-        return this.sender_currency;
+    public String getSenderCurrency() {
+        return this.senderCurrency;
     }
 
-    public void setSender_currency(String sender_currency) {
-        this.sender_currency = sender_currency;
+    public void setSenderCurrency(String senderCurrency) {
+        this.senderCurrency = senderCurrency;
     }
 
-    public String getReceiver_currency() {
-        return this.receiver_currency;
+    public String getReceiverCurrency() {
+        return this.receiverCurrency;
     }
 
-    public void setReceiver_currency(String receiver_currency) {
-        this.receiver_currency = receiver_currency;
+    public void setReceiverCurrency(String receiverCurrency) {
+        this.receiverCurrency = receiverCurrency;
     }
 
     public float getFee_applied() {
@@ -176,13 +177,13 @@ public class MovementResult {
         return this;
     }
 
-    public MovementResult sender_currency(String sender_currency) {
-        this.sender_currency = sender_currency;
+    public MovementResult senderCurrency(String senderCurrency) {
+        this.senderCurrency = senderCurrency;
         return this;
     }
 
-    public MovementResult receiver_currency(String receiver_currency) {
-        this.receiver_currency = receiver_currency;
+    public MovementResult receiverCurrency(String receiverCurrency) {
+        this.receiverCurrency = receiverCurrency;
         return this;
     }
 
@@ -214,12 +215,12 @@ public class MovementResult {
             return false;
         }
         MovementResult movementResult = (MovementResult) o;
-        return Objects.equals(id, movementResult.id) && Objects.equals(datetime, movementResult.datetime) && Objects.equals(transfer_type, movementResult.transfer_type) && Objects.equals(sender_name, movementResult.sender_name) && Objects.equals(receiver_name, movementResult.receiver_name) && amount == movementResult.amount && amount_received == movementResult.amount_received && Objects.equals(sender_currency, movementResult.sender_currency) && Objects.equals(receiver_currency, movementResult.receiver_currency) && fee_applied == movementResult.fee_applied && rate_applied == movementResult.rate_applied && Objects.equals(status, movementResult.status) && Objects.equals(dlt_address, movementResult.dlt_address);
+        return Objects.equals(id, movementResult.id) && Objects.equals(datetime, movementResult.datetime) && Objects.equals(transfer_type, movementResult.transfer_type) && Objects.equals(sender_name, movementResult.sender_name) && Objects.equals(receiver_name, movementResult.receiver_name) && amount == movementResult.amount && amount_received == movementResult.amount_received && Objects.equals(senderCurrency, movementResult.senderCurrency) && Objects.equals(receiverCurrency, movementResult.receiverCurrency) && fee_applied == movementResult.fee_applied && rate_applied == movementResult.rate_applied && Objects.equals(status, movementResult.status) && Objects.equals(dlt_address, movementResult.dlt_address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, datetime, transfer_type, sender_name, receiver_name, amount, amount_received, sender_currency, receiver_currency, fee_applied, rate_applied, status, dlt_address);
+        return Objects.hash(id, datetime, transfer_type, sender_name, receiver_name, amount, amount_received, senderCurrency, receiverCurrency, fee_applied, rate_applied, status, dlt_address);
     }
 
     @Override
@@ -232,15 +233,14 @@ public class MovementResult {
             ", receiver_name='" + getReceiver_name() + "'" +
             ", amount='" + getAmount() + "'" +
             ", amount_received='" + getAmount_received() + "'" +
-            ", sender_currency='" + getSender_currency() + "'" +
-            ", receiver_currency='" + getReceiver_currency() + "'" +
+            ", senderCurrency='" + getSenderCurrency() + "'" +
+            ", receiverCurrency='" + getReceiverCurrency() + "'" +
             ", fee_applied='" + getFee_applied() + "'" +
             ", rate_applied='" + getRate_applied() + "'" +
             ", status='" + getStatus() + "'" +
             ", dlt_address='" + getDlt_address() + "'" +
             "}";
     }
-    
 }
 
 
