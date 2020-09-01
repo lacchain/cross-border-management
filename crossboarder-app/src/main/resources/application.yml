@@ -36,8 +36,8 @@ server:
 
 crossborder:
   contract:
-    edollars: "0x2F8d5A4eFB11bDCAb2701ca82430A22d93C13c8c"
-    epesos: "0x309807a604cd741a70232b90892E82CB342709ec"
+    edollars: "0xb3b224C6a1680e6db3dA0BD0090F839E0922BBB6"
+    epesos: "0x52C148c88FE121a8e233cB6652C43Cea8D52D74d"
   oauth:
     client:
       web:
