@@ -81,7 +81,7 @@ public class UserController {
                 return ResponseEntity.noContent().build();
             }
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
-            BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
+            BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCode(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
             logger.debug("response:"+response);
             return ResponseEntity.ok().body(response);
@@ -105,7 +105,7 @@ public class UserController {
                 return ResponseEntity.noContent().build();
             }
             AccountDetail accountDetail = new AccountDetail(userView.getCompany(),userView.getFullname(),userView.getEmail(),null,userView.getDlt_address(),userView.getCurrency(),userView.getBalance(),userView.getStatus());
-            BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCity(),userView.getBank_account());
+            BankDetail bankDetail = new BankDetail(userView.getName(),userView.getTax_id(),userView.getCode(),userView.getCity(),userView.getBank_account());
             GetUserResponse response = new GetUserResponse(accountDetail,bankDetail);
             logger.debug("response:"+response);
             return ResponseEntity.ok().body(response);

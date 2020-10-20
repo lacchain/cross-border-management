@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS public.banks;
 CREATE TABLE IF NOT EXISTS public.banks
 (
   "tax_id" text NOT NULL,
+  "code" text NOT NULL,
   "name" text NOT NULL,
   "city" text NOT NULL,
   PRIMARY KEY ("tax_id")
@@ -78,11 +79,12 @@ CREATE TABLE IF NOT EXISTS public.movements
 INSERT INTO public.banks
 (
   "tax_id",
+  "code",
   "name",
   "city"
-) VALUES ('US111111', 'CITIBANK', 'MIAMI'),
-  ('MX222222', 'MEXICAN BANK', 'CIUDAD DE MEXICO'),
-  ('PR333333', 'PUERTO RICO BANK', 'SAN JUAN');
+) VALUES ('US111111', '9999', 'CITIBANK', 'MIAMI'),
+  ('MX222222', '8888', 'MEXICAN BANK', 'CIUDAD DE MEXICO'),
+  ('PR333333', '9998', 'PUERTO RICO BANK', 'SAN JUAN');
  
 INSERT INTO public.users
 (
@@ -147,7 +149,7 @@ INSERT INTO public.movements
 
 CREATE VIEW users_view AS
 SELECT accounts.dlt_address, users.company, users.fullname, users.email, banks.name, banks.tax_id, 
-       banks.city, accounts.bank_account, accounts.currency, accounts.balance, 
+       banks.code, banks.city, accounts.bank_account, accounts.currency, accounts.balance, 
        CASE WHEN accounts.status = 0 THEN 'Pending' WHEN accounts.status = 1 THEN 'Active' ELSE 'Inactive' END AS status
 FROM users
 INNER JOIN accounts ON accounts.user_id = users.id

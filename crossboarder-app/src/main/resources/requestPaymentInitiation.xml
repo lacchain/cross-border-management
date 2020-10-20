@@ -92,6 +92,16 @@
                   <BldgNb>123</BldgNb>
                   <Ctry>DO</Ctry>
                </PstlAdr>
+               <Id>
+                  <OrgId>
+                     <Othr>
+                        <Id>00112715164</Id>
+                        <SchmeNm>
+                           <Cd>TXID</Cd>
+                        </SchmeNm>
+                     </Othr>
+                  </OrgId>
+               </Id>
             </Cdtr>
             <CdtrAcct>
                <Id>
@@ -103,9 +113,6 @@
                   <Cd>CACC</Cd>
                </Tp>
             </CdtrAcct>
-            <RmtInf>
-               <Ustrd>12345678901</Ustrd>
-            </RmtInf>
          </CdtTrfTxInf>
       </PmtInf>
    </CstmrCdtTrfInitn>

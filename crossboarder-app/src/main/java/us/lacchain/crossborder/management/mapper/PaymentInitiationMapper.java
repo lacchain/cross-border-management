@@ -1,5 +1,6 @@
 package us.lacchain.crossborder.management.mapper;
 
+import us.lacchain.crossborder.management.model.UserView;
 import us.lacchain.crossborder.management.clients.response.PaymentInitiationResponse;
 import us.lacchain.crossborder.management.clients.response.PaymentStatusResponse;
 import java.io.*;
@@ -28,7 +29,7 @@ public class PaymentInitiationMapper{
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final String ACSP = "ACSP";
 
-    public String xmlToPaymentInitiationRequest(int amount){
+    public String xmlToPaymentInitiationRequest(int amount, UserView userView){
         try (InputStream inputStream = getClass().getResourceAsStream("/requestPaymentInitiation.xml")){
    
             SAXReader reader = new SAXReader();
@@ -61,6 +62,21 @@ public class PaymentInitiationMapper{
 
             Element amt = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:Amt[1]/ns:EqvtAmt[1]/ns:Amt[1]", document, namespaceContext);
             amt.setText(getAmount(amount));
+
+            Element bankCode = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:CdtrAgt[1]/ns:FinInstnId[1]/ns:ClrSysMmbId[1]/ns:MmbId[1]", document, namespaceContext);
+            bankCode.setText(userView.getCode());
+
+            Element bankName = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:CdtrAgt[1]/ns:FinInstnId[1]/ns:Nm[1]", document, namespaceContext);
+            bankName.setText(userView.getName());
+
+            Element beneficiaryFullName = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:Cdtr[1]/ns:Nm[1]", document, namespaceContext);
+            beneficiaryFullName.setText(userView.getFullname());
+
+            Element beneficiaryTaxId = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:Cdtr[1]/ns:Id[1]/ns:OrgId[1]/ns:Othr[1]/ns:Id[1]", document, namespaceContext);
+            beneficiaryTaxId.setText(userView.getTax_id());
+
+            Element beneficiaryBankAccount = (Element) select("//ns:CstmrCdtTrfInitn[1]/ns:PmtInf[1]/ns:CdtTrfTxInf[1]/ns:CdtrAcct[1]/ns:Id[1]/ns:Othr[1]/ns:Id[1]", document, namespaceContext);
+            beneficiaryBankAccount.setText(userView.getBank_account());
 
             System.out.println("<<<paymentInitiationRequest>>"+document.asXML());
 

@@ -20,6 +20,9 @@ public class BankDetail implements Serializable {
     @NotNull(message="bankTaxId can't be null")
     @Size(min = 3)
     private String bankTaxId;
+    @NotNull(message="bankCode can't be null")
+    @Size(min = 3)
+    private String bankCode;
     @NotNull(message="bankCity can't be null")
     @Size(min = 3)
     private String bankCity;
