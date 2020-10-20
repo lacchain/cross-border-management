@@ -76,7 +76,7 @@ public class UserService implements IUserService {
             userRepository.save(user);
        
             if (!bankRepository.existsById(request.getBankDetails().getBankTaxId().toUpperCase())){
-                Bank bank = new Bank(request.getBankDetails().getBankTaxId().toUpperCase(), request.getBankDetails().getBankName().toUpperCase(), request.getBankDetails().getBankCity().toUpperCase());
+                Bank bank = new Bank(request.getBankDetails().getBankTaxId().toUpperCase(), request.getBankDetails().getBankCode().toUpperCase(), request.getBankDetails().getBankName().toUpperCase(), request.getBankDetails().getBankCity().toUpperCase());
                 bankRepository.save(bank);
             }
         

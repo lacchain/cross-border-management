@@ -3,8 +3,10 @@ package us.lacchain.crossborder.management.service;
 import us.lacchain.crossborder.management.clients.request.EventRequest;
 import us.lacchain.crossborder.management.repository.AccountRepository;
 import us.lacchain.crossborder.management.repository.MovementRepository;
+import us.lacchain.crossborder.management.repository.UserViewRepository;
 import us.lacchain.crossborder.management.util.Client;
 import us.lacchain.crossborder.management.model.Movement;
+import us.lacchain.crossborder.management.model.UserView;
 import us.lacchain.crossborder.management.mapper.PaymentInitiationMapper;
 import us.lacchain.crossborder.management.clients.response.PaymentInitiationResponse;
 import us.lacchain.crossborder.management.clients.response.PaymentStatusResponse;
@@ -50,6 +52,9 @@ public class EventService implements IEventService {
 
     @Autowired
     private MovementRepository movementRepository;
+
+    @Autowired
+    private UserViewRepository userViewRepository;
 
     @Value("${crossborder.contract.edollars}")
     private String contractDollars;
@@ -207,8 +212,9 @@ public class EventService implements IEventService {
         Map<String,Object> operationIdParameter = request.getNonIndexedParameters().get(0);
         int amount = (int)amountParameter.get("value");
         String operationId = (String)operationIdParameter.get("value");
+        UserView receiver = userViewRepository.getReceiver(operationId);
         PaymentInitiationMapper mapper = new PaymentInitiationMapper();
-        String paymentInitiationRequest = mapper.xmlToPaymentInitiationRequest(amount);
+        String paymentInitiationRequest = mapper.xmlToPaymentInitiationRequest(amount, receiver);
         logger.info(">>PaymentInitiationRequest<<:"+paymentInitiationRequest);
         try{
             ResponseEntity<String> paymentInitiationResponse = webClient.postForEntity(paymentInitiationURL, client.getEntity(paymentInitiationRequest), String.class);

@@ -16,6 +16,7 @@ public class UserView {
     private String email;
     private String name;
     private String tax_id;
+    private String code;
     private String city;
     private String bank_account;
     private String currency;
@@ -25,13 +26,14 @@ public class UserView {
     public UserView() {
     }
 
-    public UserView(String dlt_address, String company, String fullname, String email, String name, String tax_id, String city, String bank_account, String currency, float balance, String status) {
+    public UserView(String dlt_address, String company, String fullname, String email, String name, String tax_id, String code, String city, String bank_account, String currency, float balance, String status) {
         this.dlt_address = dlt_address;
         this.company = company;
         this.fullname = fullname;
         this.email = email;
         this.name = name;
         this.tax_id = tax_id;
+        this.code = code;
         this.city = city;
         this.bank_account = bank_account;
         this.currency = currency;
@@ -87,6 +89,14 @@ public class UserView {
         this.tax_id = tax_id;
     }
 
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getCity() {
         return this.city;
     }
@@ -135,12 +145,12 @@ public class UserView {
             return false;
         }
         UserView userView = (UserView) o;
-        return Objects.equals(dlt_address, userView.dlt_address) && Objects.equals(company, userView.company) && Objects.equals(fullname, userView.fullname) && Objects.equals(email, userView.email) && Objects.equals(name, userView.name) && Objects.equals(tax_id, userView.tax_id) && Objects.equals(city, userView.city) && Objects.equals(bank_account, userView.bank_account) && Objects.equals(currency, userView.currency) && balance == userView.balance && status == userView.status;
+        return Objects.equals(dlt_address, userView.dlt_address) && Objects.equals(company, userView.company) && Objects.equals(fullname, userView.fullname) && Objects.equals(email, userView.email) && Objects.equals(name, userView.name) && Objects.equals(tax_id, userView.tax_id) && Objects.equals(code, userView.code) && Objects.equals(city, userView.city) && Objects.equals(bank_account, userView.bank_account) && Objects.equals(currency, userView.currency) && balance == userView.balance && status == userView.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dlt_address, company, fullname, email, name, tax_id, city, bank_account, currency, balance, status);
+        return Objects.hash(dlt_address, company, fullname, email, name, tax_id, code, city, bank_account, currency, balance, status);
     }
 
     @Override
@@ -152,6 +162,7 @@ public class UserView {
             ", email='" + getEmail() + "'" +
             ", name='" + getName() + "'" +
             ", tax_id='" + getTax_id() + "'" +
+            ", code='" + getCode() + "'" +
             ", city='" + getCity() + "'" +
             ", bank_account='" + getBank_account() + "'" +
             ", currency='" + getCurrency() + "'" +

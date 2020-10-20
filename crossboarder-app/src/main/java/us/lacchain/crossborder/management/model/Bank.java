@@ -11,6 +11,7 @@ public class Bank {
 
     @Id
     private String tax_id;
+    private String code;
     private String name;
     private String city;
     
@@ -18,8 +19,9 @@ public class Bank {
     public Bank() {
     }
 
-    public Bank(String tax_id, String name, String city) {
+    public Bank(String tax_id, String code, String name, String city) {
         this.tax_id = tax_id;
+        this.code = code;
         this.name = name;
         this.city = city;
     }
@@ -30,6 +32,14 @@ public class Bank {
 
     public void setTax_id(String tax_id) {
         this.tax_id = tax_id;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -56,18 +66,19 @@ public class Bank {
             return false;
         }
         Bank bank = (Bank) o;
-        return Objects.equals(tax_id, bank.tax_id) && Objects.equals(name, bank.name) && Objects.equals(city, bank.city);
+        return Objects.equals(tax_id, bank.tax_id) && Objects.equals(code, bank.code) && Objects.equals(name, bank.name) && Objects.equals(city, bank.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tax_id, name, city);
+        return Objects.hash(tax_id, code, name, city);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Bank{");
         sb.append("tax_id=").append(tax_id);
+        sb.append(", code=").append(code).append('\'');
         sb.append(", name=").append(name).append('\'');
         sb.append(", city=").append(city);
         sb.append('}');
